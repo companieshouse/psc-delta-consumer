@@ -9,15 +9,24 @@
         <relativePath />
     </parent>
     <artifactId>psc-delta-consumer</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>unversioned</version>
     <name>psc-delta-consumer</name>
     <description>The psc-delta-consumer is responsible for transforming psc data from the psc-delta kafka topic as part of chips and chs data sync.</description>
     <properties>
         <java.version>11</java.version>
+        <main.class>uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication</main.class>
         <spring-boot-dependencies.version>2.6.4</spring-boot-dependencies.version>
+        <spring-boot-maven-plugin.version>2.6.4</spring-boot-maven-plugin.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+        <jib-maven-plugin.version>3.1.1</jib-maven-plugin.version>
+
+        <!--sonar configuration-->
+        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml,
+            ${project.basedir}/target/site/jacoco-it/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.jacoco.reports>${project.basedir}/target/site</sonar.jacoco.reports>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -72,6 +81,17 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot-maven-plugin.version}</version>
+                <configuration>
+                    <mainClass>${main.class}</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -104,6 +124,20 @@
                         <version>1.1</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>${sonar-maven-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>${jib-maven-plugin.version}</version>
             </plugin>
         </plugins>
     </build>
