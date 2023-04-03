@@ -1,0 +1,21 @@
+server:
+  port: 8081
+
+springfox:
+  documentation:
+    auto-startup: false
+
+spring:
+  kafka:
+    bootstrap-servers: ${DATA_SYNC_KAFKA_BROKER_URL:localhost:9092}
+
+pscs:
+  delta:
+    group-id: psc-delta-consumer
+    topic: ${PSC_DELTA_TOPIC:psc-delta}
+    retry-attempts: ${PSC_DELTA_ATTEMPTS:4}
+    backoff-delay: ${PSC_DELTA_BACKOFF_DELAY:100}
+
+
+logger:
+  namespace: psc-delta-consumer
