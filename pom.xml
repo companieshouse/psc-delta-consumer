@@ -21,6 +21,15 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <jib-maven-plugin.version>3.1.1</jib-maven-plugin.version>
+        <ch-kafka.version>1.4.2</ch-kafka.version>
+        <structured-logging.version>1.9.12</structured-logging.version>
+        <kafka-models.version>1.0.28</kafka-models.version>
+        <private-api-sdk-java.version>2.0.174</private-api-sdk-java.version>
+        <api-sdk-manager-java-library.version>1.0.4</api-sdk-manager-java-library.version>
+
+        <!-- Tests -->
+        <assertj-core.version>3.22.0</assertj-core.version>
+        <test-containers.version>1.16.3</test-containers.version>
 
         <!--sonar configuration-->
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml,
@@ -52,11 +61,59 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.companieshouse</groupId>
+            <artifactId>kafka-models</artifactId>
+            <version>${kafka-models.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.companieshouse</groupId>
+            <artifactId>ch-kafka</artifactId>
+            <version>${ch-kafka.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.companieshouse</groupId>
+            <artifactId>structured-logging</artifactId>
+            <version>${structured-logging.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.companieshouse</groupId>
+            <artifactId>private-api-sdk-java</artifactId>
+            <version>${private-api-sdk-java.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.gov.companieshouse</groupId>
+            <artifactId>api-sdk-manager-java-library</artifactId>
+            <version>${api-sdk-manager-java-library.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${test-containers.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.junit.jupiter</groupId>
+                    <artifactId>junit-jupiter-engine</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 
