@@ -23,7 +23,7 @@ import uk.gov.companieshouse.logging.Logger;
 @Service
 public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements ApiClientService {
 
-    @Value("${api.disqualified-officers-data-api-key}")
+    @Value("${api.pscFullRecord-data-api-key}")
     private String chsApiKey;
 
     @Value("${api.api-url}")
