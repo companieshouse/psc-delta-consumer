@@ -50,11 +50,11 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
         return internalApiClient;
     }
 
-    public ApiResponse<Void> putPscFullRecord(String log, String consumerId, FullRecordCompanyPSCApi fullRecordCompanyPSCApi) {
+    public ApiResponse<Void> putPscFullRecord(String log, String companyId, String customerId, FullRecordCompanyPSCApi fullRecordCompanyPSCApi) {
 
-        final String uri = String.format("/", consumerId);
+        final String uri = String.format("/company/%s/persons-with-significant-control/%s", companyId, customerId);
 
-        Map<String, Object> logMap = createLogMap(consumerId, "PUT", uri);
+        Map<String, Object> logMap = createLogMap(companyId, "PUT", uri);
         logger.infoContext(log, String.format("PUT %s", uri), logMap);
         return executeOp(log, "putPscFullRecord", uri,
                 getApiClient(log).privatePscFullRecordResourceHandler()
