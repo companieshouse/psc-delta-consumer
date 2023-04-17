@@ -52,7 +52,7 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
 
     public ApiResponse<Void> putPscFullRecord(String log, String companyId, String customerId, FullRecordCompanyPSCApi fullRecordCompanyPSCApi) {
 
-        final String uri = String.format("/company/%s/persons-with-significant-control/%s", companyId, customerId);
+        final String uri = String.format("/company/%s/persons-with-significant-control/%s/individual", companyId, customerId);
 
         Map<String, Object> logMap = createLogMap(companyId, "PUT", uri);
         logger.infoContext(log, String.format("PUT %s", uri), logMap);

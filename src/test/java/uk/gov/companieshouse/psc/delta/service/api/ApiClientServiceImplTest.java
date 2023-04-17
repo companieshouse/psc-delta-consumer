@@ -29,7 +29,7 @@ public class ApiClientServiceImplTest {
     private final String companyNumber = "test12345";
     private final String pscId = "testId123456";
 
-    private final String uri = "/company/%s/persons-with-significant-control/%s";
+    private final String uri = "/company/%s/persons-with-significant-control/%s/individual";
 
     private ApiClientServiceImpl apiClientService;
 
