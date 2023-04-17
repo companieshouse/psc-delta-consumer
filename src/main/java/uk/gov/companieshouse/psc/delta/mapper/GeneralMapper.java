@@ -1,6 +1,9 @@
 package uk.gov.companieshouse.psc.delta.mapper;
 
 import java.util.Collections;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -9,6 +12,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import uk.gov.companieshouse.GenerateEtagUtil;
 
+import uk.gov.companieshouse.api.delta.NameElements;
 import uk.gov.companieshouse.api.delta.Psc;
 import uk.gov.companieshouse.api.model.psc.PscLinks;
 import uk.gov.companieshouse.api.psc.Data;
@@ -25,6 +29,7 @@ public interface GeneralMapper {
     @Mapping(target = "externalData.companyNumber", source = "companyNumber")
     @Mapping(target = "externalData.id", source = "internalId")
     @Mapping(target = "externalData.data.etag", ignore = true)
+    @Mapping(target = "externalData.data.name", ignore = true)
     @Mapping(target = "externalData.data.links", ignore = true)
     @Mapping(target = "externalData.data.kind", source = "kind", ignore = true)
     @Mapping(target = "externalData.data.ceasedOn", source = "ceasedOn", dateFormat = "yyyyMMdd")
@@ -33,6 +38,23 @@ public interface GeneralMapper {
     @AfterMapping
     default void mapEtag(@MappingTarget Data target) {
         target.setEtag(GenerateEtagUtil.generateEtag());
+    }
+
+    /**
+     * Manually map Name.
+     * @param target Data object within FullRecordCompanyPSCApi object to map to
+     * @param source Psc delta object that will be mapped from
+     */
+    @AfterMapping
+    default void mapName(@MappingTarget Data target, Psc source) {
+        NameElements nameElements = source.getNameElements();
+
+        target.setName(Stream.of(nameElements.getTitle(), nameElements.getForename(),
+                        nameElements.getMiddleName(), nameElements.getSurname())
+                        .filter(Objects::nonNull).collect(Collectors.joining(" ")));
+
+        target.setForename(nameElements.getForename());
+        target.setSurname(nameElements.getSurname());
     }
 
     /**

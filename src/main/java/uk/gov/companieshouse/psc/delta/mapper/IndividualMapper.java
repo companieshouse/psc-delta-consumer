@@ -25,7 +25,6 @@ public interface IndividualMapper {
     @Mapping(target = "externalData.data.nationality", source = "nationality")
     @Mapping(target = "externalData.data.countryOfResidence", source = "countryOfResidence")
     @Mapping(target = "externalData.data.naturesOfControl", source = "naturesOfControl")
-    @Mapping(target = "externalData.data.name", ignore = true)
     @Mapping(target = "externalData.data.serviceAddressSameAsRegisteredOfficeAddress",
             source = "serviceAddressSameAsRegisteredOffice", ignore = true)
     @Mapping(target = "externalData.data.residentialAddressIsSameAsServiceAddress",
@@ -68,36 +67,6 @@ public interface IndividualMapper {
     }
 
     /**
-     * Manually map Name.
-     * @param target Data object within FullRecordCompanyPSCApi object to map to
-     * @param source Psc delta object that will be mapped from
-     */
-    @AfterMapping
-    default void mapName(@MappingTarget Data target, Psc source) {
-        NameElements nameElements = source.getNameElements();
-
-        String title = nameElements.getTitle();
-        String forename = nameElements.getForename();
-        String surname = nameElements.getSurname();
-        String middleName = nameElements.getMiddleName();
-
-        if (nameElements.getTitle() != null && nameElements.getMiddleName() != null) {
-            target.setName(title + " " + forename + " " + middleName + " " + surname);
-            target.setTitle(title);
-        } else if (nameElements.getTitle() == null && nameElements.getMiddleName() != null) {
-            target.setName(forename + " " + middleName + " " + surname);
-        } else if (nameElements.getTitle() != null && nameElements.getMiddleName() == null) {
-            target.setName(title + " " + forename + " " + surname);
-            target.setTitle(title);
-        } else {
-            target.setName(forename + " " + surname);
-        }
-        target.setForename(forename);
-        target.setSurname(surname);
-
-    }
-
-    /**
      * Manually map ServiceAddressSameAsRegisteredOffice.
      * @param target Data object within FullRecordCompanyPSCApi object to map to
      * @param source Psc delta object that will be mapped from
@@ -107,7 +76,7 @@ public interface IndividualMapper {
         ServiceAddressSameAsRegisteredOfficeEnum registeredOfficeEnum =
                 source.getServiceAddressSameAsRegisteredOffice();
 
-        if (registeredOfficeEnum.toString() == "Y") {
+        if (registeredOfficeEnum.toString().equals("Y")) {
             target.setServiceAddressSameAsRegisteredOfficeAddress(Boolean.TRUE);
         } else {
             target.setServiceAddressSameAsRegisteredOfficeAddress(Boolean.FALSE);
@@ -124,7 +93,7 @@ public interface IndividualMapper {
         ResidentialAddressSameAsServiceAddressEnum serviceAddressEnum =
                 source.getResidentialAddressSameAsServiceAddress();
 
-        if (serviceAddressEnum.toString() == "Y") {
+        if (serviceAddressEnum.toString().equals("Y")) {
             target.setResidentialAddressIsSameAsServiceAddress(Boolean.TRUE);
         } else {
             target.setResidentialAddressIsSameAsServiceAddress(Boolean.FALSE);
