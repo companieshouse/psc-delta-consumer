@@ -16,6 +16,11 @@ pscs:
     retry-attempts: ${PSC_DELTA_ATTEMPTS:4}
     backoff-delay: ${PSC_DELTA_BACKOFF_DELAY:100}
 
+api:
+  psc-data-api-key: ${PSC_DATA_API_KEY:localhost}
+  api-url: ${API_URL:http://localhost:8888}
+  internal-api-url: ${INTERNAL_API_URL:localhost}
+
 
 logger:
   namespace: psc-delta-consumer
