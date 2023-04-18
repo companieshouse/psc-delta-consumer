@@ -20,5 +20,5 @@ public interface ApiClientService {
             final String log,
             final String companyId,
             final String notficationId,
-            final FullRecordCompanyPSCApi fullRecordCompanyPSCApi);
+            final FullRecordCompanyPSCApi fullRecordCompanyPscApi);
 }

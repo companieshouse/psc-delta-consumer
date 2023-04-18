@@ -31,6 +31,7 @@ public class PscDeltaProcessor {
         final PscDelta payload = pscDelta.getPayload();
         logger.info(format("Successfully extracted PSC Delta of %s", payload.toString()));
 
-//        apiClientService.putPscFullRecord(contextId, companyId, notficationId, fullRecordCompanyPSCApi);
+        //        apiClientService.putPscFullRecord(contextId, companyId,
+        //        notficationId, fullRecordCompanyPSCApi);
     }
 }

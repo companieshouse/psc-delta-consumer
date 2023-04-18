@@ -1,7 +1,7 @@
 package uk.gov.companieshouse.psc.delta.service.api;
 
-
 import java.util.HashMap;
+
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,15 +50,21 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
         return internalApiClient;
     }
 
-    public ApiResponse<Void> putPscFullRecord(String log, String companyId, String notficationId, FullRecordCompanyPSCApi fullRecordCompanyPSCApi) {
+    /**
+     * Process PSC Full Record Delta message.
+     */
+    public ApiResponse<Void> putPscFullRecord(String log, String companyId,
+            String notficationId, FullRecordCompanyPSCApi fullRecordCompanyPscApi) {
 
-        final String uri = String.format("/company/%s/persons-with-significant-control/%s/full_record", companyId, notficationId);
+        final String uri = String.format(
+                "/company/%s/persons-with-significant-control/%s/full_record",
+                    companyId, notficationId);
 
         Map<String, Object> logMap = createLogMap(companyId, "PUT", uri);
         logger.infoContext(log, String.format("PUT %s", uri), logMap);
         return executeOp(log, "putPscFullRecord", uri,
                 getApiClient(log).privatePscFullRecordResourceHandler()
-                        .putPscFullRecord(uri, fullRecordCompanyPSCApi));
+                        .putPscFullRecord(uri, fullRecordCompanyPscApi));
     }
 
     private HttpClient getHttpClient(String contextId) {
