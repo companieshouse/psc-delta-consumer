@@ -9,34 +9,25 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.companieshouse.api.delta.Psc;
 import uk.gov.companieshouse.api.delta.PscDelta;
+import uk.gov.companieshouse.api.psc.Data;
+import uk.gov.companieshouse.api.psc.ExternalData;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.api.psc.InternalData;
-import uk.gov.companieshouse.psc.delta.mapper.CorpAndLegalMapper;
-import uk.gov.companieshouse.psc.delta.mapper.GeneralMapper;
-import uk.gov.companieshouse.psc.delta.mapper.IndividualMapper;
+import uk.gov.companieshouse.psc.delta.mapper.PscMapper;
 
 @Component
 public class PscApiTransformer {
 
-    private final GeneralMapper generalMapper;
-    private final IndividualMapper individualMapper;
-    private final CorpAndLegalMapper corpAndLegalMapper;
+    private final PscMapper pscMapper;
 
     /**
      * Constructor for the transformer.
-     * @param generalMapper returns the FullRecordCompanyPSCApi
+     * @param pscMapper returns the FullRecordCompanyPSCApi
      *                      object for Super Secure PSCs and BOs.
-     * @param individualMapper returns the FullRecordCompanyPSCApi
-     *                         object for Individual PSCs and BOs.
-     * @param corpAndLegalMapper returns the FullRecordCompanyPSCApi
-     *                           object for Corp PSCs and BOs and Legal PSCs and BOs.
      */
     @Autowired
-    public PscApiTransformer(GeneralMapper generalMapper, IndividualMapper individualMapper,
-                             CorpAndLegalMapper corpAndLegalMapper) {
-        this.generalMapper = generalMapper;
-        this.individualMapper = individualMapper;
-        this.corpAndLegalMapper = corpAndLegalMapper;
+    public PscApiTransformer(PscMapper pscMapper) {
+        this.pscMapper = pscMapper;
     }
 
     /**
@@ -47,60 +38,17 @@ public class PscApiTransformer {
     public FullRecordCompanyPSCApi transform(PscDelta pscDelta) {
 
         FullRecordCompanyPSCApi fullRecordCompanyPscApi = new FullRecordCompanyPSCApi();
+        ExternalData externalData = new ExternalData();
+        InternalData internalData = new InternalData();
+        Data data = new Data();
+
+        fullRecordCompanyPscApi.setExternalData(externalData);
+        fullRecordCompanyPscApi.setInternalData(internalData);
+        externalData.setData(data);
+
         Psc psc = pscDelta.getPscs().get(0);
 
-        switch (psc.getKind()) {
-            case INDIVIDUAL:
-                fullRecordCompanyPscApi = individualMapper.mapPscData(psc);
-                fullRecordCompanyPscApi.getExternalData()
-                                       .getData()
-                                       .setKind("individual-person-with-significant-control");
-                break;
-            case CORPORATE_ENTITY:
-                fullRecordCompanyPscApi = corpAndLegalMapper.mapPscData(psc);
-                fullRecordCompanyPscApi.getExternalData()
-                                       .getData()
-                                       .setKind("corporate-entity-person-with-significant-control");
-                break;
-            case LEGAL_PERSON:
-                fullRecordCompanyPscApi = corpAndLegalMapper.mapPscData(psc);
-                fullRecordCompanyPscApi.getExternalData()
-                                       .getData()
-                                       .setKind("legal-person-person-with-significant-control");
-                break;
-            case SUPER_SECURE:
-                fullRecordCompanyPscApi = generalMapper.mapPscData(psc);
-                fullRecordCompanyPscApi.getExternalData()
-                                       .getData()
-                                       .setKind("super-secure-person-with-significant-control");
-                break;
-            case INDIVIDUAL_BENEFICIAL_OWNER:
-                fullRecordCompanyPscApi = individualMapper.mapPscData(psc);
-                fullRecordCompanyPscApi.getExternalData()
-                                       .getData()
-                                       .setKind("individual-beneficial-owner");
-                break;
-            case CORPORATE_BENEFICIAL_OWNER:
-                fullRecordCompanyPscApi = corpAndLegalMapper.mapPscData(psc);
-                fullRecordCompanyPscApi.getExternalData()
-                                       .getData()
-                                       .setKind("corporate-entity-beneficial-owner");
-                break;
-            case LEGAL_PERSON_BENEFICIAL_OWNER:
-                fullRecordCompanyPscApi = corpAndLegalMapper.mapPscData(psc);
-                fullRecordCompanyPscApi.getExternalData()
-                                       .getData()
-                                       .setKind("legal-person-beneficial-owner");
-                break;
-            case SUPER_SECURE_BENEFICIAL_OWNER:
-                fullRecordCompanyPscApi = generalMapper.mapPscData(psc);
-                fullRecordCompanyPscApi.getExternalData()
-                                       .getData()
-                                       .setKind("super-secure-beneficial-owner");
-                break;
-            default:
-
-        }
+        fullRecordCompanyPscApi = pscMapper.mapPscData(psc);
 
         return parseDeltaAt(fullRecordCompanyPscApi, pscDelta);
     }

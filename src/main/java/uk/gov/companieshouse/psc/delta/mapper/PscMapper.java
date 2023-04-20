@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.psc.delta.mapper;
 
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -23,7 +22,7 @@ import uk.gov.companieshouse.api.psc.ItemLinkTypes;
 import uk.gov.companieshouse.api.psc.SensitiveData;
 
 @Mapper(componentModel = "spring")
-public interface GeneralMapper {
+public interface PscMapper {
 
     @Mapping(target = "externalData.internalId", source = "internalId")
     @Mapping(target = "externalData.notificationId", source = "internalId")

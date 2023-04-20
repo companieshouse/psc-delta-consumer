@@ -8,21 +8,19 @@ import java.util.Base64;
 import java.util.Locale;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.mapstruct.Mapper;
 
+import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.psc.delta.exception.NonRetryableErrorException;
 
+@Component
 public class MapperUtils {
-
-    private MapperUtils(){
-        //utility class
-    }
 
     public static final String TIME_START_OF_DAY = "000000";
     public static final String DATE_PATTERN = "yyyyMMdd";
     public static final String DATETIME_PATTERN = "yyyyMMddHHmmss";
     public static final DateTimeFormatter UTC_DATETIME_FORMATTER =
             DateTimeFormatter.ofPattern(DATETIME_PATTERN, Locale.UK).withZone(ZoneId.of("UTC"));
+
     /**
      * Parse a date string (expected format: DATE_PATTERN).
      * Implementation note: Instant conversion requires input level of detail is Seconds,
