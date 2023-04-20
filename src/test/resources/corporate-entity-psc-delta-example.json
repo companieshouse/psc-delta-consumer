@@ -1,0 +1,37 @@
+{
+  "pscs": [
+    {
+      "company_number": "00623672",
+      "internal_id": "5",
+      "psc_id": "3",
+      "kind": "corporate-entity",
+      "notification_date": "20160101",
+      "ceased_on": "20180201",
+      "psc_statement_id": "77",
+      "address": {
+        "premise": "3",
+        "address_line_1": "Clos Rhiannon",
+        "address_line_2": "Thornhill",
+        "locality": "Cardiff",
+        "region": "Here",
+        "country": "Wales",
+        "postal_code": "CF14 9HQ",
+        "care_of": "CareOf",
+        "po_box": "PoBox"
+      },
+      "name_elements": {
+        "title": "Mr",
+        "surname": "Smith",
+        "forename": "John",
+        "middle_name": "Dave"
+      },
+      "nationality": "Welsh",
+      "country_of_residence": "Wales",
+      "natures_of_control": [
+        "OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"
+      ]
+    }
+  ],
+  "CreatedTime": "28-APR-22 16.51.29.000000",
+  "delta_at": "20211029142043360560"
+}
