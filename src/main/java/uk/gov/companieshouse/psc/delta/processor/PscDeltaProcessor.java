@@ -22,8 +22,12 @@ public class PscDeltaProcessor {
     private final Logger logger;
     private final ApiClientService apiClientService;
 
+    /**
+     * Constructor for processor.
+     */
     @Autowired
-    public PscDeltaProcessor(Logger logger, ApiClientService apiClientService, PscApiTransformer transformer) {
+    public PscDeltaProcessor(
+            Logger logger, ApiClientService apiClientService, PscApiTransformer transformer) {
         this.logger = logger;
         this.apiClientService = apiClientService;
         this.transformer = transformer;
@@ -60,7 +64,9 @@ public class PscDeltaProcessor {
                     "Error when transforming into api object", ex);
         }
 
-        apiClientService.putPscFullRecord(contextId, fullRecordCompanyPscApi.getExternalData().getCompanyNumber(),
-                fullRecordCompanyPscApi.getExternalData().getNotificationId(), fullRecordCompanyPscApi);
+        apiClientService.putPscFullRecord(contextId,
+                fullRecordCompanyPscApi.getExternalData().getCompanyNumber(),
+                fullRecordCompanyPscApi.getExternalData().getNotificationId(),
+                fullRecordCompanyPscApi);
     }
 }
