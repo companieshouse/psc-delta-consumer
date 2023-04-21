@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.psc.delta.transformer;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +14,6 @@ import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.psc.delta.mapper.PscMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
