@@ -19,6 +19,6 @@ public interface ApiClientService {
     ApiResponse<Void> putPscFullRecord(
             final String log,
             final String companyId,
-            final String customerId,
-            final FullRecordCompanyPSCApi fullRecordCompanyPSCApi);
+            final String notficationId,
+            final FullRecordCompanyPSCApi fullRecordCompanyPscApi);
 }
