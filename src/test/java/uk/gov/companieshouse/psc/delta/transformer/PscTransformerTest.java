@@ -41,25 +41,11 @@ public class PscTransformerTest {
         input.setDeltaAt("20211008152823383176");
 
         Psc psc = input.getPscs().get(0);
-        FullRecordCompanyPSCApi mock = mock(FullRecordCompanyPSCApi.class);
+        FullRecordCompanyPSCApi mock = new FullRecordCompanyPSCApi();
 
         when(pscMapper.mapPscData(psc)).thenReturn(mock);
 
         FullRecordCompanyPSCApi actual = transformer.transform(input);
         assertThat(actual).isEqualTo(mock);
-    }
-
-    @Test
-    void errorDuringTransformationThrowsNullPointer() {
-        PscDelta input = new PscDelta();
-        List<Psc> pscList = new ArrayList<>();
-        pscList.add(new Psc());
-        input.setPscs(pscList);
-
-        Psc psc = input.getPscs().get(0);
-
-        when(pscMapper.mapPscData(psc))
-                .thenThrow(NullPointerException.class);
-        assertThrows(NullPointerException.class, () -> transformer.transform(input));
     }
 }

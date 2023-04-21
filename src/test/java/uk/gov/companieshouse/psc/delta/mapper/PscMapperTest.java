@@ -37,12 +37,8 @@ import uk.gov.companieshouse.api.psc.UsualResidentialAddress;
 public class PscMapperTest {
 
     private ObjectMapper mapper;
-    private PscDelta individualDeltaObject;
-    private PscDelta corporateDeltaObject;
-    private PscDelta superSecureDeltaObject;
-    private Psc individualPsc;
-    private Psc corporatePsc;
-    private Psc superSecurePsc;
+    private PscDelta pscDeltaObject;
+    private Psc pscObject;
     private Address serviceAddress;
     private UsualResidentialAddress usualResidentialAddress;
     private NameElements nameElements;
@@ -52,28 +48,7 @@ public class PscMapperTest {
     PscMapper pscMapper;
 
     @BeforeEach
-    public void setUp() throws Exception {
-        mapper = new ObjectMapper();
-
-        String individualPath = "individual-psc-delta-example.json";
-        String corpPath = "corporate-entity-psc-delta-example.json";
-        String superSecurePath = "super-secure-psc-delta-example.json";
-
-        String individualInput = FileCopyUtils.copyToString(new InputStreamReader(
-                ClassLoader.getSystemClassLoader().getResourceAsStream(individualPath)));
-        String corpInput = FileCopyUtils.copyToString(new InputStreamReader(
-                ClassLoader.getSystemClassLoader().getResourceAsStream(corpPath)));
-        String superSecureInput = FileCopyUtils.copyToString(new InputStreamReader(
-                ClassLoader.getSystemClassLoader().getResourceAsStream(superSecurePath)));
-
-        individualDeltaObject = mapper.readValue(individualInput, PscDelta.class);
-        individualPsc = individualDeltaObject.getPscs().get(0);
-
-        corporateDeltaObject = mapper.readValue(corpInput, PscDelta.class);
-        corporatePsc = corporateDeltaObject.getPscs().get(0);
-
-        superSecureDeltaObject = mapper.readValue(superSecureInput, PscDelta.class);
-        superSecurePsc = superSecureDeltaObject.getPscs().get(0);
+    public void setUp() {
 
         serviceAddress = createServiceAddress();
         nameElements = createNameElements();
@@ -83,9 +58,10 @@ public class PscMapperTest {
     }
 
     @Test
-    public void shouldMapIndividualPscToPsc() {
+    public void shouldMapIndividualPscToPsc() throws Exception {
 
-        FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(individualPsc);
+        pscObject = createPscObject("individual-psc");
+        FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
 
         ExternalData externalData = fullRecordCompanyPSCApi.getExternalData();
         Data data = externalData.getData();
@@ -122,14 +98,13 @@ public class PscMapperTest {
         assertEquals(usualResidentialAddress, sensitivedata.getUsualResidentialAddress());
         assertEquals(Boolean.TRUE, sensitivedata.getResidentialAddressSameAsServiceAddress());
         assertEquals(dateOfBirth, sensitivedata.getDateOfBirth());
-
-        System.out.println(fullRecordCompanyPSCApi);
     }
 
     @Test
-    public void shouldMapCorpPscToPsc() {
+    public void shouldMapCorpPscToPsc() throws Exception {
 
-        FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(corporatePsc);
+        pscObject = createPscObject("corporate-entity-psc");
+        FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
 
         ExternalData externalData = fullRecordCompanyPSCApi.getExternalData();
         Data data = externalData.getData();
@@ -165,13 +140,55 @@ public class PscMapperTest {
         assertNull(sensitivedata.getUsualResidentialAddress());
         assertNull(sensitivedata.getResidentialAddressSameAsServiceAddress());
         assertNull(sensitivedata.getDateOfBirth());
-
-        System.out.println(fullRecordCompanyPSCApi);
     }
 
     @Test
-    public void shouldMapSuperSecurePscToPsc() {
-        FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(superSecurePsc);
+    public void shouldMapLegalPscToPsc() throws Exception {
+
+        pscObject = createPscObject("legal-person-psc");
+        FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
+
+        ExternalData externalData = fullRecordCompanyPSCApi.getExternalData();
+        Data data = externalData.getData();
+        SensitiveData sensitivedata = externalData.getSensitiveData();
+
+        fullRecordCompanyPSCApi.getExternalData().getData().setEtag(null);
+
+        List<ItemLinkTypes> links = new ArrayList<>();
+        ItemLinkTypes linkTypes = new ItemLinkTypes();
+        linkTypes.setSelf("/company/00623672/persons-with-significant-control/legal-person/lXgouUAR16hSIwxdJSpbr_dhyT8");
+        linkTypes.setStatements("/company/00623672/persons-with-significant-control-statements/w9h9A8B-F2rLh_r57J6zpKsyHrM");
+        links.add(linkTypes);
+
+        assertEquals("5", externalData.getId());
+        assertEquals("AoRE4bhxdSdXur_NLdfh4JF81Y4", externalData.getPscId());
+        assertEquals("5", externalData.getInternalId());
+        assertEquals("5", externalData.getNotificationId());
+        assertEquals("00623672", externalData.getCompanyNumber());
+
+        assertEquals(LocalDate.of(2018, 2, 1), data.getCeasedOn());
+        assertEquals("legal-person-person-with-significant-control", data.getKind());
+        assertEquals(LocalDate.of(2016, 1, 1), data.getNotifiedOn());
+        assertEquals(serviceAddress, data.getServiceAddress());
+        assertEquals("Mr John Dave Smith", data.getName());
+        assertEquals(nameElements, data.getNameElements());
+        assertEquals(Collections.singletonList("OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"), data.getNaturesOfControl());
+        assertEquals("Wales", data.getCountryOfResidence());
+        assertEquals(links, data.getLinks());
+        assertEquals("Welsh", data.getNationality());
+        assertEquals(LocalDate.of(2016, 1, 1), data.getNotificationDate());
+
+        assertNull(data.getServiceAddressSameAsRegisteredOfficeAddress());
+        assertNull(sensitivedata.getUsualResidentialAddress());
+        assertNull(sensitivedata.getResidentialAddressSameAsServiceAddress());
+        assertNull(sensitivedata.getDateOfBirth());
+    }
+
+    @Test
+    public void shouldMapSuperSecurePscToPsc() throws Exception {
+
+        pscObject = createPscObject("super-secure-psc");
+        FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
         fullRecordCompanyPSCApi.getExternalData().getData().setEtag(null);
 
         ExternalData externalData = fullRecordCompanyPSCApi.getExternalData();
@@ -196,8 +213,49 @@ public class PscMapperTest {
         assertNull(sensitiveData.getDateOfBirth());
         assertNull(data.getLinks().get(0).getStatements());
 
-        System.out.println(fullRecordCompanyPSCApi);
+    }
 
+    @Test
+    public void shouldMapIndividualBOToBO() throws Exception {
+
+        pscObject = createPscObject("individual-beneficial-owner");
+        FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
+
+        ExternalData externalData = fullRecordCompanyPSCApi.getExternalData();
+        Data data = externalData.getData();
+        SensitiveData sensitivedata = externalData.getSensitiveData();
+
+        fullRecordCompanyPSCApi.getExternalData().getData().setEtag(null);
+
+        List<ItemLinkTypes> links = new ArrayList<>();
+        ItemLinkTypes linkTypes = new ItemLinkTypes();
+        linkTypes.setSelf("/company/00623672/persons-with-significant-control/individual-beneficial-owner/lXgouUAR16hSIwxdJSpbr_dhyT8");
+        linkTypes.setStatements("/company/00623672/persons-with-significant-control-statements/w9h9A8B-F2rLh_r57J6zpKsyHrM");
+        links.add(linkTypes);
+
+        assertEquals("5", externalData.getId());
+        assertEquals("AoRE4bhxdSdXur_NLdfh4JF81Y4", externalData.getPscId());
+        assertEquals("5", externalData.getInternalId());
+        assertEquals("5", externalData.getNotificationId());
+        assertEquals("00623672", externalData.getCompanyNumber());
+
+        assertEquals(LocalDate.of(2018, 2, 1), data.getCeasedOn());
+        assertEquals("individual-beneficial-owner", data.getKind());
+        assertEquals(LocalDate.of(2016, 1, 1), data.getNotifiedOn());
+        assertEquals(serviceAddress, data.getServiceAddress());
+        assertEquals("Mr John Dave Smith", data.getName());
+        assertEquals(nameElements, data.getNameElements());
+        assertEquals(Collections.singletonList("OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"), data.getNaturesOfControl());
+
+        assertEquals(Boolean.TRUE, data.getServiceAddressSameAsRegisteredOfficeAddress());
+        assertEquals("Wales", data.getCountryOfResidence());
+        assertEquals(links, data.getLinks());
+        assertEquals("Welsh", data.getNationality());
+        assertEquals(LocalDate.of(2016, 1, 1), data.getNotificationDate());
+
+        assertEquals(usualResidentialAddress, sensitivedata.getUsualResidentialAddress());
+        assertEquals(Boolean.TRUE, sensitivedata.getResidentialAddressSameAsServiceAddress());
+        assertEquals(dateOfBirth, sensitivedata.getDateOfBirth());
     }
 
     public Address createServiceAddress() {
@@ -251,5 +309,19 @@ public class PscMapperTest {
         dateOfBirth.setYear(1994);
 
         return dateOfBirth;
+    }
+
+    public Psc createPscObject(String type) throws Exception {
+        mapper = new ObjectMapper();
+
+        String testFilePath = String.format("%s-delta-example.json", type);
+
+        String input = FileCopyUtils.copyToString(new InputStreamReader(
+                ClassLoader.getSystemClassLoader().getResourceAsStream(testFilePath)));
+
+        pscDeltaObject = mapper.readValue(input, PscDelta.class);
+        pscObject = pscDeltaObject.getPscs().get(0);
+
+        return pscObject;
     }
 }

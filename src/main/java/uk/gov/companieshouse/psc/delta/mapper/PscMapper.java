@@ -160,16 +160,13 @@ public interface PscMapper {
      * @param source Psc delta object that will be mapped from
      */
     @AfterMapping
-    default void mapRegisteredOfficeEnum(@MappingTarget Data target, Psc source) {
+    default void mapServiceAddressSameAsRegisteredOffice(@MappingTarget Data target, Psc source) {
         Psc.ServiceAddressSameAsRegisteredOfficeEnum registeredOfficeEnum =
                 source.getServiceAddressSameAsRegisteredOffice();
 
         if (registeredOfficeEnum != null) {
-            if (registeredOfficeEnum.toString().equals("Y")) {
-                target.setServiceAddressSameAsRegisteredOfficeAddress(Boolean.TRUE);
-            } else if (registeredOfficeEnum.toString().equals("N")) {
-                target.setServiceAddressSameAsRegisteredOfficeAddress(Boolean.FALSE);
-            }
+            target.setServiceAddressSameAsRegisteredOfficeAddress(
+                    registeredOfficeEnum.toString().equals("Y"));
         }
     }
 
@@ -179,16 +176,14 @@ public interface PscMapper {
      * @param source Psc delta object that will be mapped from
      */
     @AfterMapping
-    default void mapServiceAddressEnum(@MappingTarget SensitiveData target, Psc source) {
+    default void mapResidentialAddressSameAsServiceAddress(
+            @MappingTarget SensitiveData target, Psc source) {
         Psc.ResidentialAddressSameAsServiceAddressEnum serviceAddressEnum =
                 source.getResidentialAddressSameAsServiceAddress();
 
         if (serviceAddressEnum != null) {
-            if (serviceAddressEnum.toString().equals("Y")) {
-                target.setResidentialAddressSameAsServiceAddress(Boolean.TRUE);
-            } else {
-                target.setResidentialAddressSameAsServiceAddress(Boolean.FALSE);
-            }
+            target.setResidentialAddressSameAsServiceAddress(
+                    serviceAddressEnum.toString().equals("Y"));
         }
     }
 

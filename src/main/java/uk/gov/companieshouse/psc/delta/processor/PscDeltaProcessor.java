@@ -39,8 +39,6 @@ public class PscDeltaProcessor {
         final ChsDelta payload = chsDelta.getPayload();
         final String contextId = payload.getContextId();
 
-        FullRecordCompanyPSCApi fullRecordCompanyPscApi = new FullRecordCompanyPSCApi();
-
         logger.info(format("Successfully extracted Chs Delta with context_id %s",
                 payload.getContextId()));
         ObjectMapper mapper = new ObjectMapper();
@@ -55,9 +53,12 @@ public class PscDeltaProcessor {
                     "Error when extracting psc delta", ex);
         }
 
+        FullRecordCompanyPSCApi fullRecordCompanyPscApi;
+
         try {
             fullRecordCompanyPscApi = transformer.transform(pscDelta);
-            logger.info(format("Psc: %s", fullRecordCompanyPscApi));
+            logger.info(format("Successfully transformed psc. Api object: %s",
+                    fullRecordCompanyPscApi));
         } catch (Exception ex) {
             throw new NonRetryableErrorException(
                     "Error when transforming into api object", ex);
