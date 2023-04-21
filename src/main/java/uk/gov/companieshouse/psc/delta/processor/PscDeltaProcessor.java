@@ -14,7 +14,6 @@ import uk.gov.companieshouse.psc.delta.exception.NonRetryableErrorException;
 import uk.gov.companieshouse.psc.delta.service.api.ApiClientService;
 import uk.gov.companieshouse.psc.delta.transformer.PscApiTransformer;
 
-
 @Component
 public class PscDeltaProcessor {
 

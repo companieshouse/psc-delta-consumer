@@ -24,9 +24,9 @@ public class ApiClientServiceImplTest {
 
     private final String contextId = "testContext";
     private final String companyNumber = "test12345";
-    private final String pscId = "testId123456";
+    private final String notficationId = "testId123456";
 
-    private final String uri = "/company/%s/persons-with-significant-control/%s/individual";
+    private final String uri = "/company/%s/persons-with-significant-control/%s/full_record";
 
     private ApiClientServiceImpl apiClientService;
 
@@ -43,7 +43,7 @@ public class ApiClientServiceImplTest {
     @Test
     public void returnOkResponseWhenValidPutRequestSentToApi(){
         final ApiResponse<Void> expectedResponse = new ApiResponse<>(HttpStatus.OK.value(), null, null);
-        String expectedUri = String.format(uri, companyNumber, pscId);
+        String expectedUri = String.format(uri, companyNumber, notficationId);
         ApiClientServiceImpl apiClientServiceSpy = Mockito.spy(apiClientService);
         doReturn(expectedResponse).when(apiClientServiceSpy).executeOp(anyString(), anyString(),
                 anyString(),
@@ -51,7 +51,7 @@ public class ApiClientServiceImplTest {
 
         ApiResponse<Void> response = apiClientServiceSpy.putPscFullRecord(contextId,
                 companyNumber,
-                pscId,
+                notficationId,
                 new FullRecordCompanyPSCApi());
 
         verify(apiClientServiceSpy).executeOp(anyString(), eq("putPscFullRecord"),
