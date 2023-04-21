@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.psc.delta.transformer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -12,7 +11,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import uk.gov.companieshouse.api.delta.Psc;
 import uk.gov.companieshouse.api.delta.PscDelta;
-import uk.gov.companieshouse.api.psc.ExternalData;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.psc.delta.mapper.PscMapper;
 
@@ -28,7 +26,6 @@ public class PscTransformerTest {
     @Mock
     private PscMapper pscMapper;
     private PscApiTransformer transformer;
-    private ExternalData externalData;
 
     @BeforeEach
     public void setUp() {

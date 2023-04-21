@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 
 import uk.gov.companieshouse.api.delta.Psc;
 import uk.gov.companieshouse.api.delta.PscDelta;
-import uk.gov.companieshouse.api.psc.Data;
-import uk.gov.companieshouse.api.psc.ExternalData;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.api.psc.InternalData;
 import uk.gov.companieshouse.psc.delta.mapper.PscMapper;
@@ -37,18 +35,9 @@ public class PscApiTransformer {
      */
     public FullRecordCompanyPSCApi transform(PscDelta pscDelta) {
 
-        FullRecordCompanyPSCApi fullRecordCompanyPscApi = new FullRecordCompanyPSCApi();
-        ExternalData externalData = new ExternalData();
-        InternalData internalData = new InternalData();
-        Data data = new Data();
-
-        fullRecordCompanyPscApi.setExternalData(externalData);
-        fullRecordCompanyPscApi.setInternalData(internalData);
-        externalData.setData(data);
-
         Psc psc = pscDelta.getPscs().get(0);
 
-        fullRecordCompanyPscApi = pscMapper.mapPscData(psc);
+        FullRecordCompanyPSCApi fullRecordCompanyPscApi = pscMapper.mapPscData(psc);
 
         return parseDeltaAt(fullRecordCompanyPscApi, pscDelta);
     }

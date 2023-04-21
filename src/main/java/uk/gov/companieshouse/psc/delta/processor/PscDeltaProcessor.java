@@ -11,6 +11,7 @@ import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.psc.delta.exception.NonRetryableErrorException;
+import uk.gov.companieshouse.psc.delta.service.api.ApiClientService;
 import uk.gov.companieshouse.psc.delta.transformer.PscApiTransformer;
 
 
@@ -19,10 +20,12 @@ public class PscDeltaProcessor {
 
     private final PscApiTransformer transformer;
     private final Logger logger;
+    private final ApiClientService apiClientService;
 
     @Autowired
-    public PscDeltaProcessor(Logger logger, PscApiTransformer transformer) {
+    public PscDeltaProcessor(Logger logger, ApiClientService apiClientService, PscApiTransformer transformer) {
         this.logger = logger;
+        this.apiClientService = apiClientService;
         this.transformer = transformer;
     }
 
@@ -32,7 +35,9 @@ public class PscDeltaProcessor {
     public void processDelta(Message<ChsDelta> chsDelta) {
         final ChsDelta payload = chsDelta.getPayload();
         final String contextId = payload.getContextId();
+
         FullRecordCompanyPSCApi fullRecordCompanyPscApi = new FullRecordCompanyPSCApi();
+
         logger.info(format("Successfully extracted Chs Delta with context_id %s",
                 payload.getContextId()));
         ObjectMapper mapper = new ObjectMapper();
@@ -49,10 +54,13 @@ public class PscDeltaProcessor {
 
         try {
             fullRecordCompanyPscApi = transformer.transform(pscDelta);
-            logger.info(format("Psc: %s", fullRecordCompanyPscApi)); //remove
+            logger.info(format("Psc: %s", fullRecordCompanyPscApi));
         } catch (Exception ex) {
             throw new NonRetryableErrorException(
                     "Error when transforming into api object", ex);
         }
+
+        apiClientService.putPscFullRecord(contextId, fullRecordCompanyPscApi.getExternalData().getCompanyNumber(),
+                fullRecordCompanyPscApi.getExternalData().getNotificationId(), fullRecordCompanyPscApi);
     }
 }

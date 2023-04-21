@@ -33,7 +33,6 @@ public interface PscMapper {
     @Mapping(target = "externalData.data.links", ignore = true)
     @Mapping(target = "externalData.data.kind", source = "kind", ignore = true)
     @Mapping(target = "externalData.data.ceasedOn", source = "ceasedOn", ignore = true)
-
     @Mapping(target = "externalData.pscId", source = "pscId", ignore = true)
     @Mapping(target = "externalData.data.notifiedOn", source = "notificationDate",
             dateFormat = "yyyyMMdd")
