@@ -55,10 +55,8 @@ public interface PscMapper {
     /** encode internal_id and map to id and notification_id. */
     @AfterMapping
     default void mapEncodedInternalId(@MappingTarget ExternalData target, Psc source) {
-        if (source.getInternalId() != null) {
-            target.setId(MapperUtils.encode(source.getInternalId()));
-            target.setNotificationId(MapperUtils.encode(source.getInternalId()));
-        }
+        target.setId(MapperUtils.encode(source.getInternalId()));
+        target.setNotificationId(MapperUtils.encode(source.getInternalId()));
     }
 
     @AfterMapping
