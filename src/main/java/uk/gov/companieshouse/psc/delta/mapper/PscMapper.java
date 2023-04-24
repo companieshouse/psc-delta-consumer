@@ -25,9 +25,9 @@ import uk.gov.companieshouse.api.psc.SensitiveData;
 public interface PscMapper {
 
     @Mapping(target = "externalData.internalId", source = "internalId")
-    @Mapping(target = "externalData.notificationId", source = "internalId")
+    @Mapping(target = "externalData.notificationId", source = "internalId", ignore = true)
     @Mapping(target = "externalData.companyNumber", source = "companyNumber")
-    @Mapping(target = "externalData.id", source = "internalId")
+    @Mapping(target = "externalData.id", source = "internalId", ignore = true)
     @Mapping(target = "externalData.data.etag", ignore = true)
     @Mapping(target = "externalData.data.name", ignore = true)
     @Mapping(target = "externalData.data.links", ignore = true)
@@ -51,6 +51,13 @@ public interface PscMapper {
     @Mapping(target = "externalData.sensitiveData.usualResidentialAddress",
             source = "usualResidentialAddress")
     FullRecordCompanyPSCApi mapPscData(Psc psc);
+
+    /** encode internal_id and map to id and notification_id. */
+    @AfterMapping
+    default void mapEncodedInternalId(@MappingTarget ExternalData target, Psc source) {
+        target.setId(MapperUtils.encode(source.getInternalId()));
+        target.setNotificationId(MapperUtils.encode(source.getInternalId()));
+    }
 
     @AfterMapping
     default void mapEtag(@MappingTarget Data target) {
