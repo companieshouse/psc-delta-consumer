@@ -15,6 +15,9 @@ import uk.gov.companieshouse.psc.delta.mapper.PscMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,5 +48,7 @@ public class PscTransformerTest {
 
         FullRecordCompanyPSCApi actual = transformer.transform(input);
         assertThat(actual).isEqualTo(mock);
+        assertThat(actual.getInternalData().getDeltaAt()).isEqualTo(OffsetDateTime.of(
+                2021,10,8,15,28,23,383176000, ZoneOffset.UTC));
     }
 }
