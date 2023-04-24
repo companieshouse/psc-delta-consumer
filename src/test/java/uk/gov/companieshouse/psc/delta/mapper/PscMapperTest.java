@@ -75,10 +75,10 @@ public class PscMapperTest {
         linkTypes.setStatements("/company/00623672/persons-with-significant-control-statements/w9h9A8B-F2rLh_r57J6zpKsyHrM");
         links.add(linkTypes);
 
-        assertEquals("5", externalData.getId());
+        assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getId());
         assertEquals("AoRE4bhxdSdXur_NLdfh4JF81Y4", externalData.getPscId());
         assertEquals("5", externalData.getInternalId());
-        assertEquals("5", externalData.getNotificationId());
+        assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getNotificationId());
         assertEquals("00623672", externalData.getCompanyNumber());
 
         assertEquals(LocalDate.of(2018, 2, 1), data.getCeasedOn());
@@ -118,10 +118,10 @@ public class PscMapperTest {
         linkTypes.setStatements("/company/00623672/persons-with-significant-control-statements/w9h9A8B-F2rLh_r57J6zpKsyHrM");
         links.add(linkTypes);
 
-        assertEquals("5", externalData.getId());
+        assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getId());
         assertEquals("AoRE4bhxdSdXur_NLdfh4JF81Y4", externalData.getPscId());
         assertEquals("5", externalData.getInternalId());
-        assertEquals("5", externalData.getNotificationId());
+        assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getNotificationId());
         assertEquals("00623672", externalData.getCompanyNumber());
 
         assertEquals(LocalDate.of(2018, 2, 1), data.getCeasedOn());
@@ -160,10 +160,10 @@ public class PscMapperTest {
         linkTypes.setStatements("/company/00623672/persons-with-significant-control-statements/w9h9A8B-F2rLh_r57J6zpKsyHrM");
         links.add(linkTypes);
 
-        assertEquals("5", externalData.getId());
+        assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getId());
         assertEquals("AoRE4bhxdSdXur_NLdfh4JF81Y4", externalData.getPscId());
         assertEquals("5", externalData.getInternalId());
-        assertEquals("5", externalData.getNotificationId());
+        assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getNotificationId());
         assertEquals("00623672", externalData.getCompanyNumber());
 
         assertEquals(LocalDate.of(2018, 2, 1), data.getCeasedOn());
@@ -200,9 +200,9 @@ public class PscMapperTest {
         linkTypes.setSelf("/company/00623672/persons-with-significant-control/super-secure/lXgouUAR16hSIwxdJSpbr_dhyT8");
         links.add(linkTypes);
 
-        assertEquals("5", externalData.getId());
+        assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getId());
         assertEquals("5", externalData.getInternalId());
-        assertEquals("5", externalData.getNotificationId());
+        assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getNotificationId());
         assertEquals("00623672", externalData.getCompanyNumber());
         assertEquals(LocalDate.of(2018, 2, 1), data.getCeasedOn());
         assertEquals("super-secure-person-with-significant-control", data.getKind());
@@ -233,10 +233,10 @@ public class PscMapperTest {
         linkTypes.setStatements("/company/00623672/persons-with-significant-control-statements/w9h9A8B-F2rLh_r57J6zpKsyHrM");
         links.add(linkTypes);
 
-        assertEquals("5", externalData.getId());
+        assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getId());
         assertEquals("AoRE4bhxdSdXur_NLdfh4JF81Y4", externalData.getPscId());
         assertEquals("5", externalData.getInternalId());
-        assertEquals("5", externalData.getNotificationId());
+        assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getNotificationId());
         assertEquals("00623672", externalData.getCompanyNumber());
 
         assertEquals(LocalDate.of(2018, 2, 1), data.getCeasedOn());
