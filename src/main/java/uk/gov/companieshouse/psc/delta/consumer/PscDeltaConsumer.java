@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.psc.delta.exception.NonRetryableErrorException;
+import uk.gov.companieshouse.psc.delta.processor.PscDeltaProcessor;
 
 @Component
 public class PscDeltaConsumer {
@@ -21,13 +22,17 @@ public class PscDeltaConsumer {
     private final Logger logger;
     public final KafkaTemplate<String, Object> kafkaTemplate;
 
+    private final PscDeltaProcessor pscDeltaProcessor;
+
     /**
      * Default constructor.
      */
     @Autowired
-    public PscDeltaConsumer(Logger logger, KafkaTemplate<String, Object> kafkaTemplate) {
+    public PscDeltaConsumer(Logger logger, KafkaTemplate<String, Object> kafkaTemplate,
+                            PscDeltaProcessor pscDeltaProcessor) {
         this.logger = logger;
         this.kafkaTemplate = kafkaTemplate;
+        this.pscDeltaProcessor = pscDeltaProcessor;
     }
 
     /**
@@ -47,5 +52,6 @@ public class PscDeltaConsumer {
                                     @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
         logger.info("A new message read from " + topic + " topic with payload: "
                     + chsDeltaMessage.getPayload());
+        pscDeltaProcessor.processDelta(chsDeltaMessage);
     }
 }
