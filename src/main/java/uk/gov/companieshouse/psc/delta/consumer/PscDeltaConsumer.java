@@ -28,7 +28,8 @@ public class PscDeltaConsumer {
      * Default constructor.
      */
     @Autowired
-    public PscDeltaConsumer(Logger logger, KafkaTemplate<String, Object> kafkaTemplate, PscDeltaProcessor pscDeltaProcessor) {
+    public PscDeltaConsumer(Logger logger, KafkaTemplate<String, Object> kafkaTemplate,
+                            PscDeltaProcessor pscDeltaProcessor) {
         this.logger = logger;
         this.kafkaTemplate = kafkaTemplate;
         this.pscDeltaProcessor = pscDeltaProcessor;
