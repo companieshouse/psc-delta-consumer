@@ -19,7 +19,7 @@ import org.springframework.util.FileCopyUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import uk.gov.companieshouse.api.delta.NameElements;
+import uk.gov.companieshouse.api.psc.NameElements;
 import uk.gov.companieshouse.api.delta.Psc;
 import uk.gov.companieshouse.api.delta.PscDelta;
 import uk.gov.companieshouse.api.psc.Address;
