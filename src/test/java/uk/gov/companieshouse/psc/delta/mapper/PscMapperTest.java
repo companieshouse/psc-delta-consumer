@@ -201,6 +201,7 @@ public class PscMapperTest {
         links.add(linkTypes);
 
         assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getId());
+        assertEquals("AoRE4bhxdSdXur_NLdfh4JF81Y4", externalData.getPscId());
         assertEquals("5", externalData.getInternalId());
         assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getNotificationId());
         assertEquals("00623672", externalData.getCompanyNumber());

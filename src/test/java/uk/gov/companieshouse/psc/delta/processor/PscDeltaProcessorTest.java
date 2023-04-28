@@ -97,6 +97,7 @@ public class PscDeltaProcessorTest {
         Psc psc = new Psc();
 
         psc.setCompanyNumber("00623672");
+        psc.setPscId("3");
         psc.setInternalId("5");
         psc.setKind(Psc.KindEnum.SUPER_SECURE);
         psc.setCeasedOn("20180201");
