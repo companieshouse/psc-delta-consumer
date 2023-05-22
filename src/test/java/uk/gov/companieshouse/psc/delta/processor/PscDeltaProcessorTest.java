@@ -30,7 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class PscDeltaProcessorTest {
+class PscDeltaProcessorTest {
     private PscDeltaProcessor deltaProcessor;
     @Mock
     private Logger logger;

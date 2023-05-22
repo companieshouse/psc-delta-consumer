@@ -34,7 +34,7 @@ import uk.gov.companieshouse.api.psc.UsualResidentialAddress;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
         PscMapperImpl.class})
-public class PscMapperTest {
+class PscMapperTest {
 
     private ObjectMapper mapper;
     private PscDelta pscDeltaObject;
@@ -48,7 +48,7 @@ public class PscMapperTest {
     PscMapper pscMapper;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
 
         serviceAddress = createServiceAddress();
         nameElements = createNameElements();
@@ -58,7 +58,7 @@ public class PscMapperTest {
     }
 
     @Test
-    public void shouldMapIndividualPscToPsc() throws Exception {
+    void shouldMapIndividualPscToPsc() throws Exception {
 
         pscObject = createPscObject("individual-psc");
         FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
@@ -101,7 +101,7 @@ public class PscMapperTest {
     }
 
     @Test
-    public void shouldMapCorpPscToPsc() throws Exception {
+    void shouldMapCorpPscToPsc() throws Exception {
 
         pscObject = createPscObject("corporate-entity-psc");
         FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
@@ -143,7 +143,7 @@ public class PscMapperTest {
     }
 
     @Test
-    public void shouldMapLegalPscToPsc() throws Exception {
+    void shouldMapLegalPscToPsc() throws Exception {
 
         pscObject = createPscObject("legal-person-psc");
         FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
@@ -185,7 +185,7 @@ public class PscMapperTest {
     }
 
     @Test
-    public void shouldMapSuperSecurePscToPsc() throws Exception {
+    void shouldMapSuperSecurePscToPsc() throws Exception {
 
         pscObject = createPscObject("super-secure-psc");
         FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
@@ -217,7 +217,7 @@ public class PscMapperTest {
     }
 
     @Test
-    public void shouldMapIndividualBOToBO() throws Exception {
+    void shouldMapIndividualBOToBO() throws Exception {
 
         pscObject = createPscObject("individual-beneficial-owner");
         FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
@@ -259,7 +259,7 @@ public class PscMapperTest {
         assertEquals(dateOfBirth, sensitivedata.getDateOfBirth());
     }
 
-    public Address createServiceAddress() {
+    Address createServiceAddress() {
         Address serviceAddress = new Address();
 
         serviceAddress.setPremise("3");
@@ -275,7 +275,7 @@ public class PscMapperTest {
         return serviceAddress;
     }
 
-    public UsualResidentialAddress createURA() {
+    UsualResidentialAddress createURA() {
         UsualResidentialAddress ura = new UsualResidentialAddress();
 
         ura.setPremise("3");
@@ -291,7 +291,7 @@ public class PscMapperTest {
         return ura;
     }
 
-    public NameElements createNameElements() {
+    NameElements createNameElements() {
         NameElements nameElements = new NameElements();
 
         nameElements.setTitle("Mr");
@@ -302,7 +302,7 @@ public class PscMapperTest {
         return nameElements;
     }
 
-    public DateOfBirth createDateOfBirth() {
+    DateOfBirth createDateOfBirth() {
         DateOfBirth dateOfBirth = new DateOfBirth();
 
         dateOfBirth.setDay(12);
@@ -312,7 +312,7 @@ public class PscMapperTest {
         return dateOfBirth;
     }
 
-    public Psc createPscObject(String type) throws Exception {
+    Psc createPscObject(String type) throws Exception {
         mapper = new ObjectMapper();
 
         String testFilePath = String.format("%s-delta-example.json", type);

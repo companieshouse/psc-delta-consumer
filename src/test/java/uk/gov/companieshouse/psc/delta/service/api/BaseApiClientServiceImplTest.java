@@ -23,7 +23,7 @@ import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class BaseApiClientServiceImplTest {
+class BaseApiClientServiceImplTest {
 
     private BaseApiClientServiceImpl service;
 

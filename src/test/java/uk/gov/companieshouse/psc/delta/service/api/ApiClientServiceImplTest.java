@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-public class ApiClientServiceImplTest {
+class ApiClientServiceImplTest {
 
     private final String contextId = "testContext";
     private final String companyNumber = "test12345";
@@ -34,14 +34,14 @@ public class ApiClientServiceImplTest {
     private Logger logger;
 
     @BeforeEach
-    public void setUp(){
+    void setUp(){
         apiClientService = new ApiClientServiceImpl(logger);
         ReflectionTestUtils.setField(apiClientService, "chsApiKey", "testKey");
         ReflectionTestUtils.setField(apiClientService, "apiUrl", "http://localhost:8888");
     }
 
     @Test
-    public void returnOkResponseWhenValidPutRequestSentToApi(){
+    void returnOkResponseWhenValidPutRequestSentToApi(){
         final ApiResponse<Void> expectedResponse = new ApiResponse<>(HttpStatus.OK.value(), null, null);
         String expectedUri = String.format(uri, companyNumber, notficationId);
         ApiClientServiceImpl apiClientServiceSpy = Mockito.spy(apiClientService);

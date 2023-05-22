@@ -15,8 +15,6 @@ public class LoggingConfig {
     @Value("${logger.namespace}")
     private String loggerNamespace;
 
-    private static Logger staticLogger;
-
     /**
      * Main application logger with component specific namespace.
      *
@@ -24,13 +22,6 @@ public class LoggingConfig {
      */
     @Bean
     public Logger logger() {
-        Logger loggerBean = LoggerFactory.getLogger(loggerNamespace);
-        staticLogger = loggerBean;
-        return loggerBean;
-    }
-
-
-    public static Logger getLogger() {
-        return staticLogger;
+        return LoggerFactory.getLogger(loggerNamespace);
     }
 }
