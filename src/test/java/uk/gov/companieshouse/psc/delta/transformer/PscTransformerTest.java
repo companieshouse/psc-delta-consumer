@@ -22,19 +22,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
-public class PscTransformerTest {
+class PscTransformerTest {
 
     @Mock
     private PscMapper pscMapper;
     private PscApiTransformer transformer;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         transformer = new PscApiTransformer(pscMapper);
     }
 
     @Test
-    public void transformPscSuccessfully() {
+    void transformPscSuccessfully() {
         PscDelta input = new PscDelta();
         List<Psc> pscList = new ArrayList<>();
         pscList.add(new Psc());

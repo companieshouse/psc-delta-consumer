@@ -51,8 +51,7 @@ public class MapperUtils {
      */
     public static String encode(String unencodedString) {
         String salt = "ks734s_sdgOc4£b2";
-        String encodedString = Base64.getUrlEncoder().withoutPadding().encodeToString(
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(
                 DigestUtils.sha1(unencodedString + salt));
-        return encodedString;
     }
 }

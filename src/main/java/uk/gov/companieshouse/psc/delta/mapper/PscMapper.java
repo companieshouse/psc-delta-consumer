@@ -100,7 +100,7 @@ public interface PscMapper {
             links.setStatements(String
                     .format("/company/%s/persons-with-significant-control-statements/%s",
                             source.getCompanyNumber(),
-                            encodedStatementId)); ;
+                            encodedStatementId));
         }
         target.setLinks(Collections.singletonList(links));
     }
@@ -156,9 +156,7 @@ public interface PscMapper {
     /** encode psc_id. */
     @AfterMapping
     default void mapEncodedPscId(@MappingTarget ExternalData target, Psc source) {
-        if (source.getPscId() != null) {
-            target.setPscId(MapperUtils.encode(source.getPscId()));
-        }
+        target.setPscId(MapperUtils.encode(source.getPscId()));
     }
 
     /**
