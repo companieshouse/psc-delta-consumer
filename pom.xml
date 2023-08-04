@@ -19,6 +19,8 @@
         <spring-boot-maven-plugin.version>2.6.4</spring-boot-maven-plugin.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven-build-helper-plugin.version>3.2.0</maven-build-helper-plugin.version>
+        <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
         <jib-maven-plugin.version>3.1.1</jib-maven-plugin.version>
@@ -29,6 +31,7 @@
         <api-sdk-manager-java-library.version>1.0.4</api-sdk-manager-java-library.version>
         <map-struct.version>1.5.3.Final</map-struct.version>
         <api-helper-java-library.version>1.4.5</api-helper-java-library.version>
+        <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
 
         <!-- Tests -->
         <assertj-core.version>3.22.0</assertj-core.version>
