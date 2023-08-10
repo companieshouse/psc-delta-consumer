@@ -25,13 +25,11 @@
         "forename": "John",
         "middle_name": "Dave"
       },
-      "identification": {
-        "legal_form": "Form",
-        "legal_authority": "Authority",
-        "country_registered": "Wales",
-        "place_registered": "Cardiff",
-        "registration_number": "16102009"
-      },
+      "legal_form": "Form",
+      "legal_authority": "Authority",
+      "country_registered": "Wales",
+      "place_registered": "Cardiff",
+      "registration_number": "16102009",
       "nationality": "Welsh",
       "country_of_residence": "Wales",
       "natures_of_control": [
