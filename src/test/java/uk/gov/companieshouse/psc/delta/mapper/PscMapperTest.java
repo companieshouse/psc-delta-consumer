@@ -27,6 +27,7 @@ import uk.gov.companieshouse.api.psc.Data;
 import uk.gov.companieshouse.api.psc.DateOfBirth;
 import uk.gov.companieshouse.api.psc.ExternalData;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
+import uk.gov.companieshouse.api.psc.Identification;
 import uk.gov.companieshouse.api.psc.ItemLinkTypes;
 import uk.gov.companieshouse.api.psc.SensitiveData;
 import uk.gov.companieshouse.api.psc.UsualResidentialAddress;
@@ -43,6 +44,7 @@ class PscMapperTest {
     private UsualResidentialAddress usualResidentialAddress;
     private NameElements nameElements;
     private DateOfBirth dateOfBirth;
+    private Identification identification;
 
     @Autowired
     PscMapper pscMapper;
@@ -109,6 +111,7 @@ class PscMapperTest {
         ExternalData externalData = fullRecordCompanyPSCApi.getExternalData();
         Data data = externalData.getData();
         SensitiveData sensitivedata = externalData.getSensitiveData();
+        identification = createCorporateIdentification();
 
         fullRecordCompanyPSCApi.getExternalData().getData().setEtag(null);
 
@@ -123,6 +126,12 @@ class PscMapperTest {
         assertEquals("5", externalData.getInternalId());
         assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getNotificationId());
         assertEquals("00623672", externalData.getCompanyNumber());
+
+        assertEquals("Form", identification.getLegalForm());
+        assertEquals("Authority", identification.getLegalAuthority());
+        assertEquals("Wales", identification.getCountryRegistered());
+        assertEquals("Cardiff", identification.getPlaceRegistered());
+        assertEquals("16102009", identification.getRegistrationNumber());
 
         assertEquals(LocalDate.of(2018, 2, 1), data.getCeasedOn());
         assertEquals("corporate-entity-person-with-significant-control", data.getKind());
@@ -151,6 +160,7 @@ class PscMapperTest {
         ExternalData externalData = fullRecordCompanyPSCApi.getExternalData();
         Data data = externalData.getData();
         SensitiveData sensitivedata = externalData.getSensitiveData();
+        identification = createLegalIdentification();
 
         fullRecordCompanyPSCApi.getExternalData().getData().setEtag(null);
 
@@ -165,6 +175,9 @@ class PscMapperTest {
         assertEquals("5", externalData.getInternalId());
         assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getNotificationId());
         assertEquals("00623672", externalData.getCompanyNumber());
+
+        assertEquals("Form", identification.getLegalForm());
+        assertEquals("Authority", identification.getLegalAuthority());
 
         assertEquals(LocalDate.of(2018, 2, 1), data.getCeasedOn());
         assertEquals("legal-person-person-with-significant-control", data.getKind());
@@ -324,5 +337,28 @@ class PscMapperTest {
         pscObject = pscDeltaObject.getPscs().get(0);
 
         return pscObject;
+    }
+
+    Identification createCorporateIdentification() {
+
+        Identification identification = new Identification();
+
+        identification.setCountryRegistered("Wales");
+        identification.setLegalAuthority("Authority");
+        identification.setLegalForm("Form");
+        identification.setPlaceRegistered("Cardiff");
+        identification.setRegistrationNumber("16102009");
+
+        return identification;
+    }
+
+    Identification createLegalIdentification() {
+
+        Identification identification = new Identification();
+
+        identification.setLegalAuthority("Authority");
+        identification.setLegalForm("Form");
+
+        return identification;
     }
 }

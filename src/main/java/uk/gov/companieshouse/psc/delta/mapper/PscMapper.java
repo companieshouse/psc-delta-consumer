@@ -18,6 +18,7 @@ import uk.gov.companieshouse.api.psc.Data;
 import uk.gov.companieshouse.api.psc.DateOfBirth;
 import uk.gov.companieshouse.api.psc.ExternalData;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
+import uk.gov.companieshouse.api.psc.Identification;
 import uk.gov.companieshouse.api.psc.ItemLinkTypes;
 import uk.gov.companieshouse.api.psc.SensitiveData;
 
@@ -50,6 +51,8 @@ public interface PscMapper {
     @Mapping(target = "externalData.sensitiveData.dateOfBirth", ignore = true)
     @Mapping(target = "externalData.sensitiveData.usualResidentialAddress",
             source = "usualResidentialAddress")
+    @Mapping(target = "externalData.data.identification", ignore = true)
+    
     FullRecordCompanyPSCApi mapPscData(Psc psc);
 
     /** encode internal_id and map to id and notification_id. */
@@ -111,16 +114,26 @@ public interface PscMapper {
      * @param source Psc delta object that will be mapped from
      */
     @AfterMapping
-    default void mapKind(@MappingTarget Data target, Psc source) {
+    default void mapKindAndIdentification(@MappingTarget Data target, Psc source) {
+
+        Identification identification = new Identification();
+        target.setIdentification(identification);
         switch (source.getKind()) {
             case INDIVIDUAL:
                 target.setKind("individual-person-with-significant-control");
                 break;
             case CORPORATE_ENTITY:
                 target.setKind("corporate-entity-person-with-significant-control");
+                identification.setLegalAuthority(source.getLegalAuthority());
+                identification.setLegalForm(source.getLegalForm());
+                identification.setCountryRegistered(source.getCountryRegistered());
+                identification.setPlaceRegistered(source.getPlaceRegistered());
+                identification.setRegistrationNumber(source.getRegistrationNumber());
                 break;
             case LEGAL_PERSON:
                 target.setKind("legal-person-person-with-significant-control");
+                identification.setLegalAuthority(source.getLegalAuthority());
+                identification.setLegalForm(source.getLegalForm());
                 break;
             case SUPER_SECURE:
                 target.setKind("super-secure-person-with-significant-control");
@@ -130,9 +143,16 @@ public interface PscMapper {
                 break;
             case CORPORATE_BENEFICIAL_OWNER:
                 target.setKind("corporate-entity-beneficial-owner");
+                identification.setLegalAuthority(source.getLegalAuthority());
+                identification.setLegalForm(source.getLegalForm());
+                identification.setCountryRegistered(source.getCountryRegistered());
+                identification.setPlaceRegistered(source.getPlaceRegistered());
+                identification.setRegistrationNumber(source.getRegistrationNumber());
                 break;
             case LEGAL_PERSON_BENEFICIAL_OWNER:
                 target.setKind("legal-person-beneficial-owner");
+                identification.setLegalAuthority(source.getLegalAuthority());
+                identification.setLegalForm(source.getLegalForm());
                 break;
             case SUPER_SECURE_BENEFICIAL_OWNER:
                 target.setKind("super-secure-beneficial-owner");
