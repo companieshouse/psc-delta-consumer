@@ -68,13 +68,13 @@ public class PscSteps {
     public void aPutRequestIsSent() {
         output = TestData.getOutputData();
         verify(1, requestMadeFor(new RequestMatcher(logger, output,
-                "/company/34777772/persons-with-significant-control/ZfTs9WeeqpXTqf6dc6FZ4C0H0ZF",
-                List.of("data.etag", "deltaAt"))));
+                "/company/00623672/persons-with-significant-control/hZ_JFH9mW2suVRdVM7jm9w2MD10/full_record",
+                List.of("external_data.data.etag", "internal_data.delta_at"))));
     }
 
     private void stubPutStatement(int responseCode) {
         stubFor(put(urlEqualTo(
-                "/company/34777772/persons-with-significant-control/ZfTs9WeeqpXTqf6dc6FZ4C0H0ZF"))
+                "/company/00623672/persons-with-significant-control/hZ_JFH9mW2suVRdVM7jm9w2MD10/full_record"))
                 .willReturn(aResponse().withStatus(responseCode)));
     }
 
