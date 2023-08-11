@@ -1,6 +1,5 @@
 package uk.gov.companieshouse.psc.delta.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import uk.gov.companieshouse.logging.Logger;
@@ -12,9 +11,6 @@ import uk.gov.companieshouse.logging.LoggerFactory;
 @Configuration
 public class LoggingConfig {
 
-    @Value("${logger.namespace}")
-    private String loggerNamespace;
-
     /**
      * Main application logger with component specific namespace.
      *
@@ -22,6 +18,6 @@ public class LoggingConfig {
      */
     @Bean
     public Logger logger() {
-        return LoggerFactory.getLogger(loggerNamespace);
+        return LoggerFactory.getLogger("psc-delta-consumer");
     }
 }
