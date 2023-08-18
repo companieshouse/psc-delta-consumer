@@ -8,13 +8,13 @@ import java.io.InputStreamReader;
 
 public class TestData {
 
-    public static String getCompanyDelta() {
-        String path = "src/itest/resources/json/input/corporate_entity_BO_psc_delta.json";
+    public static String getCompanyDelta(String inputFile) {
+        String path = "src/itest/resources/json/input/" + inputFile;
         return readFile(path);
     }
 
-    public static String getOutputData() {
-        String path = "src/itest/resources/json/output/corporate_entity_BO_psc_expected_output.json";
+    public static String getOutputData(String outputFile) {
+        String path = "src/itest/resources/json/output/" + outputFile;
         return readFile(path);
     }
 

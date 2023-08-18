@@ -23,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class PscSteps {
 
     private static WireMockServer wireMockServer;
-    private String output;
 
     @Autowired
     private Logger logger;
@@ -40,6 +39,8 @@ public class PscSteps {
     @Value("${wiremock.server.port}")
     private String port;
 
+    private final String contextId = "123456789";
+
     public void sendMsgToKafkaTopic(String data) {
         kafkaTemplate.send(topic, data);
     }
@@ -50,31 +51,36 @@ public class PscSteps {
         configureFor("localhost", Integer.parseInt(port));
     }
 
+    private void shutdownWireMock(){
+        wireMockServer.shutdown();
+    }
+
     @Given("the application is running")
     public void theApplicationRunning() {
         assertThat(kafkaTemplate).isNotNull();
     }
 
-    @When("the consumer receives a message")
-    public void the_consumer_receives_a_message()  throws Exception {
+    @When("the consumer receives a message of kind {string} for company {string} with id {string}")
+    public void the_consumer_receives_a_message(String pscKind, String companyNumber, String pscId)  throws Exception {
         configureWireMock();
-        stubPutStatement(200);
-        ChsDelta delta = new ChsDelta(TestData.getCompanyDelta(), 1, "123456789", false);
+        stubPutStatement(companyNumber, pscId, 200);
+        ChsDelta delta = new ChsDelta(TestData.getCompanyDelta(pscKind + "_psc_delta.json"), 1, contextId, false);
         kafkaTemplate.send(topic, delta);
         countDown();
     }
 
-    @Then("a PUT request is sent to the psc api with the transformed data")
-    public void aPutRequestIsSent() {
-        output = TestData.getOutputData();
+    @Then("a PUT request is sent to the psc api with the transformed data for psc of kind {string} for company {string} with id {string}")
+    public void aPutRequestIsSent(String pscKind, String companyNumber, String pscId) {
+        String output = TestData.getOutputData(pscKind + "_psc_expected_output.json");
         verify(1, requestMadeFor(new RequestMatcher(logger, output,
-                "/company/00623672/persons-with-significant-control/hZ_JFH9mW2suVRdVM7jm9w2MD10/full_record",
+                "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record",
                 List.of("external_data.data.etag", "internal_data.delta_at"))));
+        shutdownWireMock();
     }
 
-    private void stubPutStatement(int responseCode) {
+    private void stubPutStatement(String companyNumber, String pscId, int responseCode) {
         stubFor(put(urlEqualTo(
-                "/company/00623672/persons-with-significant-control/hZ_JFH9mW2suVRdVM7jm9w2MD10/full_record"))
+                "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record"))
                 .willReturn(aResponse().withStatus(responseCode)));
     }
 

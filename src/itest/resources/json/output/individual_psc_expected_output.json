@@ -1,0 +1,79 @@
+{
+  "internal_data": {
+    "created_at": null,
+    "updated_at": null,
+    "updated_by": null
+  },
+  "external_data": {
+    "company_number": "00623672",
+    "id": "lXgouUAR16hSIwxdJSpbr_dhyT8",
+    "psc_id" : "AoRE4bhxdSdXur_NLdfh4JF81Y4",
+    "notification_id": "lXgouUAR16hSIwxdJSpbr_dhyT8",
+    "data" : {
+      "kind" : "individual-person-with-significant-control",
+      "service_address" : {
+        "premise": "3",
+        "address_line_1": "Clos Rhiannon",
+        "address_line_2": "Thornhill",
+        "locality": "Cardiff",
+        "country": "Wales",
+        "postal_code": "CF14 9HQ",
+        "region": "Here",
+        "care_of": "CareOf",
+        "po_box": "PoBox"
+      },
+      "name": "Mr John Dave Smith",
+      "natures_of_control": [
+        "OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"
+      ],
+      "links": [
+        {
+          "self": "/company/00623672/persons-with-significant-control/individual/lXgouUAR16hSIwxdJSpbr_dhyT8",
+          "statements": "/company/00623672/persons-with-significant-control-statements/w9h9A8B-F2rLh_r57J6zpKsyHrM"
+        }
+      ],
+      "ceased_on": [2018, 2, 1],
+      "notification_date": [2016, 1, 1],
+      "notified_on": [2016, 1, 1],
+      "company_number": null,
+      "country_of_residence": "Wales",
+      "description": null,
+      "identification": {
+        "country_registered": null,
+        "legal_authority": null,
+        "legal_form": null,
+        "place_registered": null,
+        "registration_number": null
+      },
+      "is_sanctioned": null,
+      "name_elements": {
+        "forename": "John",
+        "surname": "Smith",
+        "title": "Mr",
+        "middle_name": "Dave"
+      },
+      "nationality": "Welsh",
+      "service_address_same_as_registered_office_address": true
+    },
+    "internal_id": "5",
+    "sensitive_data": {
+      "date_of_birth": {
+        "day": 12,
+        "month": 7,
+        "year": 1994
+      },
+      "residential_address_same_as_service_address": true,
+      "usual_residential_address": {
+        "address_line_1": "Clos Rhiannon",
+        "address_line_2": "Thornhill",
+        "care_of": "CareOf",
+        "country": "Wales",
+        "locality": "Cardiff",
+        "po_box": "PoBox",
+        "postal_code": "CF14 9HQ",
+        "premise": "3",
+        "region": "Here"
+      }
+    }
+  }
+}
