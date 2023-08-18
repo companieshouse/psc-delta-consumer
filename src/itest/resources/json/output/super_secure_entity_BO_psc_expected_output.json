@@ -1,0 +1,48 @@
+{
+  "internal_data": {
+    "created_at": null,
+    "updated_at": null,
+    "updated_by": null
+  },
+  "external_data": {
+    "company_number": "00623672",
+    "id": "0ewxT9lV_MPjngrHhR-vsOUHOpo",
+    "psc_id" : "AoRE4bhxdSdXur_NLdfh4JF81Y4",
+    "notification_id": "0ewxT9lV_MPjngrHhR-vsOUHOpo",
+    "data" : {
+      "kind" : "super-secure-beneficial-owner",
+      "service_address" : null,
+      "name": null,
+      "natures_of_control": null,
+      "links": [
+        {
+          "self": "/company/00623672/persons-with-significant-control/super-secure-beneficial-owner/0ewxT9lV_MPjngrHhR-vsOUHOpo",
+          "statements": null
+        }
+      ],
+      "ceased_on": [2018, 2, 1],
+      "notification_date": null,
+      "notified_on": null,
+      "company_number": null,
+      "country_of_residence": null,
+      "description": null,
+      "identification": {
+        "country_registered": null,
+        "legal_authority": null,
+        "legal_form": null,
+        "place_registered": null,
+        "registration_number": null
+      },
+      "is_sanctioned": null,
+      "name_elements": null,
+      "nationality": null,
+      "service_address_same_as_registered_office_address": null
+    },
+    "internal_id": "8",
+    "sensitive_data": {
+      "date_of_birth": null,
+      "residential_address_same_as_service_address": null,
+      "usual_residential_address": null
+    }
+  }
+}
