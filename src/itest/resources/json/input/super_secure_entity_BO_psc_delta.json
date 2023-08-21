@@ -1,0 +1,13 @@
+{
+  "pscs": [
+    {
+      "company_number": "00623672",
+      "internal_id": "8",
+      "psc_id": "3",
+      "kind": "super-secure-beneficial-owner",
+      "ceased_on": "20180201"
+    }
+  ],
+  "CreatedTime": "28-APR-22 16.51.29.000000",
+  "delta_at": "20211029142043360560"
+}
