@@ -5,10 +5,15 @@ import consumer.matcher.RequestMatcher;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.test.utils.KafkaTestUtils;
+
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.psc.delta.data.TestData;
@@ -16,6 +21,7 @@ import uk.gov.companieshouse.psc.delta.data.TestData;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.StreamSupport;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -78,6 +84,51 @@ public class PscSteps {
         shutdownWireMock();
     }
 
+    @When("an invalid avro message is sent")
+    public void invalidAvroMessageIsSent() throws Exception {
+        kafkaTemplate.send(topic, "InvalidData");
+
+        countDown();
+    }
+
+    @When("a message with invalid data is sent")
+    public void messageWithInvalidDataIsSent() throws Exception {
+        ChsDelta delta = new ChsDelta("InvalidData", 1, "1", false);
+        kafkaTemplate.send(topic, delta);
+
+        countDown();
+    }
+
+    @When("the consumer receives a message but the api returns a (\\d*)$")
+    public void theConsumerReceivesMessageButDataApiReturns(int responseCode, String companyNumber, String pscId) throws Exception{
+        configureWireMock();
+        stubPutStatement(companyNumber, pscId, 200);
+        ChsDelta delta = new ChsDelta(TestData.getCompanyDelta("invidivual_psc_delta.json"), 1, "1", false);
+        kafkaTemplate.send(topic, delta);
+
+        countDown();
+    }
+
+    @Then("^the message should be moved to topic (.*)$")
+    public void theMessageShouldBeMovedToTopic(String topic) {
+        ConsumerRecord<String, Object> singleRecord = KafkaTestUtils.getSingleRecord(kafkaConsumer, topic);
+
+        assertThat(singleRecord.value()).isNotNull();
+    }
+
+    @Then("^the message should retry (\\d*) times and then error$")
+    public void theMessageShouldRetryAndError(int retries) {
+        ConsumerRecords<String, Object> records = KafkaTestUtils.getRecords(kafkaConsumer);
+        Iterable<ConsumerRecord<String, Object>> retryRecords =  records.records("company-psc-delta-retry");
+        Iterable<ConsumerRecord<String, Object>> errorRecords =  records.records("company-psc-delta-error");
+
+        int actualRetries = (int) StreamSupport.stream(retryRecords.spliterator(), false).count();
+        int errors = (int) StreamSupport.stream(errorRecords.spliterator(), false).count();
+
+        assertThat(actualRetries).isEqualTo(retries);
+        assertThat(errors).isEqualTo(1);
+    }
+
     private void stubPutStatement(String companyNumber, String pscId, int responseCode) {
         stubFor(put(urlEqualTo(
                 "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record"))
@@ -88,4 +139,5 @@ public class PscSteps {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         countDownLatch.await(5, TimeUnit.SECONDS);
     }
+
 }
