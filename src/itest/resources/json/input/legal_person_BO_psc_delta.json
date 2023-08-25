@@ -1,7 +1,7 @@
 {
   "pscs": [
     {
-      "company_number": "00623672",
+      "company_number": "OE623672",
       "internal_id": "7",
       "psc_id": "3",
       "kind": "legal-person-beneficial-owner",
@@ -19,14 +19,10 @@
         "care_of": "CareOf",
         "po_box": "PoBox"
       },
-      "name_elements": {
-        "title": "Mr",
-        "surname": "Smith",
-        "forename": "John",
-        "middle_name": "Dave"
-      },
-      "nationality": "Welsh",
-      "country_of_residence": "Wales",
+      "usual_residential_address": {},
+      "name": "King John Smith",
+      "legal_form": "Government",
+      "legal_authority": "Wales",
       "natures_of_control": [
         "OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"
       ]

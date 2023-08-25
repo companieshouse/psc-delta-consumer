@@ -5,7 +5,7 @@
     "updated_by": null
   },
   "external_data": {
-    "company_number": "00623672",
+    "company_number": "OE623672",
     "id": "ERyiOut_ZiY1GMAZbkeN6PLCDNc",
     "psc_id" : "AoRE4bhxdSdXur_NLdfh4JF81Y4",
     "notification_id": "ERyiOut_ZiY1GMAZbkeN6PLCDNc",
@@ -28,15 +28,15 @@
       ],
       "links": [
         {
-          "self": "/company/00623672/persons-with-significant-control/individual-beneficial-owner/ERyiOut_ZiY1GMAZbkeN6PLCDNc",
-          "statements": "/company/00623672/persons-with-significant-control-statements/w9h9A8B-F2rLh_r57J6zpKsyHrM"
+          "self": "/company/OE623672/persons-with-significant-control/individual-beneficial-owner/ERyiOut_ZiY1GMAZbkeN6PLCDNc",
+          "statements": "/company/OE623672/persons-with-significant-control-statements/w9h9A8B-F2rLh_r57J6zpKsyHrM"
         }
       ],
       "ceased_on": [2018, 2, 1],
       "notification_date": [2016, 1, 1],
       "notified_on": [2016, 1, 1],
       "company_number": null,
-      "country_of_residence": "Wales",
+      "country_of_residence": "Italy",
       "description": null,
       "identification": {
         "country_registered": null,
@@ -52,7 +52,7 @@
         "title": "Mr",
         "middle_name": "Dave"
       },
-      "nationality": "Welsh",
+      "nationality": "Italian",
       "service_address_same_as_registered_office_address": true
     },
     "internal_id": "4",

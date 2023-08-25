@@ -1,7 +1,7 @@
 {
   "pscs": [
     {
-      "company_number": "00623672",
+      "company_number": "OE623672",
       "internal_id": "4",
       "psc_id": "3",
       "kind": "individual-beneficial-owner",
@@ -37,8 +37,8 @@
         "middle_name": "Dave"
       },
       "date_of_birth": "19940712",
-      "nationality": "Welsh",
-      "country_of_residence": "Wales",
+      "nationality": "Italian",
+      "country_of_residence": "Italy",
       "natures_of_control": [
         "OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"
       ],
