@@ -24,7 +24,9 @@
       },
       "name": "Mr John Dave Smith",
       "natures_of_control": [
-        "OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"
+        "OWNERSHIPOFSHARES_75TO100PERCENT_AS_PERSON",
+        "VOTINGRIGHTS_75TO100PERCENT_AS_PERSON",
+        "RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_PERSON"
       ],
       "links": [
         {
