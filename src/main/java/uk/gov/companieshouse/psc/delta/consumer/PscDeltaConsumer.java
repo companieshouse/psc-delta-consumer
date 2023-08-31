@@ -42,6 +42,7 @@ public class PscDeltaConsumer {
             backoff = @Backoff(delayExpression = "${pscs.delta.backoff-delay}"),
             fixedDelayTopicStrategy = FixedDelayStrategy.SINGLE_TOPIC,
             dltTopicSuffix = "-error",
+            retryTopicSuffix = "-retry",
             dltStrategy = DltStrategy.FAIL_ON_ERROR,
             autoCreateTopics = "false",
             exclude = NonRetryableErrorException.class)

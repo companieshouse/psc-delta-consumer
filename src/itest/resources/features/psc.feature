@@ -18,19 +18,19 @@ Feature: Psc delta
   Scenario: Process invalid avro message
     Given the application is running
     When an invalid avro message is sent
-    Then the message should be moved to topic company-psc-delta-invalid
+    Then the message should be moved to topic psc-delta-invalid
 
   Scenario: Process message with invalid data
     Given the application is running
     When a message with invalid data is sent
-    Then the message should be moved to topic company-psc-delta-invalid
+    Then the message should be moved to topic psc-delta-invalid
 
   Scenario: Process message when the api returns 400
     Given the application is running
-    When the consumer receives a message but the api returns a 400
-    Then the message should be moved to topic company-psc-delta-invalid
+    When the consumer receives a message for company "<companyNumber>" with id "<pscId>" but the api returns a 400
+    Then the message should be moved to topic psc-delta-invalid
 
   Scenario: Process message when the api returns 503
     Given the application is running
-    When the consumer receives a message but the api returns a 503
+    When the consumer receives a message for company "<companyNumber>" with id "<pscId>" but the api returns a 503
     Then the message should retry 3 times and then error

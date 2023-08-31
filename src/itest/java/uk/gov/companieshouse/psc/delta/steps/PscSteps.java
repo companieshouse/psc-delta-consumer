@@ -2,6 +2,7 @@ package uk.gov.companieshouse.psc.delta.steps;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import consumer.matcher.RequestMatcher;
+import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -57,10 +58,6 @@ public class PscSteps {
         configureFor("localhost", Integer.parseInt(port));
     }
 
-    private void shutdownWireMock(){
-        wireMockServer.shutdown();
-    }
-
     @Given("the application is running")
     public void theApplicationRunning() {
         assertThat(kafkaTemplate).isNotNull();
@@ -81,7 +78,6 @@ public class PscSteps {
         verify(1, requestMadeFor(new RequestMatcher(logger, output,
                 "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record",
                 List.of("external_data.data.etag", "internal_data.delta_at"))));
-        shutdownWireMock();
     }
 
     @When("an invalid avro message is sent")
@@ -99,11 +95,11 @@ public class PscSteps {
         countDown();
     }
 
-    @When("the consumer receives a message but the api returns a (\\d*)$")
-    public void theConsumerReceivesMessageButDataApiReturns(int responseCode, String companyNumber, String pscId) throws Exception{
+    @When("the consumer receives a message for company {string} with id {string} but the api returns a {int}")
+    public void theConsumerReceivesMessageButDataApiReturns(String companyNumber, String pscId, int responseCode) throws Exception{
         configureWireMock();
         stubPutStatement(companyNumber, pscId, 200);
-        ChsDelta delta = new ChsDelta(TestData.getCompanyDelta("invidivual_psc_delta.json"), 1, "1", false);
+        ChsDelta delta = new ChsDelta(TestData.getCompanyDelta("invidivual_psc_delta.json"), 1, contextId, false);
         kafkaTemplate.send(topic, delta);
 
         countDown();
@@ -119,8 +115,8 @@ public class PscSteps {
     @Then("^the message should retry (\\d*) times and then error$")
     public void theMessageShouldRetryAndError(int retries) {
         ConsumerRecords<String, Object> records = KafkaTestUtils.getRecords(kafkaConsumer);
-        Iterable<ConsumerRecord<String, Object>> retryRecords =  records.records("company-psc-delta-retry");
-        Iterable<ConsumerRecord<String, Object>> errorRecords =  records.records("company-psc-delta-error");
+        Iterable<ConsumerRecord<String, Object>> retryRecords =  records.records("psc-delta-retry");
+        Iterable<ConsumerRecord<String, Object>> errorRecords =  records.records("psc-delta-error");
 
         int actualRetries = (int) StreamSupport.stream(retryRecords.spliterator(), false).count();
         int errors = (int) StreamSupport.stream(errorRecords.spliterator(), false).count();
@@ -129,6 +125,12 @@ public class PscSteps {
         assertThat(errors).isEqualTo(1);
     }
 
+    @After
+    public void shutdownWiremock(){
+        if (wireMockServer != null)
+            wireMockServer.stop();
+    }
+    
     private void stubPutStatement(String companyNumber, String pscId, int responseCode) {
         stubFor(put(urlEqualTo(
                 "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record"))
