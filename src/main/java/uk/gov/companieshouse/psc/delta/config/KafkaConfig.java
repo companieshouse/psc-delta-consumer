@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.psc.delta.config;
 
 import consumer.deserialization.AvroDeserializer;
+import consumer.exception.TopicErrorInterceptor;
 import consumer.serialization.AvroSerializer;
 
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class KafkaConfig {
 
     private final AvroSerializer serializer;
     private final AvroDeserializer<ChsDelta> deserializer;
-
+    private final Integer listenerConcurrency;
     private final String bootstrapServers;
 
     /**
@@ -42,10 +43,12 @@ public class KafkaConfig {
     @Autowired
     public KafkaConfig(AvroDeserializer<ChsDelta> deserializer,
                        AvroSerializer serializer,
-                       @Value("${spring.kafka.bootstrap-servers}") String bootstrapServers) {
+                       @Value("${spring.kafka.bootstrap-servers}") String bootstrapServers,
+                       @Value("${spring.kafka.listener.concurrency}") Integer listenerConcurrency) {
         this.serializer = serializer;
         this.deserializer = deserializer;
         this.bootstrapServers = bootstrapServers;
+        this.listenerConcurrency = listenerConcurrency;
     }
 
     /**
@@ -66,6 +69,8 @@ public class KafkaConfig {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, AvroSerializer.class);
+        props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,
+                TopicErrorInterceptor.class.getName());
         return new DefaultKafkaProducerFactory<>(
                 props, new StringSerializer(), serializer);
     }
@@ -83,6 +88,7 @@ public class KafkaConfig {
         ConcurrentKafkaListenerContainerFactory<String, ChsDelta> factory
                 = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(kafkaConsumerFactory());
+        factory.setConcurrency(listenerConcurrency);
         factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.RECORD);
 
         return factory;

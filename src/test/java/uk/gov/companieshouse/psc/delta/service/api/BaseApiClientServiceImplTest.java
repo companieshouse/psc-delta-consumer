@@ -2,6 +2,10 @@ package uk.gov.companieshouse.psc.delta.service.api;
 
 import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpResponseException.Builder;
+
+import consumer.exception.NonRetryableErrorException;
+import consumer.exception.RetryableErrorException;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,8 +15,6 @@ import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.Executor;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.ApiResponse;
-import uk.gov.companieshouse.psc.delta.exception.NonRetryableErrorException;
-import uk.gov.companieshouse.psc.delta.exception.RetryableErrorException;
 
 import uk.gov.companieshouse.logging.Logger;
 

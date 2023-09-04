@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.psc.delta.mapper;
 
+import consumer.exception.NonRetryableErrorException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -8,9 +9,7 @@ import java.util.Base64;
 import java.util.Locale;
 
 import org.apache.commons.codec.digest.DigestUtils;
-
 import org.springframework.stereotype.Component;
-import uk.gov.companieshouse.psc.delta.exception.NonRetryableErrorException;
 
 @Component
 public class MapperUtils {

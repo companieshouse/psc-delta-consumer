@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.psc.delta.consumer;
 
+import consumer.exception.NonRetryableErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
@@ -13,7 +14,6 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
-import uk.gov.companieshouse.psc.delta.exception.NonRetryableErrorException;
 import uk.gov.companieshouse.psc.delta.processor.PscDeltaProcessor;
 
 @Component
@@ -42,6 +42,7 @@ public class PscDeltaConsumer {
             backoff = @Backoff(delayExpression = "${pscs.delta.backoff-delay}"),
             fixedDelayTopicStrategy = FixedDelayStrategy.SINGLE_TOPIC,
             dltTopicSuffix = "-error",
+            retryTopicSuffix = "-retry",
             dltStrategy = DltStrategy.FAIL_ON_ERROR,
             autoCreateTopics = "false",
             exclude = NonRetryableErrorException.class)

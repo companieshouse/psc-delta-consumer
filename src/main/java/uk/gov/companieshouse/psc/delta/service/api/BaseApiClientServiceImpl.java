@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.psc.delta.service.api;
 
+import consumer.exception.NonRetryableErrorException;
+import consumer.exception.RetryableErrorException;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
@@ -8,8 +10,7 @@ import uk.gov.companieshouse.api.handler.Executor;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.logging.Logger;
-import uk.gov.companieshouse.psc.delta.exception.NonRetryableErrorException;
-import uk.gov.companieshouse.psc.delta.exception.RetryableErrorException;
+
 
 public abstract class BaseApiClientServiceImpl {
     protected Logger logger;
