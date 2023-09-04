@@ -22,5 +22,3 @@ api:
 
 logger:
   namespace: psc-delta-consumer
-
-debug: true
