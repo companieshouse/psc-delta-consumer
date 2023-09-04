@@ -63,7 +63,7 @@ public class PscSteps {
         assertThat(kafkaTemplate).isNotNull();
     }
 
-    @When("the consumer receives a message of kind {string} for company {string} with id {string}")
+    @When("the consumer receives a message of kind {string} for company {string} with psc id {string}")
     public void the_consumer_receives_a_message(String pscKind, String companyNumber, String pscId)  throws Exception {
         configureWireMock();
         stubPutStatement(companyNumber, pscId, 200);
@@ -95,11 +95,11 @@ public class PscSteps {
         countDown();
     }
 
-    @When("the consumer receives a message for company {string} with id {string} but the api returns a {int}")
-    public void theConsumerReceivesMessageButDataApiReturns(String companyNumber, String pscId, int responseCode) throws Exception{
+    @When("the consumer receives a message for company {string} with notification id {string} but the api returns a {int}")
+    public void theConsumerReceivesMessageButDataApiReturns(String companyNumber, String notificationId, int responseCode) throws Exception{
         configureWireMock();
-        stubPutStatement(companyNumber, pscId, 200);
-        ChsDelta delta = new ChsDelta(TestData.getCompanyDelta("invidivual_psc_delta.json"), 1, contextId, false);
+        stubPutStatement(companyNumber, notificationId, responseCode);
+        ChsDelta delta = new ChsDelta(TestData.getCompanyDelta("individual_psc_delta.json"), 1, contextId, false);
         kafkaTemplate.send(topic, delta);
 
         countDown();
@@ -131,9 +131,9 @@ public class PscSteps {
             wireMockServer.stop();
     }
     
-    private void stubPutStatement(String companyNumber, String pscId, int responseCode) {
+    private void stubPutStatement(String companyNumber, String notificationId, int responseCode) {
         stubFor(put(urlEqualTo(
-                "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record"))
+                "/company/" + companyNumber + "/persons-with-significant-control/" + notificationId + "/full_record"))
                 .willReturn(aResponse().withStatus(responseCode)));
     }
 

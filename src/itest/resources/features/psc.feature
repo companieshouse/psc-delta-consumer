@@ -1,7 +1,7 @@
 Feature: Psc delta
   Scenario: Can transform and send a company profile of kind "<pscKind>"
     Given the application is running
-    When the consumer receives a message of kind "<pscKind>" for company "<companyNumber>" with id "<pscId>"
+    When the consumer receives a message of kind "<pscKind>" for company "<companyNumber>" with psc id "<pscId>"
     Then a PUT request is sent to the psc api with the transformed data for psc of kind "<pscKind>" for company "<companyNumber>" with id "<pscId>"
 
     Examples:
@@ -27,10 +27,10 @@ Feature: Psc delta
 
   Scenario: Process message when the api returns 400
     Given the application is running
-    When the consumer receives a message for company "<companyNumber>" with id "<pscId>" but the api returns a 400
+    When the consumer receives a message for company "00623672" with notification id "lXgouUAR16hSIwxdJSpbr_dhyT8" but the api returns a 400
     Then the message should be moved to topic psc-delta-invalid
 
   Scenario: Process message when the api returns 503
     Given the application is running
-    When the consumer receives a message for company "<companyNumber>" with id "<pscId>" but the api returns a 503
+    When the consumer receives a message for company "00623672" with notification id "lXgouUAR16hSIwxdJSpbr_dhyT8" but the api returns a 503
     Then the message should retry 3 times and then error
