@@ -19,16 +19,17 @@
         "care_of": "CareOf",
         "po_box": "PoBox"
       },
-      "name_elements": {
-        "title": "Mr",
-        "surname": "Smith",
-        "forename": "John",
-        "middle_name": "Dave"
-      },
-      "nationality": "Welsh",
-      "country_of_residence": "Wales",
+      "usual_residential_address": {},
+      "name": "John Smith Limited",
+      "legal_form": "Limited By Shares",
+      "legal_authority": "United Kingdom (England And Wales)",
+      "place_registered": "United Kingdom (England And Wales) Companies House",
+      "registration_number": "10203040",
+      "country_registered": "United Kingdom",
       "natures_of_control": [
-        "OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"
+        "OWNERSHIPOFSHARES_75TO100PERCENT_AS_PERSON",
+        "VOTINGRIGHTS_75TO100PERCENT_AS_PERSON",
+        "RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_PERSON"
       ]
     }
   ],

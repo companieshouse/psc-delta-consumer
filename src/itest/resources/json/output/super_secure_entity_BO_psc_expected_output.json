@@ -5,7 +5,7 @@
     "updated_by": null
   },
   "external_data": {
-    "company_number": "00623672",
+    "company_number": "OE623672",
     "id": "0ewxT9lV_MPjngrHhR-vsOUHOpo",
     "psc_id" : "AoRE4bhxdSdXur_NLdfh4JF81Y4",
     "notification_id": "0ewxT9lV_MPjngrHhR-vsOUHOpo",
@@ -16,7 +16,7 @@
       "natures_of_control": null,
       "links": [
         {
-          "self": "/company/00623672/persons-with-significant-control/super-secure-beneficial-owner/0ewxT9lV_MPjngrHhR-vsOUHOpo",
+          "self": "/company/OE623672/persons-with-significant-control/super-secure-beneficial-owner/0ewxT9lV_MPjngrHhR-vsOUHOpo",
           "statements": null
         }
       ],
