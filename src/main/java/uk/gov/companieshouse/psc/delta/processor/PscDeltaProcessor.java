@@ -51,7 +51,7 @@ public class PscDeltaProcessor {
             logger.trace(format("Successfully extracted psc delta of %s",
                     pscDelta.toString()));
         } catch (Exception ex) {
-            logger.error(format("Non-retryable exception occurred", ex));
+            logger.error(format(ex.getMessage()));
             throw new NonRetryableErrorException(
                     "Error when extracting psc delta", ex);
         }
@@ -63,7 +63,7 @@ public class PscDeltaProcessor {
             logger.info(format("Successfully transformed psc. Api object: %s",
                     fullRecordCompanyPscApi));
         } catch (Exception ex) {
-            logger.error(format("Non-retryable exception occurred", ex));
+            logger.error(format(ex.getMessage()));
             throw new NonRetryableErrorException(
                     "Error when transforming into api object", ex);
         }
