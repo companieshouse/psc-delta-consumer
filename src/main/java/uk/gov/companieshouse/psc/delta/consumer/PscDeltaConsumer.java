@@ -49,7 +49,8 @@ public class PscDeltaConsumer {
             groupId = "${pscs.delta.group-id}",
             containerFactory = "listenerContainerFactory")
     public void receiveMainMessages(Message<ChsDelta> chsDeltaMessage) {
-        logger.info("Starting processing a psc delta", DataMapHolder.getLogMap());
+        logger.infoContext(chsDeltaMessage.getPayload().getContextId(),
+                "Starting processing a psc delta", DataMapHolder.getLogMap());
         pscDeltaProcessor.processDelta(chsDeltaMessage);
     }
 }

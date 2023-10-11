@@ -41,9 +41,6 @@ public class PscDeltaProcessor {
 
         final ChsDelta payload = chsDelta.getPayload();
         final String contextId = payload.getContextId();
-
-        logger.info(format("Successfully extracted Chs Delta with context_id %s", contextId));
-
         PscDelta pscDelta;
         try {
             pscDelta = new ObjectMapper().readValue(payload.getData(), PscDelta.class);
@@ -56,7 +53,7 @@ public class PscDeltaProcessor {
             logger.infoContext(contextId, "Successfully extracted psc delta",
                     DataMapHolder.getLogMap());
         } catch (Exception ex) {
-            logger.error(format(ex.getMessage()));
+            logger.errorContext(contextId, ex.getMessage(), ex, DataMapHolder.getLogMap());
             throw new NonRetryableErrorException("Error when extracting psc delta", ex);
         }
 
@@ -66,7 +63,7 @@ public class PscDeltaProcessor {
             logger.infoContext(contextId, "Successfully transformed psc",
                     DataMapHolder.getLogMap());
         } catch (Exception ex) {
-            logger.error(format(ex.getMessage()));
+            logger.errorContext(contextId, ex.getMessage(), ex, DataMapHolder.getLogMap());
             throw new NonRetryableErrorException("Error when transforming into api object", ex);
         }
 
