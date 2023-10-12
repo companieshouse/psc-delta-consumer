@@ -7,13 +7,12 @@ import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.retrytopic.DltStrategy;
 import org.springframework.kafka.retrytopic.FixedDelayStrategy;
-import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.psc.delta.logging.DataMapHolder;
 import uk.gov.companieshouse.psc.delta.processor.PscDeltaProcessor;
 
 @Component
@@ -49,10 +48,9 @@ public class PscDeltaConsumer {
     @KafkaListener(topics = "${pscs.delta.topic}",
             groupId = "${pscs.delta.group-id}",
             containerFactory = "listenerContainerFactory")
-    public void receiveMainMessages(Message<ChsDelta> chsDeltaMessage,
-                                    @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
-        logger.info("A new message read from " + topic + " topic with payload: "
-                    + chsDeltaMessage.getPayload());
+    public void receiveMainMessages(Message<ChsDelta> chsDeltaMessage) {
+        logger.infoContext(chsDeltaMessage.getPayload().getContextId(),
+                "Starting processing a psc delta", DataMapHolder.getLogMap());
         pscDeltaProcessor.processDelta(chsDeltaMessage);
     }
 }

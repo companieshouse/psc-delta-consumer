@@ -1,5 +1,5 @@
 Feature: Psc delta
-  Scenario: Can transform and send a company profile of kind "<pscKind>"
+  Scenario Outline: Can transform and send a company profile of kind "<pscKind>"
     Given the application is running
     When the consumer receives a message of kind "<pscKind>" for company "<companyNumber>" with psc id "<pscId>"
     Then a PUT request is sent to the psc api with the transformed data for psc of kind "<pscKind>" for company "<companyNumber>" with id "<pscId>"
