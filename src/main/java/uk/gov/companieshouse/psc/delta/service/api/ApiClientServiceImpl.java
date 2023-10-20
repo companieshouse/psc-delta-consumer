@@ -73,6 +73,20 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
         return httpClient;
     }
 
+    @Override
+    public ApiResponse<Void> deletePscFullRecord(String log, String pscId) {
+
+        final String uri = String.format(
+                "/company/%s/persons-with-significant-control/%s/delete", pscId);
+        
+        Map<String,Object> logMap = createLogMap(pscId, "DELETE", uri);
+        logger.infoContext(log, String.format("Delete %s", uri), logMap);
+
+        return executeOp(log, "deletePscFullRecord", uri, 
+                getApiClient(log).privatePscFullRecordResourceHandler()
+                    .deletePscFullRecord(uri));
+    }
+    
     private Map<String, Object> createLogMap(String consumerId, String method, String path) {
         final Map<String, Object> logMap = new HashMap<>();
         logMap.put("id", consumerId);
