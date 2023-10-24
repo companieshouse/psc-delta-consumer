@@ -73,10 +73,10 @@ public class PscSteps {
     }
 
     @When("the consumer receives a delete payload")
-    public void theConsumerReceivesDelete(String companyNumber, String pscId) throws Exception {
+    public void theConsumerReceivesDelete() throws Exception {
         configureWireMock();
-        stubDeleteStatement(companyNumber, pscId, 200);
-        ChsDelta delta = new ChsDelta(TestData.getCompanyDelta(pscId), 1, "1", true);
+        stubDeleteStatement(200);
+        ChsDelta delta = new ChsDelta(TestData.getDeleteData(), 1, "1", true);
         kafkaTemplate.send(topic, delta);
         countDown();
     }
@@ -116,10 +116,10 @@ public class PscSteps {
     }
 
     @When("^the consumer receives a delete message but the data api returns a (\\d*)$")
-    public void theConsumerReceivesDeleteMessageButDataApiReturns(String companyNumber, String pscId, int responseCode) throws Exception{
+    public void theConsumerReceivesDeleteMessageButDataApiReturns(int responseCode) throws Exception{
         configureWireMock();
-        stubDeleteStatement(companyNumber, pscId, responseCode);
-        ChsDelta delta = new ChsDelta(TestData.getCompanyDelta("psc_delete_delta.json"), 1, "1", true);
+        stubDeleteStatement(responseCode);
+        ChsDelta delta = new ChsDelta(TestData.getDeleteData(), 1, "1", true);
         kafkaTemplate.send(topic, delta);
 
         countDown();
@@ -154,9 +154,9 @@ public class PscSteps {
     }
 
     @Then("a DELETE request is sent to the psc data api with the encoded Id")
-    public void deleteRequestIsSent(String companyNumber, String pscId) {
+    public void deleteRequestIsSent() {
         verify(1, deleteRequestedFor(urlMatching(
-                "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/delete")));
+                "/company/OE623672/persons-with-significant-control/3/delete")));
     }
 
     @After
@@ -171,9 +171,9 @@ public class PscSteps {
                 .willReturn(aResponse().withStatus(responseCode)));
     }
 
-    private void stubDeleteStatement(String companyNumber, String notificationId, int responseCode) {
+    private void stubDeleteStatement(int responseCode) {
         stubFor(delete(urlEqualTo(
-                "/company/" + companyNumber + "/persons-with-significant-control/" + notificationId + "/delete"))
+                "/company/OE623672/persons-with-significant-control/3/delete"))
                 .willReturn(aResponse().withStatus(responseCode)));
     }
 

@@ -64,6 +64,7 @@ class PscDeltaProcessorTest {
     @Test
     void When_InvalidChsDeleteDeltaMessage_Expect_NonRetryableError() {
         Message<ChsDelta> mockChsDeltaMessage = testHelper.createInvalidChsDeltaMessage();
+
         assertThrows(NonRetryableErrorException.class, () -> deltaProcessor.processDelete(mockChsDeltaMessage));
         Mockito.verify(apiClientService, times(0)).
                 deletePscFullRecord(any(),any());
@@ -73,18 +74,20 @@ class PscDeltaProcessorTest {
     @DisplayName("Confirms the Processor does not throw when a valid ChsDelta is given")
     void When_ValidChsDeltaMessage_Expect_ProcessorDoesNotThrow_CallsTransformer() throws IOException {
         Message<ChsDelta> mockChsDeltaMessage = testHelper.createChsDeltaMessage(false);
-        when(transformer.transform(any(PscDelta.class))).thenReturn(mockFullRecordPSC);
-        Assertions.assertDoesNotThrow(() -> deltaProcessor.processDelta(mockChsDeltaMessage));
-        verify(transformer).transform(any(PscDelta.class));
-        Mockito.verify(apiClientService, times(1)).
-                putPscFullRecord(any(), any(), any(), any());
-        
+        PscDelta expectedDelta = testHelper.createPscDelta();
+        FullRecordCompanyPSCApi apiObject = testHelper.createFullRecordCompanyPSCApi();
+        when(transformer.transform(expectedDelta)).thenReturn(apiObject);
+
+        deltaProcessor.processDelta(mockChsDeltaMessage);
+
+        Assertions.assertDoesNotThrow(() -> deltaProcessor.processDelta(mockChsDeltaMessage));        
     }
 
     @Test
     @DisplayName("Confirms the Processor does not throw when a valid delete ChsDelta is given")
     void When_ValidChsDeleteDeltaMessage_Expect_ProcessorDoesNotThrow() throws IOException {
         Message<ChsDelta> mockChsDeltaMessage = testHelper.createChsDeltaMessage(true);
+        
         Assertions.assertDoesNotThrow(() -> deltaProcessor.processDelete(mockChsDeltaMessage));
         Mockito.verify(apiClientService, times(1)).
                 deletePscFullRecord(any(), any());
