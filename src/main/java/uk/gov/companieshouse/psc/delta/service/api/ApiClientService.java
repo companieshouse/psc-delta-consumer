@@ -25,5 +25,5 @@ public interface ApiClientService {
     /**
      * Delete PSC full record.
      */
-    ApiResponse<Void> deletePscFullRecord(final String log, final String pscId);
+    ApiResponse<Void> deletePscFullRecord(final String log, final String pscId, final String companyNumber);
 }

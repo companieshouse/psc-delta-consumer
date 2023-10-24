@@ -67,7 +67,7 @@ class PscDeltaProcessorTest {
 
         assertThrows(NonRetryableErrorException.class, () -> deltaProcessor.processDelete(mockChsDeltaMessage));
         Mockito.verify(apiClientService, times(0)).
-                deletePscFullRecord(any(),any());
+                deletePscFullRecord(any(), any(),any());
     }
 
     @Test
@@ -90,6 +90,6 @@ class PscDeltaProcessorTest {
         
         Assertions.assertDoesNotThrow(() -> deltaProcessor.processDelete(mockChsDeltaMessage));
         Mockito.verify(apiClientService, times(1)).
-                deletePscFullRecord(any(), any());
+                deletePscFullRecord(any(), any(), any());
     }
 }
