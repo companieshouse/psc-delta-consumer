@@ -94,8 +94,9 @@ public class PscDeltaProcessor {
         logger.info(String.format("PscDeleteDelta extracted for context ID"
                 + " [%s] Kafka message: [%s]", logContext, pscDelete));
         pscId = MapperUtils.encode(pscDelete.getPscId());
+        final String companyNumber = pscDelete.getCompanyNumber();
         logger.info(String.format(
                 "Performing a DELETE for PSC id: [%s]", pscId));
-        apiClientService.deletePscFullRecord(logContext, pscId);
+        apiClientService.deletePscFullRecord(logContext, pscId, companyNumber);
     }
 }
