@@ -74,12 +74,20 @@ public interface PscMapper {
      */
     @AfterMapping
     default void mapName(@MappingTarget Data target, Psc source) {
-        NameElements nameElements = source.getNameElements();
-
-        if (nameElements != null) {
-            target.setName(Stream.of(nameElements.getTitle(), nameElements.getForename(),
-                            nameElements.getMiddleName(), nameElements.getSurname())
-                    .filter(Objects::nonNull).collect(Collectors.joining(" ")));
+        Psc.KindEnum kind = source.getKind();
+        if (kind.equals(Psc.KindEnum.INDIVIDUAL)
+                || kind.equals(Psc.KindEnum.INDIVIDUAL_BENEFICIAL_OWNER)) {
+            NameElements nameElements = source.getNameElements();
+            if (nameElements != null) {
+                target.setName(Stream.of(
+                                nameElements.getTitle(),
+                                nameElements.getForename(),
+                                nameElements.getMiddleName(),
+                                nameElements.getSurname())
+                        .filter(Objects::nonNull).collect(Collectors.joining(" ")));
+            }
+        } else {
+            target.setName(source.getName());
         }
     }
 

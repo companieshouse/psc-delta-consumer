@@ -22,7 +22,7 @@
         "care_of": "CareOf",
         "po_box": "PoBox"
       },
-      "name": null,
+      "name": "John Smith Limited",
       "natures_of_control": [
         "OWNERSHIPOFSHARES_75TO100PERCENT_AS_PERSON",
         "VOTINGRIGHTS_75TO100PERCENT_AS_PERSON",
