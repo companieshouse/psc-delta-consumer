@@ -72,12 +72,22 @@ public class PscSteps {
         countDown();
     }
 
-    @Then("a PUT request is sent to the psc api with the transformed data for psc of kind {string} for company {string} with id {string}")
-    public void aPutRequestIsSent(String pscKind, String companyNumber, String pscId) {
-        String output = TestData.getOutputData(pscKind + "_psc_expected_output.json");
-        verify(1, requestMadeFor(new RequestMatcher(logger, output,
-                "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record",
-                List.of("external_data.data.etag", "internal_data.delta_at"))));
+    @When("the consumer receives a delete payload")
+    public void theConsumerReceivesDelete(String companyNumber, String pscId) throws Exception {
+        configureWireMock();
+        stubDeleteStatement(companyNumber, pscId, 200);
+        ChsDelta delta = new ChsDelta(TestData.getCompanyDelta(pscId), 1, "1", true);
+        kafkaTemplate.send(topic, delta);
+        countDown();
+    }
+
+    @When("the consumer receives an invalid delete payload")
+    public void theConsumerReceivesInvalidDelete() throws Exception {
+        configureWireMock();
+        ChsDelta delta = new ChsDelta("invalid", 1, "1", true);
+        kafkaTemplate.send(topic, delta);
+
+        countDown();
     }
 
     @When("an invalid avro message is sent")
@@ -105,6 +115,24 @@ public class PscSteps {
         countDown();
     }
 
+    @When("^the consumer receives a delete message but the data api returns a (\\d*)$")
+    public void theConsumerReceivesDeleteMessageButDataApiReturns(String companyNumber, String pscId, int responseCode) throws Exception{
+        configureWireMock();
+        stubDeleteStatement(companyNumber, pscId, responseCode);
+        ChsDelta delta = new ChsDelta(TestData.getCompanyDelta("psc_delete_delta.json"), 1, "1", true);
+        kafkaTemplate.send(topic, delta);
+
+        countDown();
+    }
+
+     @Then("a PUT request is sent to the psc api with the transformed data for psc of kind {string} for company {string} with id {string}")
+    public void aPutRequestIsSent(String pscKind, String companyNumber, String pscId) {
+        String output = TestData.getOutputData(pscKind + "_psc_expected_output.json");
+        verify(1, requestMadeFor(new RequestMatcher(logger, output,
+                "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record",
+                List.of("external_data.data.etag", "internal_data.delta_at"))));
+    }
+
     @Then("^the message should be moved to topic (.*)$")
     public void theMessageShouldBeMovedToTopic(String topic) {
         ConsumerRecord<String, Object> singleRecord = KafkaTestUtils.getSingleRecord(kafkaConsumer, topic);
@@ -125,6 +153,12 @@ public class PscSteps {
         assertThat(errors).isEqualTo(1);
     }
 
+    @Then("a DELETE request is sent to the psc data api with the encoded Id")
+    public void deleteRequestIsSent(String companyNumber, String pscId) {
+        verify(1, deleteRequestedFor(urlMatching(
+                "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/delete")));
+    }
+
     @After
     public void shutdownWiremock(){
         if (wireMockServer != null)
@@ -134,6 +168,12 @@ public class PscSteps {
     private void stubPutStatement(String companyNumber, String notificationId, int responseCode) {
         stubFor(put(urlEqualTo(
                 "/company/" + companyNumber + "/persons-with-significant-control/" + notificationId + "/full_record"))
+                .willReturn(aResponse().withStatus(responseCode)));
+    }
+
+    private void stubDeleteStatement(String companyNumber, String notificationId, int responseCode) {
+        stubFor(delete(urlEqualTo(
+                "/company/" + companyNumber + "/persons-with-significant-control/" + notificationId + "/delete"))
                 .willReturn(aResponse().withStatus(responseCode)));
     }
 
