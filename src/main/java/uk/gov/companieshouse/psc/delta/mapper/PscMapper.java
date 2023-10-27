@@ -141,7 +141,7 @@ public interface PscMapper {
             case INDIVIDUAL_BENEFICIAL_OWNER:
                 target.setKind("individual-beneficial-owner");
                 break;
-            case CORPORATE_BENEFICIAL_OWNER:
+            case CORPORATE_ENTITY_BENEFICIAL_OWNER:
                 target.setKind("corporate-entity-beneficial-owner");
                 identification.setLegalAuthority(source.getLegalAuthority());
                 identification.setLegalForm(source.getLegalForm());

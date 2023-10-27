@@ -51,7 +51,7 @@ public class PscDeltaConsumer {
     public void receiveMainMessages(Message<ChsDelta> chsDeltaMessage) {
         logger.infoContext(chsDeltaMessage.getPayload().getContextId(),
                 "Starting processing a psc delta", DataMapHolder.getLogMap());
-        if(chsDeltaMessage.getPayload().getIsDelete()) {
+        if (chsDeltaMessage.getPayload().getIsDelete()) {
             pscDeltaProcessor.processDelete(chsDeltaMessage);
         } else {
             pscDeltaProcessor.processDelta(chsDeltaMessage);
