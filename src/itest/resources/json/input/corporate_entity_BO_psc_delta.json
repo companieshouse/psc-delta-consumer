@@ -27,7 +27,10 @@
       "registration_number": "123456c",
       "country_registered": "Isle Of Man",
       "natures_of_control": [
-        "OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"
+        "OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_FIRM",
+        "OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_FIRM",
+        "OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_FIRM",
+        "OE_SIGINFLUENCECONTROL_AS_FIRM"
       ]
     }
   ],

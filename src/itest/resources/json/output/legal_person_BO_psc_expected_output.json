@@ -24,7 +24,9 @@
       },
       "name": "His Majesty King John Smith",
       "natures_of_control": [
-        "OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"
+        "OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_PERSON",
+        "OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_PERSON",
+        "OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_PERSON"
       ],
       "links": [
         {
