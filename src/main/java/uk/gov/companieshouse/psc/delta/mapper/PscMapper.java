@@ -33,6 +33,7 @@ public interface PscMapper {
     @Mapping(target = "externalData.data.name", ignore = true)
     @Mapping(target = "externalData.data.links", ignore = true)
     @Mapping(target = "externalData.data.kind", source = "kind", ignore = true)
+    @Mapping(target = "externalData.data.isSanctioned", ignore = true)
     @Mapping(target = "externalData.data.ceasedOn", source = "ceasedOn", ignore = true)
     @Mapping(target = "externalData.pscId", source = "pscId", ignore = true)
     @Mapping(target = "externalData.data.notifiedOn", source = "notificationDate",
@@ -40,6 +41,7 @@ public interface PscMapper {
     @Mapping(target = "externalData.data.notificationDate", source = "notificationDate",
             dateFormat = "yyyyMMdd")
     @Mapping(target = "externalData.data.serviceAddress", source = "address")
+    @Mapping(target = "externalData.data.principalOfficeAddress", source = "principalOfficeAddress")
     @Mapping(target = "externalData.data.nameElements", source = "nameElements")
     @Mapping(target = "externalData.data.nationality", source = "nationality")
     @Mapping(target = "externalData.data.countryOfResidence", source = "countryOfResidence")
@@ -89,6 +91,21 @@ public interface PscMapper {
         } else {
             target.setName(source.getName());
         }
+    }
+
+    /**
+     * Manually map IsSanctioned.
+     * @param target Data object within FullRecordCompanyPSCApi object to map to
+     * @param source Psc delta object that will be mapped from
+     */
+    @AfterMapping
+    default void mapIsSanctioned(@MappingTarget Data target, Psc source) {
+        if (source.getSanctionInd() == Psc.SanctionIndEnum._0) {
+            target.setIsSanctioned(false);
+        } else if (source.getSanctionInd() == Psc.SanctionIndEnum._1) {
+            target.setIsSanctioned(true);
+        }
+        // else null
     }
 
     /**

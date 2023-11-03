@@ -11,6 +11,7 @@
     "notification_id": "hZ_JFH9mW2suVRdVM7jm9w2MD10",
     "data" : {
       "kind" : "corporate-entity-beneficial-owner",
+      "is_sanctioned": false,
       "service_address" : {
         "premise": "3",
         "address_line_1": "Clos Rhiannon",
@@ -22,7 +23,17 @@
         "care_of": "CareOf",
         "po_box": "PoBox"
       },
-      "name": "John Smith Limited",
+      "principal_office_address" : {
+        "premise": "4",
+        "address_line_1": "Clos Rhiannon",
+        "address_line_2": "Thornhill",
+        "locality": "Cardiff",
+        "country": "Wales",
+        "postal_code": "CF14 9HQ",
+        "region": "Here",
+        "care_of": "CareOf",
+        "po_box": "PoBox"
+      },
       "natures_of_control": [
         "OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_FIRM",
         "OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_FIRM",
@@ -48,7 +59,7 @@
         "place_registered": "Isle Of Man Companies Registry",
         "registration_number": "123456c"
       },
-      "is_sanctioned": null,
+      "name": "John Smith Limited",
       "name_elements": null,
       "nationality": null,
       "service_address_same_as_registered_office_address": null

@@ -5,11 +5,23 @@
       "internal_id": "7",
       "psc_id": "3",
       "kind": "legal-person-beneficial-owner",
+      "sanction_ind": "1",
       "notification_date": "20160101",
       "ceased_on": "20180201",
       "psc_statement_id": "77",
       "address": {
         "premise": "3",
+        "address_line_1": "Clos Rhiannon",
+        "address_line_2": "Thornhill",
+        "locality": "Cardiff",
+        "region": "Here",
+        "country": "Wales",
+        "postal_code": "CF14 9HQ",
+        "care_of": "CareOf",
+        "po_box": "PoBox"
+      },
+      "principal_office_address": {
+        "premise": "4",
         "address_line_1": "Clos Rhiannon",
         "address_line_2": "Thornhill",
         "locality": "Cardiff",

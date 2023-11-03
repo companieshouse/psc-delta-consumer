@@ -11,6 +11,7 @@
     "notification_id": "lXgouUAR16hSIwxdJSpbr_dhyT8",
     "data" : {
       "kind" : "individual-person-with-significant-control",
+      "is_sanctioned": null,
       "service_address" : {
         "premise": "3",
         "address_line_1": "Clos Rhiannon",
@@ -22,7 +23,7 @@
         "care_of": "CareOf",
         "po_box": "PoBox"
       },
-      "name": "Mr John Dave Smith",
+      "principal_office_address": null,
       "natures_of_control": [
         "OWNERSHIPOFSHARES_75TO100PERCENT_AS_PERSON",
         "VOTINGRIGHTS_75TO100PERCENT_AS_PERSON",
@@ -47,7 +48,7 @@
         "place_registered": null,
         "registration_number": null
       },
-      "is_sanctioned": null,
+      "name": "Mr John Dave Smith",
       "name_elements": {
         "forename": "John",
         "surname": "Smith",

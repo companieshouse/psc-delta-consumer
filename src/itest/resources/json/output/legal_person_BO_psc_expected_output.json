@@ -11,6 +11,7 @@
     "notification_id": "nVygLIRIpytItqx33sVCo69WNt0",
     "data" : {
       "kind" : "legal-person-beneficial-owner",
+      "is_sanctioned": true,
       "service_address" : {
         "premise": "3",
         "address_line_1": "Clos Rhiannon",
@@ -22,7 +23,17 @@
         "care_of": "CareOf",
         "po_box": "PoBox"
       },
-      "name": "His Majesty King John Smith",
+      "principal_office_address" : {
+        "premise": "4",
+        "address_line_1": "Clos Rhiannon",
+        "address_line_2": "Thornhill",
+        "locality": "Cardiff",
+        "country": "Wales",
+        "postal_code": "CF14 9HQ",
+        "region": "Here",
+        "care_of": "CareOf",
+        "po_box": "PoBox"
+      },
       "natures_of_control": [
         "OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_PERSON",
         "OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_PERSON",
@@ -47,7 +58,7 @@
         "place_registered": null,
         "registration_number": null
       },
-      "is_sanctioned": null,
+      "name": "His Majesty King John Smith",
       "name_elements": null,
       "nationality": null,
       "service_address_same_as_registered_office_address": null

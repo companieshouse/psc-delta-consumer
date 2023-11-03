@@ -5,6 +5,7 @@
       "internal_id": "4",
       "psc_id": "3",
       "kind": "individual-beneficial-owner",
+      "sanction_ind": "1",
       "notification_date": "20160101",
       "ceased_on": "20180201",
       "psc_statement_id": "77",
