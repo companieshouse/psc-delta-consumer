@@ -19,12 +19,7 @@
         "care_of": "CareOf",
         "po_box": "PoBox"
       },
-      "name_elements": {
-        "title": "Mr",
-        "surname": "Smith",
-        "forename": "John",
-        "middle_name": "Dave"
-      },
+      "name": "His Majesty King John Smith",
       "legal_form": "Form",
       "legal_authority": "Authority",
       "nationality": "Welsh",

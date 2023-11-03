@@ -33,6 +33,7 @@ public interface PscMapper {
     @Mapping(target = "externalData.data.name", ignore = true)
     @Mapping(target = "externalData.data.links", ignore = true)
     @Mapping(target = "externalData.data.kind", source = "kind", ignore = true)
+    @Mapping(target = "externalData.data.isSanctioned", ignore = true)
     @Mapping(target = "externalData.data.ceasedOn", source = "ceasedOn", ignore = true)
     @Mapping(target = "externalData.pscId", source = "pscId", ignore = true)
     @Mapping(target = "externalData.data.notifiedOn", source = "notificationDate",
@@ -40,6 +41,7 @@ public interface PscMapper {
     @Mapping(target = "externalData.data.notificationDate", source = "notificationDate",
             dateFormat = "yyyyMMdd")
     @Mapping(target = "externalData.data.serviceAddress", source = "address")
+    @Mapping(target = "externalData.data.principalOfficeAddress", source = "principalOfficeAddress")
     @Mapping(target = "externalData.data.nameElements", source = "nameElements")
     @Mapping(target = "externalData.data.nationality", source = "nationality")
     @Mapping(target = "externalData.data.countryOfResidence", source = "countryOfResidence")
@@ -74,13 +76,36 @@ public interface PscMapper {
      */
     @AfterMapping
     default void mapName(@MappingTarget Data target, Psc source) {
-        NameElements nameElements = source.getNameElements();
-
-        if (nameElements != null) {
-            target.setName(Stream.of(nameElements.getTitle(), nameElements.getForename(),
-                            nameElements.getMiddleName(), nameElements.getSurname())
-                    .filter(Objects::nonNull).collect(Collectors.joining(" ")));
+        Psc.KindEnum kind = source.getKind();
+        if (kind.equals(Psc.KindEnum.INDIVIDUAL)
+                || kind.equals(Psc.KindEnum.INDIVIDUAL_BENEFICIAL_OWNER)) {
+            NameElements nameElements = source.getNameElements();
+            if (nameElements != null) {
+                target.setName(Stream.of(
+                                nameElements.getTitle(),
+                                nameElements.getForename(),
+                                nameElements.getMiddleName(),
+                                nameElements.getSurname())
+                        .filter(Objects::nonNull).collect(Collectors.joining(" ")));
+            }
+        } else {
+            target.setName(source.getName());
         }
+    }
+
+    /**
+     * Manually map IsSanctioned.
+     * @param target Data object within FullRecordCompanyPSCApi object to map to
+     * @param source Psc delta object that will be mapped from
+     */
+    @AfterMapping
+    default void mapIsSanctioned(@MappingTarget Data target, Psc source) {
+        if (source.getSanctionInd() == Psc.SanctionIndEnum._0) {
+            target.setIsSanctioned(false);
+        } else if (source.getSanctionInd() == Psc.SanctionIndEnum._1) {
+            target.setIsSanctioned(true);
+        }
+        // else null
     }
 
     /**
@@ -141,7 +166,7 @@ public interface PscMapper {
             case INDIVIDUAL_BENEFICIAL_OWNER:
                 target.setKind("individual-beneficial-owner");
                 break;
-            case CORPORATE_BENEFICIAL_OWNER:
+            case CORPORATE_ENTITY_BENEFICIAL_OWNER:
                 target.setKind("corporate-entity-beneficial-owner");
                 identification.setLegalAuthority(source.getLegalAuthority());
                 identification.setLegalForm(source.getLegalForm());
