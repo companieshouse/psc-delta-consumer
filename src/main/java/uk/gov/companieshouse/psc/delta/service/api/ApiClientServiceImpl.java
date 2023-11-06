@@ -74,10 +74,14 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
     }
 
     @Override
-    public ApiResponse<Void> deletePscFullRecord(String log, String notificationId, String companyNumber) {
+    public ApiResponse<Void> deletePscFullRecord(String log, 
+                                                 String notificationId, 
+                                                 String companyNumber) {
 
         final String uri = String.format(
-                "/company/%s/persons-with-significant-control/%s/delete", companyNumber, notificationId);
+                "/company/%s/persons-with-significant-control/%s/delete", 
+                       companyNumber, 
+                       notificationId);
         
         Map<String,Object> logMap = createLogMap(notificationId, "DELETE", uri);
         logger.infoContext(log, String.format("Delete %s", uri), logMap);

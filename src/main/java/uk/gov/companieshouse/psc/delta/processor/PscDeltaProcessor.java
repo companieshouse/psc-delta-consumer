@@ -79,7 +79,7 @@ public class PscDeltaProcessor {
     public void processDelete(Message<ChsDelta> chsDelta) {
         final ChsDelta payload = chsDelta.getPayload();
         final String logContext = payload.getContextId();
-        final String pscId;
+        final String notificationId;
 
         ObjectMapper mapper = new ObjectMapper();
         PscDeleteDelta pscDelete;
@@ -93,10 +93,10 @@ public class PscDeltaProcessor {
 
         logger.info(String.format("PscDeleteDelta extracted for context ID"
                 + " [%s] Kafka message: [%s]", logContext, pscDelete));
-        pscId = MapperUtils.encode(pscDelete.getPscId());
+        notificationId = MapperUtils.encode(pscDelete.getInternalId());
         final String companyNumber = pscDelete.getCompanyNumber();
         logger.info(String.format(
-                "Performing a DELETE for PSC id: [%s]", pscId));
-        apiClientService.deletePscFullRecord(logContext, pscId, companyNumber);
+                "Performing a DELETE for PSC id: [%s]", notificationId));
+        apiClientService.deletePscFullRecord(logContext, notificationId, companyNumber);
     }
 }
