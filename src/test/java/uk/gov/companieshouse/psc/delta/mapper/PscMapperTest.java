@@ -51,12 +51,10 @@ class PscMapperTest {
 
     @BeforeEach
     void setUp() {
-
         serviceAddress = createServiceAddress();
         nameElements = createNameElements();
         usualResidentialAddress = createURA();
         dateOfBirth = createDateOfBirth();
-
     }
 
     @Test
@@ -137,8 +135,7 @@ class PscMapperTest {
         assertEquals("corporate-entity-person-with-significant-control", data.getKind());
         assertEquals(LocalDate.of(2016, 1, 1), data.getNotifiedOn());
         assertEquals(serviceAddress, data.getServiceAddress());
-        assertEquals("Mr John Dave Smith", data.getName());
-        assertEquals(nameElements, data.getNameElements());
+        assertEquals("John Smith Limited", data.getName());
         assertEquals(Collections.singletonList("OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"), data.getNaturesOfControl());
         assertEquals("Wales", data.getCountryOfResidence());
         assertEquals(links, data.getLinks());
@@ -183,8 +180,7 @@ class PscMapperTest {
         assertEquals("legal-person-person-with-significant-control", data.getKind());
         assertEquals(LocalDate.of(2016, 1, 1), data.getNotifiedOn());
         assertEquals(serviceAddress, data.getServiceAddress());
-        assertEquals("Mr John Dave Smith", data.getName());
-        assertEquals(nameElements, data.getNameElements());
+        assertEquals("His Majesty King John Smith", data.getName());
         assertEquals(Collections.singletonList("OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"), data.getNaturesOfControl());
         assertEquals("Wales", data.getCountryOfResidence());
         assertEquals(links, data.getLinks());
