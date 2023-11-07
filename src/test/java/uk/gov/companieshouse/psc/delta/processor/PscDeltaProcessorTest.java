@@ -11,11 +11,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.messaging.Message;
-import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.companieshouse.api.delta.PscDelta;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.delta.ChsDelta;
-import uk.gov.companieshouse.psc.delta.mapper.MapperUtils;
 import uk.gov.companieshouse.psc.delta.service.api.ApiClientService;
 import uk.gov.companieshouse.psc.delta.transformer.PscApiTransformer;
 import uk.gov.companieshouse.psc.delta.utils.TestHelper;
@@ -49,8 +47,18 @@ class PscDeltaProcessorTest {
     @BeforeEach
     void setUp() {
         deltaProcessor = new PscDeltaProcessor(logger, apiClientService, transformer);
-        //mapperUtils = new MapperUtils();
-        //ReflectionTestUtils.setField(deltaProcessor, "mapperUtils", mapperUtils);
+    }
+
+    @DisplayName("Transforms a kafka message containing a ChsDelta payload into a PscDelta")
+    void When_ValidChsDeltaMessage_Expect_ValidPscDeltaMapping() throws IOException {
+        Message<ChsDelta> mockChsDeltaMessage = testHelper.createChsDeltaMessage(false);
+        PscDelta expectedDelta = testHelper.createPscDelta();
+        FullRecordCompanyPSCApi apiObject = testHelper.createFullRecordCompanyPSCApi();
+        when(transformer.transform(expectedDelta)).thenReturn(apiObject);
+
+        deltaProcessor.processDelta(mockChsDeltaMessage);
+
+        verify(transformer).transform(expectedDelta);
     }
 
     @Test
