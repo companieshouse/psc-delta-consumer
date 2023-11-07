@@ -1,18 +1,18 @@
 package uk.gov.companieshouse.psc.delta.processor;
 
-import static java.lang.String.format;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import consumer.exception.NonRetryableErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.delta.Psc;
+import uk.gov.companieshouse.api.delta.PscDeleteDelta;
 import uk.gov.companieshouse.api.delta.PscDelta;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.psc.delta.logging.DataMapHolder;
+import uk.gov.companieshouse.psc.delta.mapper.MapperUtils;
 import uk.gov.companieshouse.psc.delta.service.api.ApiClientService;
 import uk.gov.companieshouse.psc.delta.transformer.PscApiTransformer;
 
@@ -71,5 +71,32 @@ public class PscDeltaProcessor {
                 fullRecordCompanyPscApi.getExternalData().getCompanyNumber(),
                 fullRecordCompanyPscApi.getExternalData().getNotificationId(),
                 fullRecordCompanyPscApi);
+    }
+
+    /**
+     * Process CHS Delta delete message.
+     */
+    public void processDelete(Message<ChsDelta> chsDelta) {
+        final ChsDelta payload = chsDelta.getPayload();
+        final String logContext = payload.getContextId();
+        final String notificationId;
+
+        ObjectMapper mapper = new ObjectMapper();
+        PscDeleteDelta pscDelete;
+        try {
+            pscDelete = mapper.readValue(
+                    payload.getData(), PscDeleteDelta.class);
+        } catch (Exception ex) {
+            throw new NonRetryableErrorException(
+                    "Error when extracting psc delete delta", ex);
+        }
+
+        logger.info(String.format("PscDeleteDelta extracted for context ID"
+                + " [%s] Kafka message: [%s]", logContext, pscDelete));
+        notificationId = MapperUtils.encode(pscDelete.getInternalId());
+        final String companyNumber = pscDelete.getCompanyNumber();
+        logger.info(String.format(
+                "Performing a DELETE for PSC id: [%s]", notificationId));
+        apiClientService.deletePscFullRecord(logContext, notificationId, companyNumber);
     }
 }

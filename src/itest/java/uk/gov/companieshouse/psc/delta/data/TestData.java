@@ -18,6 +18,11 @@ public class TestData {
         return readFile(path);
     }
 
+    public static String getDeleteData() {
+        String path = "src/itest/resources/json/input/psc_delete_delta.json";
+        return readFile(path);
+    }
+
     private static String readFile(String path) {
         String data;
         try {
