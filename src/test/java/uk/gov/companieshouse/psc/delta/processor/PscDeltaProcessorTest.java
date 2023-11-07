@@ -49,6 +49,7 @@ class PscDeltaProcessorTest {
         deltaProcessor = new PscDeltaProcessor(logger, apiClientService, transformer);
     }
 
+    @Test
     @DisplayName("Transforms a kafka message containing a ChsDelta payload into a PscDelta")
     void When_ValidChsDeltaMessage_Expect_ValidPscDeltaMapping() throws IOException {
         Message<ChsDelta> mockChsDeltaMessage = testHelper.createChsDeltaMessage(false);
@@ -62,6 +63,7 @@ class PscDeltaProcessorTest {
     }
 
     @Test
+    @DisplayName("Confirms a Non Retryable Error is throws when the Chs Delta message is invalid")
     void When_InvalidChsDeltaMessage_Expect_NonRetryableError() {
         Message<ChsDelta> mockChsDeltaMessage = testHelper.createInvalidChsDeltaMessage();
         assertThrows(NonRetryableErrorException.class, () -> deltaProcessor.processDelta(mockChsDeltaMessage));
@@ -70,6 +72,7 @@ class PscDeltaProcessorTest {
     }
 
     @Test
+    @DisplayName("Confirms a Non Retryable Error is throws when the Chs Delete Delta message is invalid")
     void When_InvalidChsDeleteDeltaMessage_Expect_NonRetryableError() {
         Message<ChsDelta> mockChsDeltaMessage = testHelper.createInvalidChsDeltaMessage();
 
