@@ -8,6 +8,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import uk.gov.companieshouse.api.handler.delta.pscfullrecord.request.PscFullRecordDelete;
 import uk.gov.companieshouse.api.handler.delta.pscfullrecord.request.PscFullRecordPut;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
@@ -57,6 +59,21 @@ class ApiClientServiceImplTest {
         verify(apiClientServiceSpy).executeOp(anyString(), eq("putPscFullRecord"),
                 eq(expectedUri),
                 any(PscFullRecordPut.class));
+
+        assertThat(response).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    void returnOkResponseWhenValidDeleteRequestSentToApi(){
+        final ApiResponse<Void> expectedResponse = new ApiResponse<>(HttpStatus.OK.value(), null, null);
+        ApiClientServiceImpl apiClientServiceSpy = Mockito.spy(apiClientService);
+        doReturn(expectedResponse).when(apiClientServiceSpy).executeOp(anyString(), anyString(),
+                anyString(),
+                any(PscFullRecordDelete.class));
+
+        ApiResponse<Void> response = apiClientServiceSpy.deletePscFullRecord(contextId,
+                companyNumber,
+                notficationId);
 
         assertThat(response).isEqualTo(expectedResponse);
     }

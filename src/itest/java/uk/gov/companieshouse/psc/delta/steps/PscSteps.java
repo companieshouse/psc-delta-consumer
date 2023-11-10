@@ -156,7 +156,7 @@ public class PscSteps {
     @Then("a DELETE request is sent to the psc data api with the encoded Id")
     public void deleteRequestIsSent() {
         verify(1, deleteRequestedFor(urlMatching(
-                "/company/OE623672/persons-with-significant-control/lXgouUAR16hSIwxdJSpbr_dhyT8/delete")));
+                "/company/OE623672/persons-with-significant-control/lXgouUAR16hSIwxdJSpbr_dhyT8/full_record")));
     }
 
     @After
@@ -173,7 +173,7 @@ public class PscSteps {
 
     private void stubDeleteStatement(int responseCode) {
         stubFor(delete(urlEqualTo(
-                "/company/OE623672/persons-with-significant-control/lXgouUAR16hSIwxdJSpbr_dhyT8/delete"))
+                "/company/OE623672/persons-with-significant-control/lXgouUAR16hSIwxdJSpbr_dhyT8/full_record"))
                 .willReturn(aResponse().withStatus(responseCode)));
     }
 
