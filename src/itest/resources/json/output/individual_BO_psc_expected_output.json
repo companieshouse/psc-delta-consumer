@@ -13,7 +13,7 @@
       "kind" : "individual-beneficial-owner",
       "is_sanctioned": true,
       "service_address" : {
-        "premise": "3",
+        "premises": "3",
         "address_line_1": "Clos Rhiannon",
         "address_line_2": "Thornhill",
         "locality": "Cardiff",

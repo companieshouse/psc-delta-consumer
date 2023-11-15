@@ -271,7 +271,7 @@ class PscMapperTest {
     Address createServiceAddress() {
         Address serviceAddress = new Address();
 
-        serviceAddress.setPremise("3");
+        serviceAddress.setPremises("3");
         serviceAddress.setAddressLine1("Clos Rhiannon");
         serviceAddress.setAddressLine2("Thornhill");
         serviceAddress.setLocality("Cardiff");
