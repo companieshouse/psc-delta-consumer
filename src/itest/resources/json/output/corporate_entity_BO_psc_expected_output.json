@@ -13,7 +13,7 @@
       "kind" : "corporate-entity-beneficial-owner",
       "is_sanctioned": false,
       "service_address" : {
-        "premise": "3",
+        "premises": "3",
         "address_line_1": "Clos Rhiannon",
         "address_line_2": "Thornhill",
         "locality": "Cardiff",
@@ -24,7 +24,7 @@
         "po_box": "PoBox"
       },
       "principal_office_address" : {
-        "premise": "4",
+        "premises": "4",
         "address_line_1": "Clos Rhiannon",
         "address_line_2": "Thornhill",
         "locality": "Cardiff",
