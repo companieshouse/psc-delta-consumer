@@ -1,6 +1,9 @@
 package uk.gov.companieshouse.psc.delta.mapper;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -283,5 +286,27 @@ public interface PscMapper {
             target.setDateOfBirth(dateOfBirth);
         }
     }
+
+    /**
+     * Manually map NaturesOfControl.
+     * @param target Data object within FullRecordCompanyPSCApi object to map to
+     * @param source Psc delta object that will be mapped from.
+     */
+
+    @AfterMapping
+    default void mapNaturesOfControl(@MappingTarget Data target, Psc source) {
+        if (source.getNaturesOfControl() != null && !source.getNaturesOfControl().isEmpty()) {
+            HashMap<String,String> naturesOfControlMap = MapperUtils.getNaturesOfControlMap();
+            List<String> mappedNaturesOfControl = new ArrayList<>();
+            for (Psc.NaturesOfControlEnum nature : source.getNaturesOfControl()) {
+                String natureKey = nature.name();
+                String mappedValue = naturesOfControlMap.get(natureKey);
+                mappedNaturesOfControl.add(mappedValue);
+            }
+            target.setNaturesOfControl(mappedNaturesOfControl);
+        }
+    }
+
+
 
 }
