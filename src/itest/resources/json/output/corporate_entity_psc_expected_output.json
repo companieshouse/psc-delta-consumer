@@ -25,9 +25,9 @@
       },
       "principal_office_address": null,
       "natures_of_control": [
-        "OWNERSHIPOFSHARES_75TO100PERCENT_AS_PERSON",
-        "VOTINGRIGHTS_75TO100PERCENT_AS_PERSON",
-        "RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_PERSON"
+        "ownership-of-shares-75-to-100-percent",
+        "voting-rights-75-to-100-percent",
+        "right-to-appoint-and-remove-directors"
       ],
       "links": [
         {

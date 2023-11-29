@@ -25,10 +25,10 @@
       },
       "principal_office_address": null,
       "natures_of_control": [
-        "OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_PERSON",
-        "OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_PERSON",
-        "OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_PERSON",
-        "OE_SIGINFLUENCECONTROL_AS_PERSON"
+        "ownership-of-shares-more-than-25-percent-registered-overseas-entity",
+        "voting-rights-more-than-25-percent-registered-overseas-entity",
+        "right-to-appoint-and-remove-directors-registered-overseas-entity",
+        "significant-influence-or-control-registered-overseas-entity"
       ],
       "links": [
         {

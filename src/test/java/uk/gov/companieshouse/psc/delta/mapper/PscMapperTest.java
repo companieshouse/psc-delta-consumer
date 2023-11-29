@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -87,7 +88,7 @@ class PscMapperTest {
         assertEquals(serviceAddress, data.getServiceAddress());
         assertEquals("Mr John Dave Smith", data.getName());
         assertEquals(nameElements, data.getNameElements());
-        assertEquals(Collections.singletonList("OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"), data.getNaturesOfControl());
+        assertEquals(Collections.singletonList("ownership-of-shares-25-to-50-percent"), data.getNaturesOfControl());
 
         assertEquals(Boolean.TRUE, data.getServiceAddressSameAsRegisteredOfficeAddress());
         assertEquals("Wales", data.getCountryOfResidence());
@@ -136,7 +137,7 @@ class PscMapperTest {
         assertEquals(LocalDate.of(2016, 1, 1), data.getNotifiedOn());
         assertEquals(serviceAddress, data.getServiceAddress());
         assertEquals("John Smith Limited", data.getName());
-        assertEquals(Collections.singletonList("OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"), data.getNaturesOfControl());
+        assertEquals(Collections.singletonList("ownership-of-shares-25-to-50-percent"), data.getNaturesOfControl());
         assertEquals("Wales", data.getCountryOfResidence());
         assertEquals(links, data.getLinks());
         assertEquals("Welsh", data.getNationality());
@@ -181,7 +182,7 @@ class PscMapperTest {
         assertEquals(LocalDate.of(2016, 1, 1), data.getNotifiedOn());
         assertEquals(serviceAddress, data.getServiceAddress());
         assertEquals("His Majesty King John Smith", data.getName());
-        assertEquals(Collections.singletonList("OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"), data.getNaturesOfControl());
+        assertEquals(Collections.singletonList("ownership-of-shares-25-to-50-percent"), data.getNaturesOfControl());
         assertEquals("Wales", data.getCountryOfResidence());
         assertEquals(links, data.getLinks());
         assertEquals("Welsh", data.getNationality());
@@ -255,7 +256,7 @@ class PscMapperTest {
         assertEquals(serviceAddress, data.getServiceAddress());
         assertEquals("Mr John Dave Smith", data.getName());
         assertEquals(nameElements, data.getNameElements());
-        assertEquals(Collections.singletonList("OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"), data.getNaturesOfControl());
+        assertEquals(Collections.singletonList("ownership-of-shares-25-to-50-percent"), data.getNaturesOfControl());
 
         assertEquals(Boolean.TRUE, data.getServiceAddressSameAsRegisteredOfficeAddress());
         assertEquals("Wales", data.getCountryOfResidence());
@@ -357,4 +358,18 @@ class PscMapperTest {
 
         return identification;
     }
+
+
+    @Test
+    public void shouldMapNaturesOfControl() {
+        Psc source = new Psc();
+        source.setNaturesOfControl(Arrays.asList(Psc.NaturesOfControlEnum.OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON));
+        Data target = new Data();
+        pscMapper.mapNaturesOfControl(target,source);
+
+        List<String> expectedValue = Arrays.asList("ownership-of-shares-25-to-50-percent");
+
+        assertEquals(expectedValue,target.getNaturesOfControl());
+    }
+
 }
