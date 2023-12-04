@@ -51,7 +51,7 @@ public interface PscMapper {
     @Mapping(target = "externalData.data.countryOfResidence", source = "countryOfResidence")
     @Mapping(target = "externalData.data.naturesOfControl", source = "naturesOfControl")
     @Mapping(target = "externalData.data.serviceAddressSameAsRegisteredOfficeAddress",
-            source = "serviceAddressSameAsRegisteredOffice", ignore = true)
+            source = "serviceAddressSameAsRegisteredAddress", ignore = true)
     @Mapping(target = "externalData.sensitiveData.residentialAddressSameAsServiceAddress",
             source = "residentialAddressSameAsServiceAddress", ignore = true)
     @Mapping(target = "externalData.sensitiveData.dateOfBirth", ignore = true)
@@ -227,18 +227,18 @@ public interface PscMapper {
     }
 
     /**
-     * Manually map ServiceAddressSameAsRegisteredOffice.
+     * Manually map ServiceAddressSameAsRegisteredAddress.
      * @param target Data object within FullRecordCompanyPSCApi object to map to
      * @param source Psc delta object that will be mapped from
      */
     @AfterMapping
-    default void mapServiceAddressSameAsRegisteredOffice(@MappingTarget Data target, Psc source) {
-        Psc.ServiceAddressSameAsRegisteredOfficeEnum registeredOfficeEnum =
-                source.getServiceAddressSameAsRegisteredOffice();
+    default void mapServiceAddressSameAsRegisteredAddress(@MappingTarget Data target, Psc source) {
+        Psc.ServiceAddressSameAsRegisteredAddressEnum registeredAddressEnum =
+                source.getServiceAddressSameAsRegisteredAddress();
 
-        if (registeredOfficeEnum != null) {
+        if (registeredAddressEnum != null) {
             target.setServiceAddressSameAsRegisteredOfficeAddress(
-                    registeredOfficeEnum.toString().equals("Y"));
+                    registeredAddressEnum.toString().equals("Y"));
         }
     }
 

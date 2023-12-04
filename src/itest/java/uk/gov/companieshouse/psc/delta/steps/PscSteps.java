@@ -43,7 +43,7 @@ public class PscSteps {
     @Value("${pscs.delta.topic}")
     private String topic;
 
-    @Value("${wiremock.server.port}")
+    @Value("${wiremock.server.port:8888}")
     private String port;
 
     private final String contextId = "123456789";
