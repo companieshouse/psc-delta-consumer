@@ -46,7 +46,7 @@
         "OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_PERSON",
         "OE_SIGINFLUENCECONTROL_AS_PERSON"
       ],
-      "service_address_same_as_registered_office": "Y",
+      "service_address_same_as_registered_address": "Y",
       "residential_address_same_as_service_address": "Y"
     }
   ],
