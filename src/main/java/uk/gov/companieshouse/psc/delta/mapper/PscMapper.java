@@ -296,7 +296,8 @@ public interface PscMapper {
     @AfterMapping
     default void mapNaturesOfControl(@MappingTarget Data target, Psc source) {
         if (source.getNaturesOfControl() != null && !source.getNaturesOfControl().isEmpty()) {
-            HashMap<String,String> naturesOfControlMap = MapperUtils.getNaturesOfControlMap();
+            HashMap<String,String> naturesOfControlMap =
+                    MapperUtils.getNaturesOfControlMap(source.getCompanyNumber());
             List<String> mappedNaturesOfControl = new ArrayList<>();
             for (Psc.NaturesOfControlEnum nature : source.getNaturesOfControl()) {
                 String natureKey = nature.name();
