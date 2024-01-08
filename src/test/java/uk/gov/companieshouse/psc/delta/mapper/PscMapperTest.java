@@ -364,10 +364,24 @@ class PscMapperTest {
     public void shouldMapNaturesOfControl() {
         Psc source = new Psc();
         source.setNaturesOfControl(Arrays.asList(Psc.NaturesOfControlEnum.OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON));
+        source.setCompanyNumber("00623672");
         Data target = new Data();
         pscMapper.mapNaturesOfControl(target,source);
 
         List<String> expectedValue = Arrays.asList("ownership-of-shares-25-to-50-percent");
+
+        assertEquals(expectedValue,target.getNaturesOfControl());
+    }
+
+    @Test
+    public void shouldMapNaturesOfControlLlp() {
+        Psc source = new Psc();
+        source.setNaturesOfControl(Arrays.asList(Psc.NaturesOfControlEnum.RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_FIRM));
+        source.setCompanyNumber("OC623672");
+        Data target = new Data();
+        pscMapper.mapNaturesOfControl(target,source);
+
+        List<String> expectedValue = Arrays.asList("right-to-share-surplus-assets-25-to-50-percent-as-firm-limited-liability-partnership");
 
         assertEquals(expectedValue,target.getNaturesOfControl());
     }

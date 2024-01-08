@@ -8,9 +8,12 @@ import java.time.format.DateTimeParseException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Component;
+
+import static java.util.Map.entry;
 
 @Component
 public class MapperUtils {
@@ -54,11 +57,24 @@ public class MapperUtils {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(
                 DigestUtils.sha1(unencodedString + salt));
     }
+
+    public static HashMap<String,String> getNaturesOfControlMap(String companyNumber) {
+        if(companyNumber.length() < 2) {
+            return getNaturesOfControlMap();
+        }
+        else {
+            String typeCode = companyNumber.substring(0, 2);
+            if(typeCode.equals("SO") || typeCode.equals("NC") || typeCode.equals("OC")) {
+                return getLlpNaturesOfControlMap();
+            }
+            else return getNaturesOfControlMap();
+        }
+    }
     /**
      * Create a hashmap for natures of control.
      */
 
-    public static HashMap<String,String> getNaturesOfControlMap() {
+    private static HashMap<String,String> getNaturesOfControlMap() {
 
         HashMap<String,String> naturesOfControlMap = new HashMap<>();
 
@@ -190,5 +206,48 @@ public class MapperUtils {
                 "right-to-appoint-and-remove-members-as-trust-limited-liability-partnership");
 
         return naturesOfControlMap;
+    }
+
+    public static HashMap<String,String> getLlpNaturesOfControlMap() {
+        Map<String,String> llpMap = Map.ofEntries(
+                entry("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_PERSON",
+                        "right-to-share-surplus-assets-25-to-50-percent-limited-liability-partnership"),
+                entry("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_PERSON",
+                        "right-to-share-surplus-assets-50-to-75-percent-limited-liability-partnership"),
+                entry("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_PERSON",
+                        "right-to-share-surplus-assets-75-to-100-percent-limited-liability-partnership"),
+                entry("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_TRUST",
+                        "right-to-share-surplus-assets-25-to-50-percent-as-trust-limited-liability-partnership"),
+                entry("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_TRUST",
+                        "right-to-share-surplus-assets-50-to-75-percent-as-trust-limited-liability-partnership"),
+                entry("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_TRUST",
+                        "right-to-share-surplus-assets-75-to-100-percent-as-trust-limited-liability-partnership"),
+                entry("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_FIRM",
+                        "right-to-share-surplus-assets-25-to-50-percent-as-firm-limited-liability-partnership"),
+                entry("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_FIRM",
+                        "right-to-share-surplus-assets-50-to-75-percent-as-firm-limited-liability-partnership"),
+                entry("VOTINGRIGHTS_75TO100PERCENT_AS_PERSON",
+                        "voting-rights-75-to-100-percent-limited-liability-partnership"),
+                entry("VOTINGRIGHTS_25TO50PERCENT_AS_TRUST",
+                        "voting-rights-25-to-50-percent-as-trust-limited-liability-partnership"),
+                entry("VOTINGRIGHTS_50TO75PERCENT_AS_TRUST",
+                        "voting-rights-50-to-75-percent-as-trust-limited-liability-partnership"),
+                entry("VOTINGRIGHTS_75TO100PERCENT_AS_TRUST",
+                        "voting-rights-75-to-100-percent-as-trust-limited-liability-partnership"),
+                entry("VOTINGRIGHTS_25TO50PERCENT_AS_FIRM",
+                        "voting-rights-25-to-50-percent-as-firm-limited-liability-partnership"),
+                entry("VOTINGRIGHTS_50TO75PERCENT_AS_FIRM",
+                        "voting-rights-50-to-75-percent-as-firm-limited-liability-partnership"),
+                entry("VOTINGRIGHTS_75TO100PERCENT_AS_FIRM",
+                        "voting-rights-75-to-100-percent-as-firm-limited-liability-partnership"),
+                entry("SIGINFLUENCECONTROL_AS_PERSON",
+                        "significant-influence-or-control-limited-liability-partnership"),
+                entry("SIGINFLUENCECONTROL_AS_TRUST",
+                        "significant-influence-or-control-as-trust-limited-liability-partnership"),
+                entry("SIGINFLUENCECONTROL_AS_FIRM",
+                        "significant-influence-or-control-as-firm-limited-liability-partnership")
+        );
+        return new HashMap<>(llpMap);
+
     }
 }
