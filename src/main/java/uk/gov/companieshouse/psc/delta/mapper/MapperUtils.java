@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.psc.delta.mapper;
 
+import static java.util.Map.entry;
+
 import consumer.exception.NonRetryableErrorException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -12,8 +14,6 @@ import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Component;
-
-import static java.util.Map.entry;
 
 @Component
 public class MapperUtils {
@@ -58,16 +58,19 @@ public class MapperUtils {
                 DigestUtils.sha1(unencodedString + salt));
     }
 
+    /**
+     * Create a hashmap for natures of control.
+     */
     public static HashMap<String,String> getNaturesOfControlMap(String companyNumber) {
-        if(companyNumber.length() < 2) {
+        if (companyNumber.length() < 2) {
             return getNaturesOfControlMap();
-        }
-        else {
+        } else {
             String typeCode = companyNumber.substring(0, 2);
-            if(typeCode.equals("SO") || typeCode.equals("NC") || typeCode.equals("OC")) {
+            if (typeCode.equals("SO") || typeCode.equals("NC") || typeCode.equals("OC")) {
                 return getLlpNaturesOfControlMap();
+            } else {
+                return getNaturesOfControlMap();
             }
-            else return getNaturesOfControlMap();
         }
     }
     /**
@@ -208,24 +211,35 @@ public class MapperUtils {
         return naturesOfControlMap;
     }
 
+    /**
+     * Create a hashmap for natures of control llps.
+     */
     public static HashMap<String,String> getLlpNaturesOfControlMap() {
         Map<String,String> llpMap = Map.ofEntries(
                 entry("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_PERSON",
-                        "right-to-share-surplus-assets-25-to-50-percent-limited-liability-partnership"),
+                        "right-to-share-surplus-assets-25-to-50-percent-"
+                                + "limited-liability-partnership"),
                 entry("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_PERSON",
-                        "right-to-share-surplus-assets-50-to-75-percent-limited-liability-partnership"),
+                        "right-to-share-surplus-assets-50-to-75-percent-limited-"
+                                + "liability-partnership"),
                 entry("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_PERSON",
-                        "right-to-share-surplus-assets-75-to-100-percent-limited-liability-partnership"),
+                        "right-to-share-surplus-assets-75-to-100-percent-"
+                                + "limited-liability-partnership"),
                 entry("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_TRUST",
-                        "right-to-share-surplus-assets-25-to-50-percent-as-trust-limited-liability-partnership"),
+                        "right-to-share-surplus-assets-25-to-50-percent-"
+                                + "as-trust-limited-liability-partnership"),
                 entry("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_TRUST",
-                        "right-to-share-surplus-assets-50-to-75-percent-as-trust-limited-liability-partnership"),
+                        "right-to-share-surplus-assets-50-to-75-percent-as"
+                                + "-trust-limited-liability-partnership"),
                 entry("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_TRUST",
-                        "right-to-share-surplus-assets-75-to-100-percent-as-trust-limited-liability-partnership"),
+                        "right-to-share-surplus-assets-75-to-100-percent-as-"
+                                + "trust-limited-liability-partnership"),
                 entry("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_FIRM",
-                        "right-to-share-surplus-assets-25-to-50-percent-as-firm-limited-liability-partnership"),
+                        "right-to-share-surplus-assets-25-to-50-percent-as-"
+                                + "firm-limited-liability-partnership"),
                 entry("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_FIRM",
-                        "right-to-share-surplus-assets-50-to-75-percent-as-firm-limited-liability-partnership"),
+                        "right-to-share-surplus-assets-50-to-75-percent-"
+                                + "as-firm-limited-liability-partnership"),
                 entry("VOTINGRIGHTS_75TO100PERCENT_AS_PERSON",
                         "voting-rights-75-to-100-percent-limited-liability-partnership"),
                 entry("VOTINGRIGHTS_25TO50PERCENT_AS_TRUST",
