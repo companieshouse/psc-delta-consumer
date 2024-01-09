@@ -68,15 +68,17 @@ public class MapperUtils {
             String typeCode = companyNumber.substring(0, 2);
             if (typeCode.equals("SO") || typeCode.equals("NC") || typeCode.equals("OC")) {
                 return getLlpNaturesOfControlMap();
+            } else if (typeCode.equals("OE")) {
+                return getRoeNaturesOfControlMap();
             } else {
                 return getNaturesOfControlMap();
             }
         }
     }
+
     /**
      * Create a hashmap for natures of control.
      */
-
     private static HashMap<String,String> getNaturesOfControlMap() {
 
         HashMap<String,String> naturesOfControlMap = new HashMap<>();
@@ -262,6 +264,40 @@ public class MapperUtils {
                         "significant-influence-or-control-as-firm-limited-liability-partnership")
         );
         return new HashMap<>(llpMap);
+    }
 
+    /**
+     * Create a hashmap for natures of control ROEs.
+     */
+    private static HashMap<String, String> getRoeNaturesOfControlMap() {
+        Map<String,String> roeMap = Map.ofEntries(
+                entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_PERSON",
+                        "ownership-of-shares-more-than-25-percent-registered-overseas-entity"),
+                entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_TRUST",
+                        "ownership-of-shares-more-than-25-percent-as-trust-"
+                                + "registered-overseas-entity"),
+                entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_FIRM",
+                        "ownership-of-shares-more-than-25-percent-as-firm-"
+                                + "registered-overseas-entity"),
+                entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_PERSON",
+                        "voting-rights-more-than-25-percent-registered-overseas-entity"),
+                entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_TRUST",
+                        "voting-rights-more-than-25-percent-as-trust-registered-overseas-entity"),
+                entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_FIRM",
+                        "voting-rights-more-than-25-percent-as-firm-registered-overseas-entity"),
+                entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_PERSON",
+                        "right-to-appoint-and-remove-directors-registered-overseas-entity"),
+                entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_TRUST",
+                        "right-to-appoint-and-remove-directors-as-trust-"
+                                + "registered-overseas-entity"),
+                entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_FIRM",
+                        "right-to-appoint-and-remove-directors-as-firm-registered-overseas-entity"),
+                entry("OE_SIGINFLUENCECONTROL_AS_PERSON",
+                        "significant-influence-or-control-registered-overseas-entity"),
+                entry("OE_SIGINFLUENCECONTROL_AS_TRUST",
+                        "significant-influence-or-control-as-trust-registered-overseas-entity"),
+                entry("OE_SIGINFLUENCECONTROL_AS_FIRM",
+                        "significant-influence-or-control-as-firm-registered-overseas-entity"));
+        return new HashMap<>(roeMap);
     }
 }
