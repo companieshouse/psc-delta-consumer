@@ -245,7 +245,8 @@ public class MapperUtils {
                 entry("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_FIRM",
                         "ight-to-appoint-and-remove-members-as-firm-limited-liability-partnership"),
                 entry("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_TRUST",
-                        "right-to-appoint-and-remove-members-as-trust-limited-liability-partnership"),
+                        "right-to-appoint-and-remove-members-as"
+                                + "-trust-limited-liability-partnership"),
                 entry("VOTINGRIGHTS_25TO50PERCENT_AS_PERSON",
                         "voting-rights-25-to-50-percent-limited-liability-partnership"),
                 entry("VOTINGRIGHTS_50TO75PERCENT_AS_PERSON" ,
