@@ -386,4 +386,17 @@ class PscMapperTest {
         assertEquals(expectedValue,target.getNaturesOfControl());
     }
 
+    @Test
+    public void shouldMapNaturesOfControlRoe() {
+        Psc source = new Psc();
+        source.setNaturesOfControl((Arrays.asList(Psc.NaturesOfControlEnum.OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_FIRM)));
+        source.setCompanyNumber("OE623672");
+        Data target = new Data();
+        pscMapper.mapNaturesOfControl(target, source);
+
+        List<String> expectedValue = Arrays.asList("ownership-of-shares-more-than-25-percent-as-firm-registered-overseas-entity");
+
+        assertEquals(expectedValue, target.getNaturesOfControl());
+    }
+
 }
