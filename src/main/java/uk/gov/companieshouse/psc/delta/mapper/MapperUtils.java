@@ -240,6 +240,9 @@ public class MapperUtils {
                 entry("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_FIRM",
                         "right-to-share-surplus-assets-50-to-75-percent-"
                                 + "as-firm-limited-liability-partnership"),
+                entry("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_FIRM",
+                        "right-to-share-surplus-assets-75-to-100-percent-as-firm-"
+                                + "limited-liability-partnership"),
                 entry("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_PERSON",
                         "right-to-appoint-and-remove-members-limited-liability-partnership"),
                 entry("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_FIRM",
