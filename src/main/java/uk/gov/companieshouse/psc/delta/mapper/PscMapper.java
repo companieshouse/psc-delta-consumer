@@ -17,6 +17,7 @@ import uk.gov.companieshouse.GenerateEtagUtil;
 
 import uk.gov.companieshouse.api.delta.NameElements;
 import uk.gov.companieshouse.api.delta.Psc;
+import uk.gov.companieshouse.api.delta.PscAddress;
 import uk.gov.companieshouse.api.psc.Address;
 import uk.gov.companieshouse.api.psc.Data;
 import uk.gov.companieshouse.api.psc.DateOfBirth;
@@ -88,6 +89,24 @@ public interface PscMapper {
         }
         if (source.getPrincipalOfficeAddress() != null) {
             principalOfficeAddress.setPremises(source.getPrincipalOfficeAddress().getPremise());
+        }
+    }
+
+    /**
+     * Invoked at the end of the auto-generated mapping methods.
+     *
+     * @param target     the target PSC
+     * @param source     the source PSC
+     */
+    @AfterMapping
+    default void mapCareOf(@MappingTarget ExternalData target, Psc source) {
+        Data data = target.getData();
+        Address address = data.getServiceAddress();
+        PscAddress sourceAddress = source.getAddress();
+        if (source.getAddress() != null) {
+            address.setCareOf(sourceAddress.getCareOfName());
+            data.setServiceAddress(address);
+            target.setData(data);
         }
     }
 

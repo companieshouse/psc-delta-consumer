@@ -16,7 +16,7 @@
         "region": "Here",
         "country": "Wales",
         "postal_code": "CF14 9HQ",
-        "care_of": "CareOf",
+        "care_of_name": "CareOf",
         "po_box": "PoBox"
       },
       "usual_residential_address": {
