@@ -23,7 +23,7 @@
         <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-        <jib-maven-plugin.version>3.1.1</jib-maven-plugin.version>
+        <jib-maven-plugin.version>3.3.0</jib-maven-plugin.version>
         <ch-kafka.version>1.4.2</ch-kafka.version>
         <structured-logging.version>1.9.25</structured-logging.version>
         <kafka-models.version>1.0.34</kafka-models.version>
