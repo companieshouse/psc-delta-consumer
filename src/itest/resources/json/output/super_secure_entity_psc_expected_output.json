@@ -11,6 +11,7 @@
     "notification_id": "Gh7E2SSkj-YBM3i396MI-ycubGY",
     "data" : {
       "kind" : "super-secure-person-with-significant-control",
+      "description" : "super-secure-persons-with-significant-control",
       "is_sanctioned": null,
       "service_address" : null,
       "principal_office_address": null,

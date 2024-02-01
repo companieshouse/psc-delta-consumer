@@ -327,6 +327,24 @@ public interface PscMapper {
         }
     }
 
+    /**
+     * Manually map description.
+     * @param target Data object within ... object to map to
+     * @param source Psc delta object that will be mapped from.
+     */
+
+    @AfterMapping
+    default void mapSuperSecureDescription(@MappingTarget Data target, Psc source){
+        if(source.getKind() != null && source.getKind().equals("super-secure-person-with-significant-control")){
+            target.setDescription("super-secure-persons-with-significant-control");
+        }
+        if(source.getKind() != null && source.getKind().equals("super-secure-beneficial-owner")){
+            target.setDescription("super-secure-beneficial-owner");
+        }
+    }
+
+
+
 
 
 }

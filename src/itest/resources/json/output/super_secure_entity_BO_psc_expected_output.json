@@ -11,6 +11,7 @@
     "notification_id": "0ewxT9lV_MPjngrHhR-vsOUHOpo",
     "data" : {
       "kind" : "super-secure-beneficial-owner",
+      "description" : "super-secure-beneficial-owner",
       "is_sanctioned": false,
       "service_address" : null,
       "principal_office_address": null,

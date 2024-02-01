@@ -218,6 +218,7 @@ class PscMapperTest {
         assertEquals(LocalDate.of(2018, 2, 1), data.getCeasedOn());
         assertEquals("super-secure-person-with-significant-control", data.getKind());
         assertEquals(links, data.getLinks());
+        assertEquals("super-secure-persons-with-significant-control", data.getDescription());
 
         assertNull(data.getServiceAddress());
         assertNull(sensitiveData.getUsualResidentialAddress());
