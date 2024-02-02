@@ -111,6 +111,20 @@ public interface PscMapper {
     }
 
     /**
+     * Manually map Description for Super Secure.
+     * @param target Data object within FullRecordCompanyPSCApi object to map to
+     * @param source Psc delta object that will be mapped from
+     */
+    @AfterMapping
+    default void mapSuperSecureDescription(@MappingTarget Data target, Psc source) {
+        if (source.getKind() == Psc.KindEnum.SUPER_SECURE) {
+            target.setDescription("super-secure-persons-with-significant-control");
+        } else if (source.getKind() == Psc.KindEnum.SUPER_SECURE_BENEFICIAL_OWNER) {
+            target.setDescription("super-secure-beneficial-owner");
+        }
+    }
+
+    /**
      * Manually map Name.
      * @param target Data object within FullRecordCompanyPSCApi object to map to
      * @param source Psc delta object that will be mapped from
