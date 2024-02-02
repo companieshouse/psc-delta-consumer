@@ -217,6 +217,7 @@ class PscMapperTest {
         assertEquals("00623672", externalData.getCompanyNumber());
         assertEquals(LocalDate.of(2018, 2, 1), data.getCeasedOn());
         assertEquals("super-secure-person-with-significant-control", data.getKind());
+        assertEquals("super-secure-persons-with-significant-control", data.getDescription());
         assertEquals(links, data.getLinks());
 
         assertNull(data.getServiceAddress());
