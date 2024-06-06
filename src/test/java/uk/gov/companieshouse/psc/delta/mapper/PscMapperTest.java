@@ -198,6 +198,7 @@ class PscMapperTest {
     void shouldMapSuperSecurePscToPsc() throws Exception {
 
         pscObject = createPscObject("super-secure-psc");
+        pscObject.setPscId(null);
         FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
         fullRecordCompanyPSCApi.getExternalData().getData().setEtag(null);
 
@@ -211,7 +212,7 @@ class PscMapperTest {
         links.add(linkTypes);
 
         assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getId());
-        assertEquals("AoRE4bhxdSdXur_NLdfh4JF81Y4", externalData.getPscId());
+        assertNull(externalData.getPscId());
         assertEquals("5", externalData.getInternalId());
         assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getNotificationId());
         assertEquals("00623672", externalData.getCompanyNumber());
