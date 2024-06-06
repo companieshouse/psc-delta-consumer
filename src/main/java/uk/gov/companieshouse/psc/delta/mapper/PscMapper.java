@@ -256,7 +256,9 @@ public interface PscMapper {
     /** encode psc_id. */
     @AfterMapping
     default void mapEncodedPscId(@MappingTarget ExternalData target, Psc source) {
-        target.setPscId(MapperUtils.encode(source.getPscId()));
+        if (source.getPscId() != null) {
+            target.setPscId(MapperUtils.encode(source.getPscId()));
+        }
     }
 
     /**

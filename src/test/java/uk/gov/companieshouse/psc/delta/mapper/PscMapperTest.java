@@ -198,6 +198,7 @@ class PscMapperTest {
     void shouldMapSuperSecurePscToPsc() throws Exception {
 
         pscObject = createPscObject("super-secure-psc");
+        pscObject.setPscId(null);
         FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
         fullRecordCompanyPSCApi.getExternalData().getData().setEtag(null);
 
@@ -211,7 +212,7 @@ class PscMapperTest {
         links.add(linkTypes);
 
         assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getId());
-        assertEquals("AoRE4bhxdSdXur_NLdfh4JF81Y4", externalData.getPscId());
+        assertNull(externalData.getPscId());
         assertEquals("5", externalData.getInternalId());
         assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getNotificationId());
         assertEquals("00623672", externalData.getCompanyNumber());
@@ -398,6 +399,19 @@ class PscMapperTest {
         List<String> expectedValue = Arrays.asList("ownership-of-shares-more-than-25-percent-as-firm-registered-overseas-entity");
 
         assertEquals(expectedValue, target.getNaturesOfControl());
+    }
+
+    @Test
+    public void shouldMapSuperSecurePsc() {
+        Psc source = new Psc();
+        source.setNaturesOfControl(Arrays.asList(Psc.NaturesOfControlEnum.RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_FIRM));
+        source.setCompanyNumber("OC623672");
+        Data target = new Data();
+        pscMapper.mapNaturesOfControl(target,source);
+
+        List<String> expectedValue = Arrays.asList("right-to-share-surplus-assets-25-to-50-percent-as-firm-limited-liability-partnership");
+
+        assertEquals(expectedValue,target.getNaturesOfControl());
     }
 
 }
