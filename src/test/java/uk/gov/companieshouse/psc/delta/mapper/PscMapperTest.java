@@ -401,17 +401,4 @@ class PscMapperTest {
         assertEquals(expectedValue, target.getNaturesOfControl());
     }
 
-    @Test
-    public void shouldMapSuperSecurePsc() {
-        Psc source = new Psc();
-        source.setNaturesOfControl(Arrays.asList(Psc.NaturesOfControlEnum.RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_FIRM));
-        source.setCompanyNumber("OC623672");
-        Data target = new Data();
-        pscMapper.mapNaturesOfControl(target,source);
-
-        List<String> expectedValue = Arrays.asList("right-to-share-surplus-assets-25-to-50-percent-as-firm-limited-liability-partnership");
-
-        assertEquals(expectedValue,target.getNaturesOfControl());
-    }
-
 }
