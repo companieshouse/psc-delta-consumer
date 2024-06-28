@@ -9,6 +9,7 @@
     "id": "ERyiOut_ZiY1GMAZbkeN6PLCDNc",
     "psc_id" : "AoRE4bhxdSdXur_NLdfh4JF81Y4",
     "notification_id": "ERyiOut_ZiY1GMAZbkeN6PLCDNc",
+    "psc_statement_id" : "UKWLhOXMpdjzt-Maq7hbxAyPyQs",
     "data" : {
       "kind" : "individual-beneficial-owner",
       "is_sanctioned": true,
@@ -33,7 +34,7 @@
       "links": [
         {
           "self": "/company/OE623672/persons-with-significant-control/individual-beneficial-owner/ERyiOut_ZiY1GMAZbkeN6PLCDNc",
-          "statements": "/company/OE623672/persons-with-significant-control-statements/w9h9A8B-F2rLh_r57J6zpKsyHrM"
+          "statements": "/company/OE623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs"
         }
       ],
       "ceased_on": [2018, 2, 1],
