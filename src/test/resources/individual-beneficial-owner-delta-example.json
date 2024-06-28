@@ -7,7 +7,7 @@
       "kind": "individual-beneficial-owner",
       "notification_date": "20160101",
       "ceased_on": "20180201",
-      "psc_statement_id": "77",
+      "psc_statement_id": "12345",
       "address": {
         "premise": "3",
         "address_line_1": "Clos Rhiannon",
