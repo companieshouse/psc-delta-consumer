@@ -9,6 +9,7 @@
     "id": "0ewxT9lV_MPjngrHhR-vsOUHOpo",
     "psc_id" : "AoRE4bhxdSdXur_NLdfh4JF81Y4",
     "notification_id": "0ewxT9lV_MPjngrHhR-vsOUHOpo",
+    "psc_statement_id" : null,
     "data" : {
       "kind" : "super-secure-beneficial-owner",
       "is_sanctioned": false,

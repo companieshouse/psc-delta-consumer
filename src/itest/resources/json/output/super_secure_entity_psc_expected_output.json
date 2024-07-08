@@ -9,6 +9,7 @@
     "id": "Gh7E2SSkj-YBM3i396MI-ycubGY",
     "psc_id" : "AoRE4bhxdSdXur_NLdfh4JF81Y4",
     "notification_id": "Gh7E2SSkj-YBM3i396MI-ycubGY",
+    "psc_statement_id" : null,
     "data" : {
       "kind" : "super-secure-person-with-significant-control",
       "is_sanctioned": null,

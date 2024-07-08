@@ -9,6 +9,7 @@
     "id": "lXgouUAR16hSIwxdJSpbr_dhyT8",
     "psc_id" : "AoRE4bhxdSdXur_NLdfh4JF81Y4",
     "notification_id": "lXgouUAR16hSIwxdJSpbr_dhyT8",
+    "psc_statement_id" : "UKWLhOXMpdjzt-Maq7hbxAyPyQs",
     "data" : {
       "kind" : "individual-person-with-significant-control",
       "is_sanctioned": null,
@@ -32,7 +33,7 @@
       "links": [
         {
           "self": "/company/00623672/persons-with-significant-control/individual/lXgouUAR16hSIwxdJSpbr_dhyT8",
-          "statements": "/company/00623672/persons-with-significant-control-statements/w9h9A8B-F2rLh_r57J6zpKsyHrM"
+          "statements": "/company/00623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs"
         }
       ],
       "ceased_on": [2018, 2, 1],

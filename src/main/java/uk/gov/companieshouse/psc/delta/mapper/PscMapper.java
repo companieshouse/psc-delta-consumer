@@ -59,6 +59,7 @@ public interface PscMapper {
     @Mapping(target = "externalData.sensitiveData.usualResidentialAddress",
             source = "usualResidentialAddress")
     @Mapping(target = "externalData.data.identification", ignore = true)
+
     
     FullRecordCompanyPSCApi mapPscData(Psc psc);
 
@@ -67,6 +68,12 @@ public interface PscMapper {
     default void mapEncodedInternalId(@MappingTarget ExternalData target, Psc source) {
         target.setId(MapperUtils.encode(source.getInternalId()));
         target.setNotificationId(MapperUtils.encode(source.getInternalId()));
+        if (source.getPscStatementId() != null) {
+            target.setPscStatementId(MapperUtils.encode(source.getPscStatementId()));
+        } else {
+            target.setPscStatementId(null);
+        }
+
     }
 
     @AfterMapping
