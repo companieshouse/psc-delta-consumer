@@ -73,7 +73,7 @@ class PscMapperTest {
         List<ItemLinkTypes> links = new ArrayList<>();
         ItemLinkTypes linkTypes = new ItemLinkTypes();
         linkTypes.setSelf("/company/00623672/persons-with-significant-control/individual/lXgouUAR16hSIwxdJSpbr_dhyT8");
-        linkTypes.setStatements("/company/00623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs");
+        linkTypes.setStatement("/company/00623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs");
         links.add(linkTypes);
 
         assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getId());
@@ -118,7 +118,7 @@ class PscMapperTest {
         List<ItemLinkTypes> links = new ArrayList<>();
         ItemLinkTypes linkTypes = new ItemLinkTypes();
         linkTypes.setSelf("/company/00623672/persons-with-significant-control/corporate-entity/lXgouUAR16hSIwxdJSpbr_dhyT8");
-        linkTypes.setStatements("/company/00623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs");
+        linkTypes.setStatement("/company/00623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs");
         links.add(linkTypes);
 
         assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getId());
@@ -167,7 +167,7 @@ class PscMapperTest {
         List<ItemLinkTypes> links = new ArrayList<>();
         ItemLinkTypes linkTypes = new ItemLinkTypes();
         linkTypes.setSelf("/company/00623672/persons-with-significant-control/legal-person/lXgouUAR16hSIwxdJSpbr_dhyT8");
-        linkTypes.setStatements("/company/00623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs");
+        linkTypes.setStatement("/company/00623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs");
         links.add(linkTypes);
 
         assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getId());
@@ -228,7 +228,7 @@ class PscMapperTest {
         assertNull(data.getServiceAddress());
         assertNull(sensitiveData.getUsualResidentialAddress());
         assertNull(sensitiveData.getDateOfBirth());
-        assertNull(data.getLinks().get(0).getStatements());
+        assertNull(data.getLinks().get(0).getStatement());
 
     }
 
@@ -247,7 +247,7 @@ class PscMapperTest {
         List<ItemLinkTypes> links = new ArrayList<>();
         ItemLinkTypes linkTypes = new ItemLinkTypes();
         linkTypes.setSelf("/company/00623672/persons-with-significant-control/individual-beneficial-owner/lXgouUAR16hSIwxdJSpbr_dhyT8");
-        linkTypes.setStatements("/company/00623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs");
+        linkTypes.setStatement("/company/00623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs");
         links.add(linkTypes);
 
         assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getId());

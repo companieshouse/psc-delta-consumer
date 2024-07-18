@@ -187,7 +187,7 @@ public interface PscMapper {
 
         if (source.getPscStatementId() != null) {
             String encodedStatementId = MapperUtils.encode(source.getPscStatementId());
-            links.setStatements(String
+            links.setStatement(String
                     .format("/company/%s/persons-with-significant-control-statements/%s",
                             source.getCompanyNumber(),
                             encodedStatementId));
