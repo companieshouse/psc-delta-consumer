@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -211,16 +212,16 @@ public interface PscMapper {
                 break;
             case CORPORATE_ENTITY:
                 target.setKind("corporate-entity-person-with-significant-control");
-                identification.setLegalAuthority(source.getLegalAuthority());
-                identification.setLegalForm(source.getLegalForm());
-                identification.setCountryRegistered(source.getCountryRegistered());
-                identification.setPlaceRegistered(source.getPlaceRegistered());
-                identification.setRegistrationNumber(source.getRegistrationNumber());
+                mapIfNotNull(identification::setLegalAuthority, source.getLegalAuthority());
+                mapIfNotNull(identification::setLegalForm, source.getLegalForm());
+                mapIfNotNull(identification::setCountryRegistered, source.getCountryRegistered());
+                mapIfNotNull(identification::setPlaceRegistered, source.getPlaceRegistered());
+                mapIfNotNull(identification::setRegistrationNumber, source.getRegistrationNumber());
                 break;
             case LEGAL_PERSON:
                 target.setKind("legal-person-person-with-significant-control");
-                identification.setLegalAuthority(source.getLegalAuthority());
-                identification.setLegalForm(source.getLegalForm());
+                mapIfNotNull(identification::setLegalAuthority, source.getLegalAuthority());
+                mapIfNotNull(identification::setLegalForm, source.getLegalForm());
                 break;
             case SUPER_SECURE:
                 target.setKind("super-secure-person-with-significant-control");
@@ -230,16 +231,16 @@ public interface PscMapper {
                 break;
             case CORPORATE_ENTITY_BENEFICIAL_OWNER:
                 target.setKind("corporate-entity-beneficial-owner");
-                identification.setLegalAuthority(source.getLegalAuthority());
-                identification.setLegalForm(source.getLegalForm());
-                identification.setCountryRegistered(source.getCountryRegistered());
-                identification.setPlaceRegistered(source.getPlaceRegistered());
-                identification.setRegistrationNumber(source.getRegistrationNumber());
+                mapIfNotNull(identification::setLegalAuthority, source.getLegalAuthority());
+                mapIfNotNull(identification::setLegalForm, source.getLegalForm());
+                mapIfNotNull(identification::setCountryRegistered, source.getCountryRegistered());
+                mapIfNotNull(identification::setPlaceRegistered, source.getPlaceRegistered());
+                mapIfNotNull(identification::setRegistrationNumber, source.getRegistrationNumber());
                 break;
             case LEGAL_PERSON_BENEFICIAL_OWNER:
                 target.setKind("legal-person-beneficial-owner");
-                identification.setLegalAuthority(source.getLegalAuthority());
-                identification.setLegalForm(source.getLegalForm());
+                mapIfNotNull(identification::setLegalAuthority, source.getLegalAuthority());
+                mapIfNotNull(identification::setLegalForm, source.getLegalForm());
                 break;
             case SUPER_SECURE_BENEFICIAL_OWNER:
                 target.setKind("super-secure-beneficial-owner");
@@ -350,6 +351,14 @@ public interface PscMapper {
         }
     }
 
+    /**
+     * Function that maps Identification if the source value is not null.
+     */
+    private <T> void mapIfNotNull(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
+        }
+    }
 
 
 }
