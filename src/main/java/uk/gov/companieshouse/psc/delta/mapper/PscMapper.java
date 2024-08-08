@@ -212,16 +212,16 @@ public interface PscMapper {
                 break;
             case CORPORATE_ENTITY:
                 target.setKind("corporate-entity-person-with-significant-control");
-                mapIfNotNull(identification::setLegalAuthority, source.getLegalAuthority());
-                mapIfNotNull(identification::setLegalForm, source.getLegalForm());
-                mapIfNotNull(identification::setCountryRegistered, source.getCountryRegistered());
-                mapIfNotNull(identification::setPlaceRegistered, source.getPlaceRegistered());
-                mapIfNotNull(identification::setRegistrationNumber, source.getRegistrationNumber());
+                identification.setLegalAuthority(source.getLegalAuthority());
+                identification.setLegalForm(source.getLegalForm());
+                identification.setCountryRegistered(source.getCountryRegistered());
+                identification.setPlaceRegistered(source.getPlaceRegistered());
+                identification.setRegistrationNumber(source.getRegistrationNumber());
                 break;
             case LEGAL_PERSON:
                 target.setKind("legal-person-person-with-significant-control");
-                mapIfNotNull(identification::setLegalAuthority, source.getLegalAuthority());
-                mapIfNotNull(identification::setLegalForm, source.getLegalForm());
+                identification.setLegalAuthority(source.getLegalAuthority());
+                identification.setLegalForm(source.getLegalForm());
                 break;
             case SUPER_SECURE:
                 target.setKind("super-secure-person-with-significant-control");
@@ -231,21 +231,52 @@ public interface PscMapper {
                 break;
             case CORPORATE_ENTITY_BENEFICIAL_OWNER:
                 target.setKind("corporate-entity-beneficial-owner");
-                mapIfNotNull(identification::setLegalAuthority, source.getLegalAuthority());
-                mapIfNotNull(identification::setLegalForm, source.getLegalForm());
-                mapIfNotNull(identification::setCountryRegistered, source.getCountryRegistered());
-                mapIfNotNull(identification::setPlaceRegistered, source.getPlaceRegistered());
-                mapIfNotNull(identification::setRegistrationNumber, source.getRegistrationNumber());
+                identification.setLegalAuthority(source.getLegalAuthority());
+                identification.setLegalForm(source.getLegalForm());
+                identification.setCountryRegistered(source.getCountryRegistered());
+                identification.setPlaceRegistered(source.getPlaceRegistered());
+                identification.setRegistrationNumber(source.getRegistrationNumber());
                 break;
             case LEGAL_PERSON_BENEFICIAL_OWNER:
                 target.setKind("legal-person-beneficial-owner");
-                mapIfNotNull(identification::setLegalAuthority, source.getLegalAuthority());
-                mapIfNotNull(identification::setLegalForm, source.getLegalForm());
+                identification.setLegalAuthority(source.getLegalAuthority());
+                identification.setLegalForm(source.getLegalForm());
                 break;
             case SUPER_SECURE_BENEFICIAL_OWNER:
                 target.setKind("super-secure-beneficial-owner");
                 break;
             default:
+        }
+    }
+
+    /**removes empty objects from the target to ensure they are not persisted to Mongo. */
+    @AfterMapping
+    default void removeEmptyIdentificationObject(@MappingTarget Data target, Psc source) {
+        if (target.getIdentification() != null) {
+            if (Objects.equals(target.getIdentification().getLegalAuthority(),
+                    new Identification().getLegalAuthority())) {
+                target.getIdentification().setLegalAuthority(null);
+            }
+            if (Objects.equals(target.getIdentification().getLegalForm(),
+                    new Identification().getLegalForm())) {
+                target.getIdentification().setLegalForm(null);
+            }
+            if (Objects.equals(target.getIdentification().getCountryRegistered(),
+                    new Identification().getCountryRegistered())) {
+                target.getIdentification().setCountryRegistered(null);
+            }
+            if (Objects.equals(target.getIdentification().getPlaceRegistered(),
+                    new Identification().getPlaceRegistered())) {
+                target.getIdentification().setPlaceRegistered(null);
+            }
+            if (Objects.equals(target.getIdentification().getRegistrationNumber(),
+                    new Identification().getRegistrationNumber())) {
+                target.getIdentification().setRegistrationNumber(null);
+            }
+            if (Objects.equals(target.getIdentification(), new Identification())) {
+                target.setIdentification(null);
+            }
+
         }
     }
 
@@ -350,15 +381,5 @@ public interface PscMapper {
             target.setNaturesOfControl(mappedNaturesOfControl);
         }
     }
-
-    /**
-     * Function that maps Identification if the source value is not null.
-     */
-    private <T> void mapIfNotNull(Consumer<T> setter, T value) {
-        if (value != null) {
-            setter.accept(value);
-        }
-    }
-
 
 }
