@@ -405,4 +405,5 @@ class PscMapperTest {
 
         assertEquals(expectedValue, target.getNaturesOfControl());
     }
+
 }
