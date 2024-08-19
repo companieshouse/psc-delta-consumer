@@ -251,32 +251,10 @@ public interface PscMapper {
     /**removes empty objects from the target to ensure they are not persisted to Mongo. */
     @AfterMapping
     default void removeEmptyIdentificationObject(@MappingTarget Data target, Psc source) {
-        if (target.getIdentification() != null) {
-            if (Objects.equals(target.getIdentification().getLegalAuthority(),
-                    new Identification().getLegalAuthority())) {
-                target.getIdentification().setLegalAuthority(null);
-            }
-            if (Objects.equals(target.getIdentification().getLegalForm(),
-                    new Identification().getLegalForm())) {
-                target.getIdentification().setLegalForm(null);
-            }
-            if (Objects.equals(target.getIdentification().getCountryRegistered(),
-                    new Identification().getCountryRegistered())) {
-                target.getIdentification().setCountryRegistered(null);
-            }
-            if (Objects.equals(target.getIdentification().getPlaceRegistered(),
-                    new Identification().getPlaceRegistered())) {
-                target.getIdentification().setPlaceRegistered(null);
-            }
-            if (Objects.equals(target.getIdentification().getRegistrationNumber(),
-                    new Identification().getRegistrationNumber())) {
-                target.getIdentification().setRegistrationNumber(null);
-            }
-            if (Objects.equals(target.getIdentification(), new Identification())) {
-                target.setIdentification(null);
-            }
-
+        if (Objects.equals(target.getIdentification(), new Identification())) {
+            target.setIdentification(null);
         }
+
     }
 
     /**
