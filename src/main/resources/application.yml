@@ -16,7 +16,7 @@ pscs:
     group-id: psc-delta-consumer
     topic: ${PSC_DELTA_TOPIC:psc-delta}
     retry-attempts: ${PSC_DELTA_ATTEMPTS:4}
-    backoff-delay: ${PSC_DELTA_BACKOFF_DELAY:100}
+    backoff-delay: ${PSC_DELTA_BACKOFF_DELAY:15000}
 
 api:
   psc-data-api-key: ${PSC_DATA_API_KEY:localhost}
