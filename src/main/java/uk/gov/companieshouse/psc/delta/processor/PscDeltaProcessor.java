@@ -2,6 +2,7 @@ package uk.gov.companieshouse.psc.delta.processor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import consumer.exception.NonRetryableErrorException;
+import consumer.exception.RetryableErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
@@ -54,7 +55,7 @@ public class PscDeltaProcessor {
                     DataMapHolder.getLogMap());
         } catch (Exception ex) {
             logger.errorContext(contextId, ex.getMessage(), ex, DataMapHolder.getLogMap());
-            throw new NonRetryableErrorException("Error when extracting psc delta", ex);
+            throw new RetryableErrorException("Error when extracting psc delta", ex);
         }
 
         FullRecordCompanyPSCApi fullRecordCompanyPscApi;
@@ -64,7 +65,7 @@ public class PscDeltaProcessor {
                     DataMapHolder.getLogMap());
         } catch (Exception ex) {
             logger.errorContext(contextId, ex.getMessage(), ex, DataMapHolder.getLogMap());
-            throw new NonRetryableErrorException("Error when transforming into api object", ex);
+            throw new RetryableErrorException("Error when transforming into api object", ex);
         }
 
         apiClientService.putPscFullRecord(contextId,
@@ -87,7 +88,7 @@ public class PscDeltaProcessor {
             pscDelete = mapper.readValue(
                     payload.getData(), PscDeleteDelta.class);
         } catch (Exception ex) {
-            throw new NonRetryableErrorException(
+            throw new RetryableErrorException(
                     "Error when extracting psc delete delta", ex);
         }
 

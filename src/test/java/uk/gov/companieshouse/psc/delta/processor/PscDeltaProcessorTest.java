@@ -2,6 +2,7 @@ package uk.gov.companieshouse.psc.delta.processor;
 
 import consumer.exception.NonRetryableErrorException;
 
+import consumer.exception.RetryableErrorException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -63,20 +64,20 @@ class PscDeltaProcessorTest {
     }
 
     @Test
-    @DisplayName("Confirms a Non Retryable Error is throws when the Chs Delta message is invalid")
-    void When_InvalidChsDeltaMessage_Expect_NonRetryableError() {
+    @DisplayName("Confirms a Retryable Error is thrown when the Chs Delta message is invalid")
+    void When_InvalidChsDeltaMessage_Expect_RetryableError() {
         Message<ChsDelta> mockChsDeltaMessage = testHelper.createInvalidChsDeltaMessage();
-        assertThrows(NonRetryableErrorException.class, () -> deltaProcessor.processDelta(mockChsDeltaMessage));
+        assertThrows(RetryableErrorException.class, () -> deltaProcessor.processDelta(mockChsDeltaMessage));
         Mockito.verify(apiClientService, times(0)).
                 putPscFullRecord(any(),any(),any(), any());
     }
 
     @Test
-    @DisplayName("Confirms a Non Retryable Error is throws when the Chs Delete Delta message is invalid")
-    void When_InvalidChsDeleteDeltaMessage_Expect_NonRetryableError() {
+    @DisplayName("Confirms a Retryable Error is thrown when the Chs Delete Delta message is invalid")
+    void When_InvalidChsDeleteDeltaMessage_Expect_RetryableError() {
         Message<ChsDelta> mockChsDeltaMessage = testHelper.createInvalidChsDeltaMessage();
 
-        assertThrows(NonRetryableErrorException.class, () -> deltaProcessor.processDelete(mockChsDeltaMessage));
+        assertThrows(RetryableErrorException.class, () -> deltaProcessor.processDelete(mockChsDeltaMessage));
         Mockito.verify(apiClientService, times(0)).
                 deletePscFullRecord(any(), any(),any());
     }
