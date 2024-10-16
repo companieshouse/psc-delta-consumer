@@ -209,6 +209,48 @@ public class MapperUtils {
                 "right-to-appoint-and-remove-members-as-firm-limited-liability-partnership");
         naturesOfControlMap.put("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_TRUST",
                 "right-to-appoint-and-remove-members-as-trust-limited-liability-partnership");
+        naturesOfControlMap.put("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_CONTROLOVERTRUST",
+                "ownership-of-shares-more-than-25-percent-as-control-over-trust"
+                        + "-registered-overseas-entity");
+        naturesOfControlMap.put("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_CONTROLOVERTRUST",
+                "voting-rights-more-than-25-percent-as-control-over-trust"
+                        + "-registered-overseas-entity");
+        naturesOfControlMap.put("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_CONTROLOVERTRUST",
+                "right-to-appoint-and-remove-directors-as-control-over-trust"
+                        + "-registered-overseas-entity");
+        naturesOfControlMap.put("OE_SIGINFLUENCECONTROL_AS_CONTROLOVERTRUST",
+                "significant-influence-or-control-as-control-over-trust"
+                        + "-registered-overseas-entity");
+        naturesOfControlMap.put("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_CONTROLOVERFIRM",
+                "ownership-of-shares-more-than-25-percent-as-control-over-firm"
+                        + "-registered-overseas-entity");
+        naturesOfControlMap.put("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_CONTROLOVERFIRM",
+                "voting-rights-more-than-25-percent-as-control-over-firm"
+                        + "-registered-overseas-entity");
+        naturesOfControlMap.put("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_CONTROLOVERFIRM",
+                "right-to-appoint-and-remove-directors-as-control-over-firm"
+                        + "-registered-overseas-entity");
+        naturesOfControlMap.put("OE_SIGINFLUENCECONTROL_AS_CONTROLOVERFIRM",
+                "significant-influence-or-control-as-control-over-firm"
+                        + "-registered-overseas-entity");
+        naturesOfControlMap.put("OE_REGOWNER_AS_NOMINEEPERSON_ENGLANDWALES",
+                "registered-owner-as-nominee-person-england-wales"
+                        + "-registered-overseas-entity");
+        naturesOfControlMap.put("OE_REGOWNER_AS_NOMINEEPERSON_SCOTLAND",
+                "registered-owner-as-nominee-person-scotland"
+                        + "-registered-overseas-entity");
+        naturesOfControlMap.put("OE_REGOWNER_AS_NOMINEEPERSON_NORTHERNIRELAND",
+                "registered-owner-as-nominee-person-northern-ireland"
+                        + "-registered-overseas-entity");
+        naturesOfControlMap.put("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_ENGLANDWALES",
+                "registered-owner-as-nominee-another-entity-england-wales"
+                        + "-registered-overseas-entity");
+        naturesOfControlMap.put("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_SCOTLAND",
+                "registered-owner-as-nominee-another-entity-scotland"
+                        + "-registered-overseas-entity");
+        naturesOfControlMap.put("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_NORTHERNIRELAND",
+                "registered-owner-as-nominee-another-entity-northern-ireland"
+                        + "-registered-overseas-entity");
 
         return naturesOfControlMap;
     }
@@ -312,7 +354,51 @@ public class MapperUtils {
                 entry("OE_SIGINFLUENCECONTROL_AS_TRUST",
                         "significant-influence-or-control-as-trust-registered-overseas-entity"),
                 entry("OE_SIGINFLUENCECONTROL_AS_FIRM",
-                        "significant-influence-or-control-as-firm-registered-overseas-entity"));
+                        "significant-influence-or-control-as-firm-registered-overseas-entity"),
+                entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_CONTROLOVERTRUST",
+                        "ownership-of-shares-more-than-25-percent-as-control-over-trust"
+                                + "-registered-overseas-entity"),
+                entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_CONTROLOVERTRUST",
+                        "voting-rights-more-than-25-percent-as-control-over-trust"
+                                + "-registered-overseas-entity"),
+                entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_CONTROLOVERTRUST",
+                        "right-to-appoint-and-remove-directors-as-control-over-trust"
+                                + "-registered-overseas-entity"),
+                entry("OE_SIGINFLUENCECONTROL_AS_CONTROLOVERTRUST",
+                        "significant-influence-or-control-as-control-over-trust"
+                                + "-registered-overseas-entity"),
+                entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_CONTROLOVERFIRM",
+                        "ownership-of-shares-more-than-25-percent-as-control-over-firm"
+                                + "-registered-overseas-entity"),
+                entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_CONTROLOVERFIRM",
+                        "voting-rights-more-than-25-percent-as-control-over-firm"
+                                + "-registered-overseas-entity"),
+                entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_CONTROLOVERFIRM",
+                        "right-to-appoint-and-remove-directors-as-control-over-firm"
+                                + "-registered-overseas-entity"),
+                entry("OE_SIGINFLUENCECONTROL_AS_CONTROLOVERFIRM",
+                        "significant-influence-or-control-as-control-over-firm"
+                                + "-registered-overseas-entity"),
+                entry("OE_REGOWNER_AS_NOMINEEPERSON_ENGLANDWALES",
+                        "registered-owner-as-nominee-person-england-wales"
+                                + "-registered-overseas-entity"),
+                entry("OE_REGOWNER_AS_NOMINEEPERSON_SCOTLAND",
+                        "registered-owner-as-nominee-person-scotland"
+                                + "-registered-overseas-entity"),
+                entry("OE_REGOWNER_AS_NOMINEEPERSON_NORTHERNIRELAND",
+                        "registered-owner-as-nominee-person-northern-ireland"
+                                + "-registered-overseas-entity"),
+                entry("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_ENGLANDWALES",
+                        "registered-owner-as-nominee-another-entity-england-wales"
+                                + "-registered-overseas-entity"),
+                entry("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_SCOTLAND",
+                        "registered-owner-as-nominee-another-entity-scotland"
+                                + "-registered-overseas-entity"),
+                entry("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_NORTHERNIRELAND",
+                        "registered-owner-as-nominee-another-entity-northern-ireland"
+                                + "-registered-overseas-entity")
+        );
+
         return new HashMap<>(roeMap);
     }
 }
