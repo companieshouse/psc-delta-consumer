@@ -13,33 +13,35 @@
     <name>psc-delta-consumer</name>
     <description>The psc-delta-consumer is responsible for transforming psc data from the psc-delta kafka topic as part of chips and chs data sync.</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>21</java.version>
         <main.class>uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication</main.class>
-        <spring-boot-dependencies.version>2.6.4</spring-boot-dependencies.version>
-        <spring-boot-maven-plugin.version>2.6.4</spring-boot-maven-plugin.version>
+        <spring-boot-dependencies.version>3.3.5</spring-boot-dependencies.version>
+        <spring-boot-maven-plugin.version>3.3.5</spring-boot-maven-plugin.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <maven-build-helper-plugin.version>3.2.0</maven-build-helper-plugin.version>
-        <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
-        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
-        <jib-maven-plugin.version>3.3.0</jib-maven-plugin.version>
-        <ch-kafka.version>1.4.2</ch-kafka.version>
-        <structured-logging.version>1.9.41</structured-logging.version>
-        <kafka-models.version>1.0.34</kafka-models.version>
-        <private-api-sdk-java.version>2.0.471</private-api-sdk-java.version>
-        <api-sdk-manager-java-library.version>1.0.4</api-sdk-manager-java-library.version>
-        <map-struct.version>1.5.3.Final</map-struct.version>
-        <api-helper-java-library.version>1.4.5</api-helper-java-library.version>
-        <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
+        <maven-build-helper-plugin.version>3.6.0</maven-build-helper-plugin.version>
+        <maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+        <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
+        <jib-maven-plugin.version>3.4.4</jib-maven-plugin.version>
+        <ch-kafka.version>3.0.3</ch-kafka.version>
+        <structured-logging.version>3.0.20</structured-logging.version>
+        <kafka-models.version>3.0.8</kafka-models.version>
+        <private-api-sdk-java.version>4.0.471</private-api-sdk-java.version>
+        <api-sdk-manager-java-library.version>3.0.6</api-sdk-manager-java-library.version>
+        <map-struct.version>1.6.2</map-struct.version>
+        <api-helper-java-library.version>3.0.1</api-helper-java-library.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
+        <checkstyle.version>10.20.0</checkstyle.version>
 
         <!-- Tests -->
-        <assertj-core.version>3.22.0</assertj-core.version>
+        <assertj-core.version>3.26.3</assertj-core.version>
         <skip.integration.tests>false</skip.integration.tests>
         <skip.unit.tests>false</skip.unit.tests>
-        <test-containers.version>1.16.3</test-containers.version>
-        <io-cucumber.version>7.2.3</io-cucumber.version>
-        <wiremock.standalone.version>2.32.0</wiremock.standalone.version>
+        <test-containers.version>1.20.1</test-containers.version>
+        <io-cucumber.version>7.20.1</io-cucumber.version>
+        <wiremock.standalone.version>3.9.2</wiremock.standalone.version>
 
         <!--sonar configuration-->
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml,
@@ -59,6 +61,11 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>1.12.0</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -93,16 +100,38 @@
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.pcollections</groupId>
+                    <artifactId>pcollections</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>kafka-models</artifactId>
             <version>${kafka-models.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.avro</groupId>
+                    <artifactId>avro</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>ch-kafka</artifactId>
             <version>${ch-kafka.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.avro</groupId>
+                    <artifactId>avro</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
@@ -169,26 +198,14 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.tomakehurst</groupId>
-            <artifactId>wiremock-jre8</artifactId>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock</artifactId>
             <version>${wiremock.standalone.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
-                    <groupId>org.conscrypt</groupId>
-                    <artifactId>conscrypt-openjdk-uber</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>net.javacrumbs.json-unit</groupId>
-                    <artifactId>json-unit-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.github.jknack</groupId>
-                    <artifactId>handlebars</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.github.jknack</groupId>
-                    <artifactId>handlebars-helpers</artifactId>
+                    <groupId>com.ethlo.time</groupId>
+                    <artifactId>itu</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -211,6 +228,22 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>2.17</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>7.5.1</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -339,6 +372,33 @@
                         <include>**/*ITest.java</include>
                     </includes>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.17</version>
+                <executions>
+                    <execution>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <violationSeverity>warning</violationSeverity>
+                    <logViolationsToConsole>true</logViolationsToConsole>
+                    <failsOnError>true</failsOnError>
+                    <failOnViolation>true</failOnViolation>
+                    <configLocation>companieshouse_checks.xml</configLocation>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>uk.gov.companieshouse</groupId>
+                        <artifactId>java-checkstyle-config</artifactId>
+                        <version>1.1</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
