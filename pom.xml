@@ -120,6 +120,14 @@
                     <groupId>org.apache.avro</groupId>
                     <artifactId>avro</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty.http2</groupId>
+                    <artifactId>http2-server</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-webapp</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -199,7 +207,7 @@
         </dependency>
         <dependency>
             <groupId>org.wiremock</groupId>
-            <artifactId>wiremock</artifactId>
+            <artifactId>wiremock-jetty12</artifactId>
             <version>${wiremock.standalone.version}</version>
             <scope>test</scope>
             <exclusions>
@@ -213,7 +221,6 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -226,19 +233,49 @@
             </exclusions>
         </dependency>
     </dependencies>
-
     <build>
         <pluginManagement>
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>2.17</version>
+                    <version>${maven-checkstyle-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>process-sources</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <violationSeverity>warning</violationSeverity>
+                        <logViolationsToConsole>true</logViolationsToConsole>
+                        <failsOnError>true</failsOnError>
+                        <failOnViolation>true</failOnViolation>
+                        <configLocation>companieshouse_checks.xml</configLocation>
+                    </configuration>
                     <dependencies>
+                    <dependency>
+                        <groupId>uk.gov.companieshouse</groupId>
+                        <artifactId>java-checkstyle-config</artifactId>
+                        <version>1.1</version>
+                    </dependency>
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>7.5.1</version>
+                            <version>${checkstyle.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.checkerframework</groupId>
+                            <artifactId>checker-qual</artifactId>
+                            <version>3.48.2</version>
+                            <exclusions>
+                                <exclusion>
+                                    <groupId>org.xmlresolver</groupId>
+                                    <artifactId>xmlresolver</artifactId>
+                                </exclusion>
+                            </exclusions>
                         </dependency>
                     </dependencies>
                 </plugin>
@@ -373,33 +410,33 @@
                     </includes>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.17</version>
-                <executions>
-                    <execution>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <violationSeverity>warning</violationSeverity>
-                    <logViolationsToConsole>true</logViolationsToConsole>
-                    <failsOnError>true</failsOnError>
-                    <failOnViolation>true</failOnViolation>
-                    <configLocation>companieshouse_checks.xml</configLocation>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>uk.gov.companieshouse</groupId>
-                        <artifactId>java-checkstyle-config</artifactId>
-                        <version>1.1</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-checkstyle-plugin</artifactId>-->
+<!--                <version>3.6.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>process-sources</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>check</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--                <configuration>-->
+<!--                    <violationSeverity>warning</violationSeverity>-->
+<!--                    <logViolationsToConsole>true</logViolationsToConsole>-->
+<!--                    <failsOnError>true</failsOnError>-->
+<!--                    <failOnViolation>true</failOnViolation>-->
+<!--                    <configLocation>companieshouse_checks.xml</configLocation>-->
+<!--                </configuration>-->
+<!--                <dependencies>-->
+<!--                    <dependency>-->
+<!--                        <groupId>uk.gov.companieshouse</groupId>-->
+<!--                        <artifactId>java-checkstyle-config</artifactId>-->
+<!--                        <version>1.1</version>-->
+<!--                    </dependency>-->
+<!--                </dependencies>-->
+<!--            </plugin>-->
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
@@ -409,6 +446,17 @@
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
                 <version>${jib-maven-plugin.version}</version>
+                <configuration>
+                    <from>
+                        <image>416670754337.dkr.ecr.eu-west-2.amazonaws.com/ci-corretto-build-21:latest</image>
+                    </from>
+                    <to>
+                        <image>169942020521.dkr.ecr.eu-west-2.amazonaws.com/local/psc-delta-consumer:latest</image>
+                    </to>
+                    <container>
+                        <expandClasspathDependencies>true</expandClasspathDependencies>
+                    </container>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -6,7 +6,6 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.retrytopic.DltStrategy;
-import org.springframework.kafka.retrytopic.FixedDelayStrategy;
 import org.springframework.messaging.Message;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Component;
@@ -39,7 +38,6 @@ public class PscDeltaConsumer {
      */
     @RetryableTopic(attempts = "${pscs.delta.retry-attempts}",
             backoff = @Backoff(delayExpression = "${pscs.delta.backoff-delay}"),
-            fixedDelayTopicStrategy = FixedDelayStrategy.SINGLE_TOPIC,
             dltTopicSuffix = "-error",
             retryTopicSuffix = "-retry",
             dltStrategy = DltStrategy.FAIL_ON_ERROR,
