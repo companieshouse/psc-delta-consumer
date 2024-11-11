@@ -1,12 +1,14 @@
 package uk.gov.companieshouse.psc.delta.steps;
 
-import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.http.Request;
+import com.github.tomakehurst.wiremock.matching.ValueMatcher;
 import consumer.matcher.RequestMatcher;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -24,7 +26,18 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.StreamSupport;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.delete;
+import static com.github.tomakehurst.wiremock.client.WireMock.deleteRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
+import static com.github.tomakehurst.wiremock.client.WireMock.put;
+import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.requestMadeFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PscSteps {
@@ -128,9 +141,12 @@ public class PscSteps {
      @Then("a PUT request is sent to the psc api with the transformed data for psc of kind {string} for company {string} with id {string}")
     public void aPutRequestIsSent(String pscKind, String companyNumber, String pscId) {
         String output = TestData.getOutputData(pscKind + "_psc_expected_output.json");
-        verify(1, requestMadeFor(new RequestMatcher(logger, output,
-                "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record",
-                List.of("external_data.data.etag", "internal_data.delta_at"))));
+        verify(1, putRequestedFor(urlMatching("/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record"))
+                        .withRequestBody(equalToJson(output)));
+
+//         verify(1, requestMadeFor(new RequestMatcher(logger, output,
+//                 "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record",
+//                 List.of("external_data.data.etag", "internal_data.delta_at"))));
     }
 
     @Then("^the message should be moved to topic (.*)$")
@@ -156,7 +172,7 @@ public class PscSteps {
     @Then("a DELETE request is sent to the psc data api with the encoded Id")
     public void deleteRequestIsSent() {
         verify(1, deleteRequestedFor(urlMatching(
-                "/company/OE623672/persons-with-significant-control/lXgouUAR16hSIwxdJSpbr_dhyT8/full_record")));
+                "/company/OE623672/persons-with-significant-control/lXgouUAR16hSIwxdJSpbr_dhyT8/delete")));
     }
 
     @After
@@ -173,7 +189,7 @@ public class PscSteps {
 
     private void stubDeleteStatement(int responseCode) {
         stubFor(delete(urlEqualTo(
-                "/company/OE623672/persons-with-significant-control/lXgouUAR16hSIwxdJSpbr_dhyT8/full_record"))
+                "/company/OE623672/persons-with-significant-control/lXgouUAR16hSIwxdJSpbr_dhyT8/delete"))
                 .willReturn(aResponse().withStatus(responseCode)));
     }
 

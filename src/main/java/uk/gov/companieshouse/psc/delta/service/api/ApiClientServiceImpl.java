@@ -79,7 +79,7 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
                                                  String companyNumber) {
 
         final String uri = String.format(
-                "/company/%s/persons-with-significant-control/%s/full_record", 
+                "/company/%s/persons-with-significant-control/%s/delete",
                        companyNumber, 
                        notificationId);
         

@@ -1,44 +1,44 @@
 {
-  "internal_data": {
-    "created_at": null,
-    "updated_at": null,
-    "updated_by": null
-  },
-  "external_data": {
-    "company_number": "00623672",
-    "id": "Gh7E2SSkj-YBM3i396MI-ycubGY",
-    "psc_id" : "AoRE4bhxdSdXur_NLdfh4JF81Y4",
-    "notification_id": "Gh7E2SSkj-YBM3i396MI-ycubGY",
-    "psc_statement_id" : null,
+  "external_data" : {
     "data" : {
+      "description" : "super-secure-persons-with-significant-control",
       "kind" : "super-secure-person-with-significant-control",
-      "is_sanctioned": null,
+      "identification" : null,
+      "notified_on" : null,
+      "ceased_on" : [ 2018, 2, 1 ],
       "service_address" : null,
-      "principal_office_address": null,
-      "natures_of_control": null,
-      "links": [
-        {
-          "self": "/company/00623672/persons-with-significant-control/super-secure/Gh7E2SSkj-YBM3i396MI-ycubGY",
-          "statement": null
-        }
-      ],
-      "ceased_on": [2018, 2, 1],
-      "notification_date": null,
-      "notified_on": null,
-      "company_number": null,
-      "country_of_residence": null,
-      "description": "super-secure-persons-with-significant-control",
-      "identification": null,
-      "name": null,
-      "name_elements": null,
-      "nationality": null,
-      "service_address_same_as_registered_office_address": null
+      "principal_office_address" : null,
+      "name" : null,
+      "name_elements" : null,
+      "natures_of_control" : null,
+      "is_sanctioned" : null,
+      "etag" : "ec56e9952c885c6d284f7a7157ada052fb363b38",
+      "service_address_same_as_registered_office_address" : null,
+      "country_of_residence" : null,
+      "links" : [ {
+        "self" : "/company/00623672/persons-with-significant-control/super-secure/Gh7E2SSkj-YBM3i396MI-ycubGY",
+        "statement" : null
+      } ],
+      "nationality" : null,
+      "company_number" : null,
+      "notification_date" : null
     },
-    "internal_id": "9",
-    "sensitive_data": {
-      "date_of_birth": null,
-      "residential_address_same_as_service_address": null,
-      "usual_residential_address": null
-    }
+    "sensitive_data" : {
+      "usual_residential_address" : null,
+      "residential_address_same_as_service_address" : null,
+      "date_of_birth" : null
+    },
+    "id" : "Gh7E2SSkj-YBM3i396MI-ycubGY",
+    "psc_id" : "AoRE4bhxdSdXur_NLdfh4JF81Y4",
+    "internal_id" : "9",
+    "notification_id" : "Gh7E2SSkj-YBM3i396MI-ycubGY",
+    "psc_statement_id" : null,
+    "company_number" : "00623672"
+  },
+  "internal_data" : {
+    "delta_at" : 1635517243.360560000,
+    "created_at" : null,
+    "updated_by" : null,
+    "updated_at" : null
   }
 }
