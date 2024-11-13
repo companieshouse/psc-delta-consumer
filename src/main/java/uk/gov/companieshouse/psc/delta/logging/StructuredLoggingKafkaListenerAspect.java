@@ -21,12 +21,15 @@ import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
+import uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication;
 
 @Component
 @Aspect
 class StructuredLoggingKafkaListenerAspect {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NAMESPACE);
+    private static final Logger LOGGER = LoggerFactory.getLogger(
+            PscDeltaConsumerApplication.APPLICATION_NAME_SPACE);
+
     private static final String LOG_MESSAGE_RECEIVED = "Processing delta";
     private static final String LOG_MESSAGE_DELETE_RECEIVED = "Processing DELETE delta";
     private static final String LOG_MESSAGE_PROCESSED = "Processed delta";
