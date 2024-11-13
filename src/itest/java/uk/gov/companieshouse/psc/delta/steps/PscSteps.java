@@ -1,8 +1,5 @@
 package uk.gov.companieshouse.psc.delta.steps;
 
-import com.github.tomakehurst.wiremock.http.Request;
-import com.github.tomakehurst.wiremock.matching.ValueMatcher;
-import consumer.matcher.RequestMatcher;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -20,6 +17,7 @@ import org.springframework.kafka.test.utils.KafkaTestUtils;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.psc.delta.data.TestData;
+import uk.gov.companieshouse.psc.delta.matcher.CustomRequestMatcher;
 
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -140,14 +138,13 @@ public class PscSteps {
 
      @Then("a PUT request is sent to the psc api with the transformed data for psc of kind {string} for company {string} with id {string}")
     public void aPutRequestIsSent(String pscKind, String companyNumber, String pscId) {
-        String output = TestData.getOutputData(pscKind + "_psc_expected_output.json");
-        verify(1, putRequestedFor(urlMatching("/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record"))
-                        .withRequestBody(equalToJson(output)));
+         String output = TestData.getOutputData(pscKind + "_psc_expected_output.json");
 
-//         verify(1, requestMadeFor(new RequestMatcher(logger, output,
-//                 "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record",
-//                 List.of("external_data.data.etag", "internal_data.delta_at"))));
-    }
+         verify(1, requestMadeFor(
+                 new CustomRequestMatcher(logger, output,
+                         "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record",
+                         List.of("external_data.data.etag", "internal_data.delta_at"))));
+     }
 
     @Then("^the message should be moved to topic (.*)$")
     public void theMessageShouldBeMovedToTopic(String topic) {

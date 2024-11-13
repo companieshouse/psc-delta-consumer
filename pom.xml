@@ -41,7 +41,7 @@
         <skip.unit.tests>false</skip.unit.tests>
         <test-containers.version>1.20.1</test-containers.version>
         <io-cucumber.version>7.20.1</io-cucumber.version>
-        <wiremock.version>3.9.2</wiremock.version>
+        <wiremock.standalone.version>3.9.2</wiremock.standalone.version>
 
         <!--sonar configuration-->
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml,
@@ -207,15 +207,9 @@
         </dependency>
         <dependency>
             <groupId>org.wiremock</groupId>
-            <artifactId>wiremock-jetty12</artifactId>
-            <version>3.9.2</version>
+            <artifactId>wiremock-standalone</artifactId>
+            <version>${wiremock.standalone.version}</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.ethlo.time</groupId>
-                    <artifactId>itu</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
