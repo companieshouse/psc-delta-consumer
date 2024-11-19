@@ -34,6 +34,9 @@
         <api-helper-java-library.version>3.0.1</api-helper-java-library.version>
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <checkstyle.version>10.20.0</checkstyle.version>
+        <java-checkstyle-config.version>1.1</java-checkstyle-config.version>
+        <avro.version>1.12.0</avro.version>
+        <checker-qual.version>3.48.2</checker-qual.version>
 
         <!-- Tests -->
         <assertj-core.version>3.26.3</assertj-core.version>
@@ -64,7 +67,7 @@
         <dependency>
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
-            <version>1.12.0</version>
+            <version>${avro.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -253,7 +256,7 @@
                     <dependency>
                         <groupId>uk.gov.companieshouse</groupId>
                         <artifactId>java-checkstyle-config</artifactId>
-                        <version>1.1</version>
+                        <version>${java-checkstyle-config.version}</version>
                     </dependency>
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
@@ -263,7 +266,7 @@
                         <dependency>
                             <groupId>org.checkerframework</groupId>
                             <artifactId>checker-qual</artifactId>
-                            <version>3.48.2</version>
+                            <version>${checker-qual.version}</version>
                             <exclusions>
                                 <exclusion>
                                     <groupId>org.xmlresolver</groupId>
@@ -404,33 +407,6 @@
                     </includes>
                 </configuration>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-checkstyle-plugin</artifactId>-->
-<!--                <version>3.6.0</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <phase>process-sources</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>check</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--                <configuration>-->
-<!--                    <violationSeverity>warning</violationSeverity>-->
-<!--                    <logViolationsToConsole>true</logViolationsToConsole>-->
-<!--                    <failsOnError>true</failsOnError>-->
-<!--                    <failOnViolation>true</failOnViolation>-->
-<!--                    <configLocation>companieshouse_checks.xml</configLocation>-->
-<!--                </configuration>-->
-<!--                <dependencies>-->
-<!--                    <dependency>-->
-<!--                        <groupId>uk.gov.companieshouse</groupId>-->
-<!--                        <artifactId>java-checkstyle-config</artifactId>-->
-<!--                        <version>1.1</version>-->
-<!--                    </dependency>-->
-<!--                </dependencies>-->
-<!--            </plugin>-->
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
