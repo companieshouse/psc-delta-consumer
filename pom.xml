@@ -23,7 +23,6 @@
         <maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
-        <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
         <jib-maven-plugin.version>3.4.4</jib-maven-plugin.version>
         <ch-kafka.version>3.0.3</ch-kafka.version>
         <structured-logging.version>3.0.20</structured-logging.version>
@@ -84,6 +83,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
@@ -148,6 +151,7 @@
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>structured-logging</artifactId>
             <version>${structured-logging.version}</version>
+
         </dependency>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
@@ -231,53 +235,7 @@
         </dependency>
     </dependencies>
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>${maven-checkstyle-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <phase>process-sources</phase>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <violationSeverity>warning</violationSeverity>
-                        <logViolationsToConsole>true</logViolationsToConsole>
-                        <failsOnError>true</failsOnError>
-                        <failOnViolation>true</failOnViolation>
-                        <configLocation>companieshouse_checks.xml</configLocation>
-                    </configuration>
-                    <dependencies>
-                    <dependency>
-                        <groupId>uk.gov.companieshouse</groupId>
-                        <artifactId>java-checkstyle-config</artifactId>
-                        <version>${java-checkstyle-config.version}</version>
-                    </dependency>
-                        <dependency>
-                            <groupId>com.puppycrawl.tools</groupId>
-                            <artifactId>checkstyle</artifactId>
-                            <version>${checkstyle.version}</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.checkerframework</groupId>
-                            <artifactId>checker-qual</artifactId>
-                            <version>${checker-qual.version}</version>
-                            <exclusions>
-                                <exclusion>
-                                    <groupId>org.xmlresolver</groupId>
-                                    <artifactId>xmlresolver</artifactId>
-                                </exclusion>
-                            </exclusions>
-                        </dependency>
-                    </dependencies>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -421,7 +379,7 @@
                         <image>416670754337.dkr.ecr.eu-west-2.amazonaws.com/ci-corretto-build-21:latest</image>
                     </from>
                     <to>
-                        <image>169942020521.dkr.ecr.eu-west-2.amazonaws.com/local/psc-delta-consumer:latest</image>
+                        <image>416670754337.dkr.ecr.eu-west-2.amazonaws.com/local/psc-delta-consumer:latest</image>
                     </to>
                     <container>
                         <expandClasspathDependencies>true</expandClasspathDependencies>
