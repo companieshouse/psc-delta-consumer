@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.psc.delta.processor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import consumer.exception.NonRetryableErrorException;
 import consumer.exception.RetryableErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;

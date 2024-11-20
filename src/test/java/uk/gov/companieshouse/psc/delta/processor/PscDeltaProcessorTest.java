@@ -1,7 +1,5 @@
 package uk.gov.companieshouse.psc.delta.processor;
 
-import consumer.exception.NonRetryableErrorException;
-
 import consumer.exception.RetryableErrorException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
