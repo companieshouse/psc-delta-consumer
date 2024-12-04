@@ -3,6 +3,7 @@ package uk.gov.companieshouse.psc.delta.service.api;
 import uk.gov.companieshouse.api.InternalApiClient;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
+import uk.gov.companieshouse.psc.delta.processor.DeletePscApiClientRequest;
 
 /**
  * The {@code ApiClientService} interface provides an abstraction that can be
@@ -25,7 +26,5 @@ public interface ApiClientService {
     /**
      * Delete PSC full record.
      */
-    ApiResponse<Void> deletePscFullRecord(final String log, 
-                                          final String notificationId, 
-                                          final String companyNumber);
+    ApiResponse<Void> deletePscFullRecord(DeletePscApiClientRequest clientRequest);
 }

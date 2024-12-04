@@ -1,8 +1,13 @@
 package uk.gov.companieshouse.psc.delta.processor;
 
-import consumer.exception.NonRetryableErrorException;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import consumer.exception.RetryableErrorException;
+import java.io.IOException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,19 +20,10 @@ import org.springframework.messaging.Message;
 import uk.gov.companieshouse.api.delta.PscDelta;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.delta.ChsDelta;
+import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.psc.delta.service.api.ApiClientService;
 import uk.gov.companieshouse.psc.delta.transformer.PscApiTransformer;
 import uk.gov.companieshouse.psc.delta.utils.TestHelper;
-import uk.gov.companieshouse.logging.Logger;
-
-
-import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PscDeltaProcessorTest {
@@ -79,7 +75,7 @@ class PscDeltaProcessorTest {
 
         assertThrows(RetryableErrorException.class, () -> deltaProcessor.processDelete(mockChsDeltaMessage));
         Mockito.verify(apiClientService, times(0)).
-                deletePscFullRecord(any(), any(),any());
+                deletePscFullRecord(any());
     }
 
     @Test
@@ -102,6 +98,6 @@ class PscDeltaProcessorTest {
         
         Assertions.assertDoesNotThrow(() -> deltaProcessor.processDelete(mockChsDeltaMessage));
         Mockito.verify(apiClientService, times(1)).
-                deletePscFullRecord(any(), any(), any());
+                deletePscFullRecord(any());
     }
 }

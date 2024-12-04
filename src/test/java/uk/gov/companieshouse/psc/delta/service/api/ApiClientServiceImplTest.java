@@ -14,6 +14,7 @@ import uk.gov.companieshouse.api.handler.delta.pscfullrecord.request.PscFullReco
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.psc.delta.processor.DeletePscApiClientRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,6 +33,8 @@ class ApiClientServiceImplTest {
 
     private ApiClientServiceImpl apiClientService;
 
+    @Mock
+    private DeletePscApiClientRequest clientRequest;
     @Mock
     private Logger logger;
 
@@ -71,9 +74,7 @@ class ApiClientServiceImplTest {
                 anyString(),
                 any(PscFullRecordDelete.class));
 
-        ApiResponse<Void> response = apiClientServiceSpy.deletePscFullRecord(contextId,
-                companyNumber,
-                notficationId);
+        ApiResponse<Void> response = apiClientServiceSpy.deletePscFullRecord(clientRequest);
 
         assertThat(response).isEqualTo(expectedResponse);
     }
