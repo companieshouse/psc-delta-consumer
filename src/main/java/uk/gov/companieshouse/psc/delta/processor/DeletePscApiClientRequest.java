@@ -3,7 +3,7 @@ package uk.gov.companieshouse.psc.delta.processor;
 import java.util.Objects;
 import uk.gov.companieshouse.api.delta.PscDeleteDelta.KindEnum;
 
-public final class DeletePscApiClientRequest {
+public class DeletePscApiClientRequest {
 
     private final String contextId;
     private final String notificationId;

@@ -29,7 +29,6 @@ import uk.gov.companieshouse.psc.delta.utils.TestHelper;
 class PscDeltaProcessorTest {
     private TestHelper testHelper = new TestHelper();
     private PscDeltaProcessor deltaProcessor;
-    //private MapperUtils mapperUtils;
 
     @Mock
     private Logger logger;
