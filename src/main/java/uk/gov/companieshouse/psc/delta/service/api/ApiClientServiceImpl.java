@@ -24,7 +24,7 @@ import uk.gov.companieshouse.psc.delta.processor.DeletePscApiClientRequest;
 @Service
 public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements ApiClientService {
 
-    private static final String DELETE_REQUEST_URI = "/company/%s/persons-with-significant-control/%s/full_record/delete";
+    private static final String DELETE_REQUEST_URI = "/company/%s/persons-with-significant-control/%s/full_record";
 
     @Value("${api.psc-data-api-key}")
     private String chsApiKey;
