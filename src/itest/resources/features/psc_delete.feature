@@ -1,8 +1,18 @@
 Feature: Psc delete
-  Scenario: send DELETE request to the data api
+  Scenario Outline: send DELETE request to the data api
   Given the application is running
-  When the consumer receives a delete payload
-  Then a DELETE request is sent to the psc data api with the encoded Id
+  When the consumer receives a delete payload with <kind>
+  Then a DELETE request is sent to the psc data api with the <expectedKind>
+    Examples:
+    | kind                                | expectedKind                                       |
+    | "individual"                        | "individual-person-with-significant-control"       |
+    | "corporate-entity"                  | "corporate-entity-person-with-significant-control" |
+    | "legal-person"                      | "legal-person-person-with-significant-control"     |
+    | "super-secure"                      | "super-secure-person-with-significant-control"     |
+    | "individual-beneficial-owner"       | "individual-beneficial-owner"                      |
+    | "corporate-entity-beneficial-owner" | "corporate-entity-beneficial-owner"                |
+    | "legal-person-beneficial-owner"     | "legal-person-beneficial-owner"                    |
+    | "super-secure-beneficial-owner"     | "super-secure-beneficial-owner"                    |
 
   Scenario: send DELETE with invalid JSON
   Given the application is running

@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.psc.delta.processor;
 
+import static uk.gov.companieshouse.psc.delta.mapper.KindMapper.mapKindForDelete;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import consumer.exception.RetryableErrorException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,9 +96,11 @@ public class PscDeltaProcessor {
         logger.info(String.format("PscDeleteDelta extracted for context ID"
                 + " [%s] Kafka message: [%s]", contextId, pscDelete));
         notificationId = MapperUtils.encode(pscDelete.getInternalId());
+        final String kind = mapKindForDelete(pscDelete.getKind());
         final String companyNumber = pscDelete.getCompanyNumber();
+
         DeletePscApiClientRequest clientRequest = new DeletePscApiClientRequest(contextId,
-                notificationId, companyNumber, pscDelete.getDeltaAt(), pscDelete.getKind());
+                notificationId, companyNumber, pscDelete.getDeltaAt(), kind);
         logger.info(String.format(
                 "Performing a DELETE for PSC id: [%s]", notificationId));
         apiClientService.deletePscFullRecord(clientRequest);

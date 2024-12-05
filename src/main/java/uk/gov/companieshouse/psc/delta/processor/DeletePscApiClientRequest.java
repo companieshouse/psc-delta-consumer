@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.psc.delta.processor;
 
 import java.util.Objects;
-import uk.gov.companieshouse.api.delta.PscDeleteDelta.KindEnum;
 
 public class DeletePscApiClientRequest {
 
@@ -9,10 +8,10 @@ public class DeletePscApiClientRequest {
     private final String notificationId;
     private final String companyNumber;
     private final String deltaAt;
-    private KindEnum kind;
+    private final String kind;
 
-    public DeletePscApiClientRequest(String contextId, String notificationId, String companyNumber, String deltaAt,
-            KindEnum kind) {
+    public DeletePscApiClientRequest(String contextId, String notificationId, String companyNumber,
+            String deltaAt, String kind) {
         this.contextId = contextId;
         this.notificationId = notificationId;
         this.companyNumber = companyNumber;
@@ -36,7 +35,7 @@ public class DeletePscApiClientRequest {
         return deltaAt;
     }
 
-    public KindEnum getKind() {
+    public String getKind() {
         return kind;
     }
 
@@ -49,7 +48,7 @@ public class DeletePscApiClientRequest {
         DeletePscApiClientRequest that = (DeletePscApiClientRequest) o;
         return Objects.equals(contextId, that.contextId) && Objects.equals(notificationId,
                 that.notificationId) && Objects.equals(companyNumber, that.companyNumber)
-                && Objects.equals(deltaAt, that.deltaAt) && kind == that.kind;
+                && Objects.equals(deltaAt, that.deltaAt) && Objects.equals(kind, that.kind);
     }
 
     @Override
@@ -69,7 +68,7 @@ public class DeletePscApiClientRequest {
                 ", notificationId='" + notificationId + '\'' +
                 ", companyNumber='" + companyNumber + '\'' +
                 ", deltaAt='" + deltaAt + '\'' +
-                ", kind=" + kind +
+                ", kind='" + kind + '\'' +
                 '}';
     }
 }

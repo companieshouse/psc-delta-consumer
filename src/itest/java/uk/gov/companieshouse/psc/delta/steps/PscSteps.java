@@ -30,11 +30,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
+import uk.gov.companieshouse.api.delta.PscDeleteDelta.KindEnum;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.psc.delta.data.TestData;
 
 public class PscSteps {
+
+    private static final String DELTA_AT = "20230724093435661593";
 
     private static WireMockServer wireMockServer;
 
@@ -79,11 +82,11 @@ public class PscSteps {
         countDown();
     }
 
-    @When("the consumer receives a delete payload")
-    public void theConsumerReceivesDelete() throws Exception {
+    @When("the consumer receives a delete payload with {string}")
+    public void theConsumerReceivesDelete(String kind) throws Exception {
         configureWireMock();
-        stubDeleteStatement(200);
-        ChsDelta delta = new ChsDelta(TestData.getDeleteData(), 1, "1", true);
+        stubDeleteStatement(kind, 200);
+        ChsDelta delta = new ChsDelta(TestData.getDeleteData(kind), 1, "1", true);
         kafkaTemplate.send(topic, delta);
         countDown();
     }
@@ -125,8 +128,8 @@ public class PscSteps {
     @When("^the consumer receives a delete message but the data api returns a (\\d*)$")
     public void theConsumerReceivesDeleteMessageButDataApiReturns(int responseCode) throws Exception{
         configureWireMock();
-        stubDeleteStatement(responseCode);
-        ChsDelta delta = new ChsDelta(TestData.getDeleteData(), 1, "1", true);
+        stubDeleteStatement(KindEnum.INDIVIDUAL.getValue(), responseCode);
+        ChsDelta delta = new ChsDelta(TestData.getDeleteData(KindEnum.INDIVIDUAL.getValue()), 1, "1", true);
         kafkaTemplate.send(topic, delta);
 
         countDown();
@@ -160,12 +163,12 @@ public class PscSteps {
         assertThat(errors).isEqualTo(1);
     }
 
-    @Then("a DELETE request is sent to the psc data api with the encoded Id")
-    public void deleteRequestIsSent() {
+    @Then("a DELETE request is sent to the psc data api with the {string}")
+    public void deleteRequestIsSent(String kind) {
         verify(1, deleteRequestedFor(urlMatching(
                 "/company/OE623672/persons-with-significant-control/lXgouUAR16hSIwxdJSpbr_dhyT8/full_record/delete"))
-                .withHeader("X-KIND", containing("corporate-entity"))
-                .withHeader("X-DELTA-AT", containing("20230724093435661593")));
+                .withHeader("X-KIND", containing(kind))
+                .withHeader("X-DELTA-AT", containing(DELTA_AT)));
     }
 
     @After
@@ -180,11 +183,11 @@ public class PscSteps {
                 .willReturn(aResponse().withStatus(responseCode)));
     }
 
-    private void stubDeleteStatement(int responseCode) {
+    private void stubDeleteStatement(String kind, int responseCode) {
         stubFor(delete(urlEqualTo(
                 "/company/OE623672/persons-with-significant-control/lXgouUAR16hSIwxdJSpbr_dhyT8/full_record/delete"))
-                .withHeader("X-KIND", containing("corporate-entity"))
-                .withHeader("X-DELTA-AT", containing("20230724093435661593"))
+                .withHeader("X-KIND", containing(kind))
+                .withHeader("X-DELTA-AT", containing(DELTA_AT))
                 .willReturn(aResponse().withStatus(responseCode)));
     }
 
@@ -192,5 +195,4 @@ public class PscSteps {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         countDownLatch.await(5, TimeUnit.SECONDS);
     }
-
 }

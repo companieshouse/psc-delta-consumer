@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import uk.gov.companieshouse.api.delta.PscDeleteDelta.KindEnum;
 import uk.gov.companieshouse.api.handler.delta.pscfullrecord.request.PscFullRecordDelete;
 import uk.gov.companieshouse.api.handler.delta.pscfullrecord.request.PscFullRecordPut;
 import uk.gov.companieshouse.api.model.ApiResponse;
@@ -30,7 +29,7 @@ class ApiClientServiceImplTest {
     private static final String COMPANY_NUMBER = "test12345";
     private static final String NOTIFICATION_ID = "testId123456";
     private static final String DELTA_AT = "20240219123045999999";
-    private KindEnum kindEnum = KindEnum.fromValue("individual");
+    private static final String INDIVIDUAL_KIND = "individual-person-with-significant-control";
 
     private final String uri = "/company/%s/persons-with-significant-control/%s/full_record";
 
@@ -80,7 +79,7 @@ class ApiClientServiceImplTest {
         when(clientRequest.getNotificationId()).thenReturn(NOTIFICATION_ID);
         when(clientRequest.getCompanyNumber()).thenReturn(COMPANY_NUMBER);
         when(clientRequest.getDeltaAt()).thenReturn(DELTA_AT);
-        when(clientRequest.getKind()).thenReturn(kindEnum);
+        when(clientRequest.getKind()).thenReturn(INDIVIDUAL_KIND);
 
         ApiResponse<Void> response = apiClientServiceSpy.deletePscFullRecord(clientRequest);
 

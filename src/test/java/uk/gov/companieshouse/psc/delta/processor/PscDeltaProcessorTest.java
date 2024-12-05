@@ -27,6 +27,7 @@ import uk.gov.companieshouse.psc.delta.utils.TestHelper;
 
 @ExtendWith(MockitoExtension.class)
 class PscDeltaProcessorTest {
+
     private TestHelper testHelper = new TestHelper();
     private PscDeltaProcessor deltaProcessor;
 

@@ -87,7 +87,7 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
 
         return executeOp(clientRequest.getContextId(), "deletePscFullRecord", formattedUri,
                 getApiClient(clientRequest.getContextId()).privatePscFullRecordResourceHandler()
-                    .deletePscFullRecord(formattedUri, clientRequest.getDeltaAt(), clientRequest.getKind().getValue()));
+                    .deletePscFullRecord(formattedUri, clientRequest.getDeltaAt(), clientRequest.getKind()));
     }
     
     private Map<String, Object> createLogMap(String consumerId, String method, String path) {
