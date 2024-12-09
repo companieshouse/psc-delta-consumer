@@ -1,63 +1,102 @@
 package uk.gov.companieshouse.psc.delta.logging;
 
+import static org.springframework.kafka.retrytopic.RetryTopicHeaders.DEFAULT_HEADER_ATTEMPTS;
+import static org.springframework.kafka.support.KafkaHeaders.OFFSET;
+import static org.springframework.kafka.support.KafkaHeaders.PARTITION_ID;
+import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_TOPIC;
+import static uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication.NAMESPACE;
+
+import consumer.exception.NonRetryableErrorException;
+import consumer.exception.RetryableErrorException;
+import java.nio.ByteBuffer;
 import java.util.Optional;
 import java.util.UUID;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageHeaders;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
-import uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication;
 
 @Component
 @Aspect
 class StructuredLoggingKafkaListenerAspect {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(
-            PscDeltaConsumerApplication.NAMESPACE);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(NAMESPACE);
     private static final String LOG_MESSAGE_RECEIVED = "Processing delta";
+    private static final String LOG_MESSAGE_DELETE_RECEIVED = "Processing DELETE delta";
     private static final String LOG_MESSAGE_PROCESSED = "Processed delta";
-    private static final String EXCEPTION_MESSAGE = "%s exception thrown: %s";
+    private static final String LOG_MESSAGE_DELETE_PROCESSED = "Processed DELETE delta";
+    private static final String EXCEPTION_MESSAGE = "%s exception thrown";
+
+    private final int maxAttempts;
+
+    StructuredLoggingKafkaListenerAspect(@Value("${pscs.delta.retry-attempts}") int maxAttempts) {
+        this.maxAttempts = maxAttempts;
+    }
 
     @Around("@annotation(org.springframework.kafka.annotation.KafkaListener)")
-    public Object manageStructuredLogging(ProceedingJoinPoint joinPoint)
-            throws Throwable {
-
+    public Object manageStructuredLogging(ProceedingJoinPoint joinPoint) throws Throwable {
+        int retryCount = 0;
         try {
             Message<?> message = (Message<?>) joinPoint.getArgs()[0];
-            DataMapHolder.initialise(extractContextId(message.getPayload())
+            MessageHeaders headers = message.getHeaders();
+            retryCount = Optional.ofNullable(headers.get(DEFAULT_HEADER_ATTEMPTS))
+                    .map(attempts -> ByteBuffer.wrap((byte[]) attempts).getInt())
+                    .orElse(1) - 1;
+
+            ChsDelta chsDelta = extractChsDelta(message.getPayload());
+
+            DataMapHolder.initialise(Optional.ofNullable(chsDelta.getContextId())
                     .orElse(UUID.randomUUID().toString()));
 
             DataMapHolder.get()
-                    .topic((String) message.getHeaders().get("kafka_receivedTopic"))
-                    .partition((Integer) message.getHeaders().get("kafka_receivedPartitionId"))
-                    .offset((Long)message.getHeaders().get("kafka_offset"));
+                    .retryCount(retryCount)
+                    .topic((String) headers.get(RECEIVED_TOPIC))
+                    .partition((Integer) headers.get(
+                            PARTITION_ID)) // This will need to change to RECEIVED_PARTITION after Java 21 upgrade
+                    .offset((Long) headers.get(OFFSET));
 
-            LOGGER.debug(LOG_MESSAGE_RECEIVED, DataMapHolder.getLogMap());
+            LOGGER.info(chsDelta.getIsDelete() ? LOG_MESSAGE_DELETE_RECEIVED : LOG_MESSAGE_RECEIVED,
+                    DataMapHolder.getLogMap());
 
             Object result = joinPoint.proceed();
 
-            LOGGER.debug(LOG_MESSAGE_PROCESSED, DataMapHolder.getLogMap());
+            LOGGER.info(chsDelta.getIsDelete() ? LOG_MESSAGE_DELETE_PROCESSED : LOG_MESSAGE_PROCESSED,
+                    DataMapHolder.getLogMap());
 
             return result;
+        } catch (RetryableErrorException ex) {
+            // maxAttempts includes first attempt which is not a retry
+            if (retryCount >= maxAttempts - 1) {
+                LOGGER.error("Max retry attempts reached", ex, DataMapHolder.getLogMap());
+            } else {
+                LOGGER.info(String.format(EXCEPTION_MESSAGE, ex.getClass().getSimpleName()), DataMapHolder.getLogMap());
+            }
+            throw ex;
         } catch (Exception ex) {
-            LOGGER.debug(String.format(EXCEPTION_MESSAGE,
-                            ex.getClass().getSimpleName(), ex.getMessage()),
-                    DataMapHolder.getLogMap());
+            LOGGER.error("Exception thrown", ex, DataMapHolder.getLogMap());
             throw ex;
         } finally {
             DataMapHolder.clear();
         }
     }
 
-    private Optional<String> extractContextId(Object payload) {
-        if (payload instanceof ChsDelta) {
-            return Optional.of(((ChsDelta)payload).getContextId());
+    private ChsDelta extractChsDelta(Object payload) {
+        try {
+            return (ChsDelta) Optional.of(payload)
+                    .orElseGet(() -> {
+                        LOGGER.error("Null payload", DataMapHolder.getLogMap());
+                        throw new NonRetryableErrorException("Null payload");
+                    });
+        } catch (ClassCastException ex) {
+            String errorMessage = String.format("Invalid payload type, payload: [%s]", payload);
+            LOGGER.error(errorMessage, DataMapHolder.getLogMap());
+            throw new NonRetryableErrorException(errorMessage);
         }
-        return Optional.empty();
     }
 }
