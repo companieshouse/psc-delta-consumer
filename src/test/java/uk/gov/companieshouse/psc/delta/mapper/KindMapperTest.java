@@ -1,25 +1,31 @@
 package uk.gov.companieshouse.psc.delta.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static uk.gov.companieshouse.psc.delta.mapper.KindMapper.mapKindForDelete;
 
 import java.util.stream.Stream;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.delta.PscDeleteDelta.KindEnum;
 
+@ExtendWith(MockitoExtension.class)
 class KindMapperTest {
+
+    @InjectMocks
+    private KindMapper kindMapper;
 
     @ParameterizedTest
     @MethodSource("scenarios")
-    void shouldCorrectlyMapKindEnum (KindEnum kindEnum, String kind) {
+    void shouldCorrectlyMapKindEnum (KindEnum kindEnum, String expectedKind) {
 
         // when
-        String actualKind = mapKindForDelete(kindEnum);
+        String actualKind = kindMapper.mapKindForDelete(kindEnum);
 
         // then
-        assertEquals(kind,  actualKind);
+        assertEquals(expectedKind,  actualKind);
     }
 
     private static Stream<Arguments> scenarios() {

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,6 +22,7 @@ import uk.gov.companieshouse.api.delta.PscDelta;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.psc.delta.mapper.KindMapper;
 import uk.gov.companieshouse.psc.delta.service.api.ApiClientService;
 import uk.gov.companieshouse.psc.delta.transformer.PscApiTransformer;
 import uk.gov.companieshouse.psc.delta.utils.TestHelper;
@@ -29,6 +31,8 @@ import uk.gov.companieshouse.psc.delta.utils.TestHelper;
 class PscDeltaProcessorTest {
 
     private TestHelper testHelper = new TestHelper();
+
+    @InjectMocks
     private PscDeltaProcessor deltaProcessor;
 
     @Mock
@@ -38,12 +42,14 @@ class PscDeltaProcessorTest {
     @Mock
     private PscApiTransformer transformer;
     @Mock
+    private KindMapper kindMapper;
+    @Mock
     FullRecordCompanyPSCApi mockFullRecordPSC;
     
 
     @BeforeEach
     void setUp() {
-        deltaProcessor = new PscDeltaProcessor(logger, apiClientService, transformer);
+        deltaProcessor = new PscDeltaProcessor(logger, apiClientService, transformer, kindMapper);
     }
 
     @Test

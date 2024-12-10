@@ -1,7 +1,5 @@
 package uk.gov.companieshouse.psc.delta.processor;
 
-import java.util.Objects;
-
 public class DeletePscApiClientRequest {
 
     private final String contextId;
@@ -10,13 +8,12 @@ public class DeletePscApiClientRequest {
     private final String deltaAt;
     private final String kind;
 
-    public DeletePscApiClientRequest(String contextId, String notificationId, String companyNumber,
-            String deltaAt, String kind) {
-        this.contextId = contextId;
-        this.notificationId = notificationId;
-        this.companyNumber = companyNumber;
-        this.deltaAt = deltaAt;
-        this.kind = kind;
+    private DeletePscApiClientRequest(Builder builder) {
+        contextId = builder.contextId;
+        notificationId = builder.notificationId;
+        companyNumber = builder.companyNumber;
+        deltaAt = builder.deltaAt;
+        kind = builder.kind;
     }
 
     public String getContextId() {
@@ -39,36 +36,48 @@ public class DeletePscApiClientRequest {
         return kind;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) {
-            return false;
+    public static final class Builder {
+
+        private String contextId;
+        private String notificationId;
+        private String companyNumber;
+        private String deltaAt;
+        private String kind;
+
+        private Builder() {
         }
 
-        DeletePscApiClientRequest that = (DeletePscApiClientRequest) o;
-        return Objects.equals(contextId, that.contextId) && Objects.equals(notificationId,
-                that.notificationId) && Objects.equals(companyNumber, that.companyNumber)
-                && Objects.equals(deltaAt, that.deltaAt) && Objects.equals(kind, that.kind);
-    }
+        public static Builder builder() {
+            return new Builder();
+        }
 
-    @Override
-    public int hashCode() {
-        int result = Objects.hashCode(contextId);
-        result = 31 * result + Objects.hashCode(notificationId);
-        result = 31 * result + Objects.hashCode(companyNumber);
-        result = 31 * result + Objects.hashCode(deltaAt);
-        result = 31 * result + Objects.hashCode(kind);
-        return result;
-    }
+        public Builder contextId(String contextId) {
+            this.contextId = contextId;
+            return this;
+        }
 
-    @Override
-    public String toString() {
-        return "DeletePscApiClientRequest{" +
-                "contextId='" + contextId + '\'' +
-                ", notificationId='" + notificationId + '\'' +
-                ", companyNumber='" + companyNumber + '\'' +
-                ", deltaAt='" + deltaAt + '\'' +
-                ", kind='" + kind + '\'' +
-                '}';
+        public Builder notificationId(String notificationId) {
+            this.notificationId = notificationId;
+            return this;
+        }
+
+        public Builder companyNumber(String companyNumber) {
+            this.companyNumber = companyNumber;
+            return this;
+        }
+
+        public Builder deltaAt(String deltaAt) {
+            this.deltaAt = deltaAt;
+            return this;
+        }
+
+        public Builder kind(String kind) {
+            this.kind = kind;
+            return this;
+        }
+
+        public DeletePscApiClientRequest build() {
+            return new DeletePscApiClientRequest(this);
+        }
     }
 }

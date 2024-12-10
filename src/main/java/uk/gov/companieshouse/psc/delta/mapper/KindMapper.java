@@ -7,10 +7,12 @@ import uk.gov.companieshouse.api.delta.PscDeleteDelta.KindEnum;
 @Component
 public class KindMapper {
 
-    private KindMapper() {
+    public KindMapper() {
+        // Empty for now as while this looks like a util class it performs business logic of kind mapping
+        // for deletes that needs to work like this until service can be fully refactored
     }
 
-    public static String mapKindForDelete(KindEnum kindEnum) {
+    public String mapKindForDelete(KindEnum kindEnum) {
         switch (kindEnum) {
             case INDIVIDUAL:
                 return "individual-person-with-significant-control";
