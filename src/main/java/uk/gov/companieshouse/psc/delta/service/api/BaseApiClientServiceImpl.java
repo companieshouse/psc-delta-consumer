@@ -23,13 +23,13 @@ public abstract class BaseApiClientServiceImpl {
      * General execution of an SDK endpoint.
      *
      * @param <T>           type of api response
-     * @param logContext    context ID for logging
+     * @param contextId    context ID for logging
      * @param operationName name of operation
      * @param uri           uri of sdk being called
      * @param executor      executor to use
      * @return the response object
      */
-    public <T> ApiResponse<T> executeOp(final String logContext,
+    public <T> ApiResponse<T> executeOp(final String contextId,
                                         final String operationName,
                                         final String uri,
                                         final Executor<ApiResponse<T>> executor) {
@@ -39,13 +39,10 @@ public abstract class BaseApiClientServiceImpl {
         logMap.put("path", uri);
 
         try {
-
             return executor.execute();
-
         } catch (URIValidationException ex) {
             String msg = "404 NOT_FOUND response received from psc-data-api";
-            logger.errorContext(logContext, msg, ex, logMap);
-
+            logger.errorContext(contextId, msg, ex, logMap);
             throw new RetryableErrorException(msg, ex);
         } catch (ApiErrorResponseException ex) {
             logMap.put("status", ex.getStatusCode());
@@ -54,13 +51,12 @@ public abstract class BaseApiClientServiceImpl {
                 // 400 BAD REQUEST status cannot be retried
                 String msg =
                         "400 BAD_REQUEST response received from psc-data-api";
-                logger.errorContext(logContext, msg, ex, logMap);
+                logger.errorContext(contextId, msg, ex, logMap);
                 throw new NonRetryableErrorException(msg, ex);
             }
-
             // any other client or server status is retryable
             String msg = "Non-Successful response received from psc-data-api";
-            logger.errorContext(logContext, msg + ", retry", ex, logMap);
+            logger.errorContext(contextId, msg + ", retry", ex, logMap);
             throw new RetryableErrorException(msg, ex);
         }
     }

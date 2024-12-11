@@ -14,6 +14,7 @@ import uk.gov.companieshouse.api.http.HttpClient;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.psc.delta.processor.DeletePscApiClientRequest;
 
 
 /**
@@ -22,6 +23,8 @@ import uk.gov.companieshouse.logging.Logger;
 @Primary
 @Service
 public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements ApiClientService {
+
+    private static final String DELETE_REQUEST_URI = "/company/%s/persons-with-significant-control/%s/full_record";
 
     @Value("${api.psc-data-api-key}")
     private String chsApiKey;
@@ -74,21 +77,17 @@ public class ApiClientServiceImpl extends BaseApiClientServiceImpl implements Ap
     }
 
     @Override
-    public ApiResponse<Void> deletePscFullRecord(String log, 
-                                                 String notificationId, 
-                                                 String companyNumber) {
+    public ApiResponse<Void> deletePscFullRecord(DeletePscApiClientRequest clientRequest) {
+        String formattedUri = String.format(DELETE_REQUEST_URI,
+                clientRequest.getCompanyNumber(),
+                clientRequest.getNotificationId());
 
-        final String uri = String.format(
-                "/company/%s/persons-with-significant-control/%s/full_record", 
-                       companyNumber, 
-                       notificationId);
-        
-        Map<String,Object> logMap = createLogMap(notificationId, "DELETE", uri);
-        logger.infoContext(log, String.format("Delete %s", uri), logMap);
+        Map<String,Object> logMap = createLogMap(clientRequest.getNotificationId(), "DELETE", formattedUri);
+        logger.infoContext(clientRequest.getContextId(), String.format("Delete %s", formattedUri), logMap);
 
-        return executeOp(log, "deletePscFullRecord", uri, 
-                getApiClient(log).privatePscFullRecordResourceHandler()
-                    .deletePscFullRecord(uri));
+        return executeOp(clientRequest.getContextId(), "deletePscFullRecord", formattedUri,
+                getApiClient(clientRequest.getContextId()).privatePscFullRecordResourceHandler()
+                    .deletePscFullRecord(formattedUri, clientRequest.getDeltaAt(), clientRequest.getKind()));
     }
     
     private Map<String, Object> createLogMap(String consumerId, String method, String path) {
