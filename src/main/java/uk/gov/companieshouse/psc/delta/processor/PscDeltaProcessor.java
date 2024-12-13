@@ -11,6 +11,7 @@ import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.psc.delta.logging.DataMapHolder;
+import uk.gov.companieshouse.psc.delta.mapper.KindMapper;
 import uk.gov.companieshouse.psc.delta.mapper.MapperUtils;
 import uk.gov.companieshouse.psc.delta.service.ApiClientService;
 import uk.gov.companieshouse.psc.delta.transformer.PscApiTransformer;
@@ -21,11 +22,13 @@ public class PscDeltaProcessor {
     private final PscApiTransformer transformer;
     private final Logger logger;
     private final ApiClientService apiClientService;
+    private final KindMapper kindMapper;
 
-    public PscDeltaProcessor(Logger logger, ApiClientService apiClientService, PscApiTransformer transformer) {
+    public PscDeltaProcessor(Logger logger, ApiClientService apiClientService, PscApiTransformer transformer, KindMapper kindMapper) {
         this.logger = logger;
         this.apiClientService = apiClientService;
         this.transformer = transformer;
+        this.kindMapper = kindMapper;
     }
 
     public void processDelta(Message<ChsDelta> chsDelta) {
@@ -65,8 +68,7 @@ public class PscDeltaProcessor {
 
     public void processDelete(Message<ChsDelta> chsDelta) {
         final ChsDelta payload = chsDelta.getPayload();
-        final String logContext = payload.getContextId();
-        final String notificationId;
+        final String contextId = payload.getContextId();
 
         ObjectMapper mapper = new ObjectMapper();
         PscDeleteDelta pscDelete;
@@ -79,10 +81,20 @@ public class PscDeltaProcessor {
         }
 
         logger.info(String.format("PscDeleteDelta extracted for context ID"
-                + " [%s] Kafka message: [%s]", logContext, pscDelete));
-        notificationId = MapperUtils.encode(pscDelete.getInternalId());
+                + " [%s] Kafka message: [%s]", contextId, pscDelete));
+        final String notificationId = MapperUtils.encode(pscDelete.getInternalId());
+        final String kind = kindMapper.mapKindForDelete(pscDelete.getKind());
+        final String companyNumber = pscDelete.getCompanyNumber();
+        DeletePscApiClientRequest clientRequest = DeletePscApiClientRequest.Builder.builder()
+                .contextId(contextId)
+                .notificationId(notificationId)
+                .companyNumber(companyNumber)
+                .deltaAt(pscDelete.getDeltaAt())
+                .kind(kind)
+                .build();
+
         logger.info(String.format(
                 "Performing a DELETE for PSC id: [%s]", notificationId));
-        apiClientService.deletePscFullRecord(pscDelete.getCompanyNumber(), notificationId);
+        apiClientService.deletePscFullRecord(clientRequest);
     }
 }

@@ -1,12 +1,28 @@
 package uk.gov.companieshouse.psc.delta.steps;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.delete;
+import static com.github.tomakehurst.wiremock.client.WireMock.deleteRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.put;
+import static com.github.tomakehurst.wiremock.client.WireMock.requestMadeFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.github.tomakehurst.wiremock.WireMockServer;
 import consumer.matcher.RequestMatcher;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.StreamSupport;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -14,20 +30,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
-
+import uk.gov.companieshouse.api.delta.PscDeleteDelta.KindEnum;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.psc.delta.data.TestData;
 
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.StreamSupport;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class PscSteps {
+
+    private static final String DELTA_AT = "20230724093435661593";
 
     private static WireMockServer wireMockServer;
 
@@ -72,11 +82,11 @@ public class PscSteps {
         countDown();
     }
 
-    @When("the consumer receives a delete payload")
-    public void theConsumerReceivesDelete() throws Exception {
+    @When("the consumer receives a delete payload with {string}")
+    public void theConsumerReceivesDelete(String kind) throws Exception {
         configureWireMock();
-        stubDeleteStatement(200);
-        ChsDelta delta = new ChsDelta(TestData.getDeleteData(), 1, "1", true);
+        stubDeleteStatement(kind, 200);
+        ChsDelta delta = new ChsDelta(TestData.getDeleteData(kind), 1, "1", true);
         kafkaTemplate.send(topic, delta);
         countDown();
     }
@@ -118,8 +128,8 @@ public class PscSteps {
     @When("^the consumer receives a delete message but the data api returns a (\\d*)$")
     public void theConsumerReceivesDeleteMessageButDataApiReturns(int responseCode) throws Exception{
         configureWireMock();
-        stubDeleteStatement(responseCode);
-        ChsDelta delta = new ChsDelta(TestData.getDeleteData(), 1, "1", true);
+        stubDeleteStatement(KindEnum.INDIVIDUAL.getValue(), responseCode);
+        ChsDelta delta = new ChsDelta(TestData.getDeleteData(KindEnum.INDIVIDUAL.getValue()), 1, "1", true);
         kafkaTemplate.send(topic, delta);
 
         countDown();
@@ -153,10 +163,12 @@ public class PscSteps {
         assertThat(errors).isEqualTo(1);
     }
 
-    @Then("a DELETE request is sent to the psc data api with the encoded Id")
-    public void deleteRequestIsSent() {
+    @Then("a DELETE request is sent to the psc data api with the {string}")
+    public void deleteRequestIsSent(String kind) {
         verify(1, deleteRequestedFor(urlMatching(
-                "/company/OE623672/persons-with-significant-control/lXgouUAR16hSIwxdJSpbr_dhyT8/full_record")));
+                "/company/OE623672/persons-with-significant-control/lXgouUAR16hSIwxdJSpbr_dhyT8/full_record"))
+                .withHeader("X-KIND", containing(kind))
+                .withHeader("X-DELTA-AT", containing(DELTA_AT)));
     }
 
     @After
@@ -171,9 +183,11 @@ public class PscSteps {
                 .willReturn(aResponse().withStatus(responseCode)));
     }
 
-    private void stubDeleteStatement(int responseCode) {
+    private void stubDeleteStatement(String kind, int responseCode) {
         stubFor(delete(urlEqualTo(
                 "/company/OE623672/persons-with-significant-control/lXgouUAR16hSIwxdJSpbr_dhyT8/full_record"))
+                .withHeader("X-KIND", containing(kind))
+                .withHeader("X-DELTA-AT", containing(DELTA_AT))
                 .willReturn(aResponse().withStatus(responseCode)));
     }
 
@@ -181,5 +195,4 @@ public class PscSteps {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         countDownLatch.await(5, TimeUnit.SECONDS);
     }
-
 }

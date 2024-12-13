@@ -21,6 +21,7 @@ import uk.gov.companieshouse.api.delta.PscDelta;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.psc.delta.mapper.KindMapper;
 import uk.gov.companieshouse.psc.delta.service.ApiClientService;
 import uk.gov.companieshouse.psc.delta.transformer.PscApiTransformer;
 import uk.gov.companieshouse.psc.delta.utils.TestHelper;
@@ -30,7 +31,6 @@ class PscDeltaProcessorTest {
 
     private TestHelper testHelper = new TestHelper();
     private PscDeltaProcessor deltaProcessor;
-    //private MapperUtils mapperUtils;
 
     @Mock
     private Logger logger;
@@ -39,12 +39,14 @@ class PscDeltaProcessorTest {
     @Mock
     private PscApiTransformer transformer;
     @Mock
+    private KindMapper kindMapper;
+    @Mock
     FullRecordCompanyPSCApi mockFullRecordPSC;
 
 
     @BeforeEach
     void setUp() {
-        deltaProcessor = new PscDeltaProcessor(logger, apiClientService, transformer);
+        deltaProcessor = new PscDeltaProcessor(logger, apiClientService, transformer, kindMapper);
     }
 
     @Test
@@ -76,7 +78,7 @@ class PscDeltaProcessorTest {
 
         assertThrows(RetryableErrorException.class, () -> deltaProcessor.processDelete(mockChsDeltaMessage));
         Mockito.verify(apiClientService, times(0)).
-                deletePscFullRecord(any(), any());
+                deletePscFullRecord(any());
     }
 
     @Test
@@ -99,6 +101,6 @@ class PscDeltaProcessorTest {
 
         Assertions.assertDoesNotThrow(() -> deltaProcessor.processDelete(mockChsDeltaMessage));
         Mockito.verify(apiClientService, times(1)).
-                deletePscFullRecord(any(), any());
+                deletePscFullRecord(any());
     }
 }

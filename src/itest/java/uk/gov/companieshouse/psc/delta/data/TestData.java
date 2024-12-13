@@ -18,9 +18,9 @@ public class TestData {
         return readFile(path);
     }
 
-    public static String getDeleteData() {
+    public static String getDeleteData(String kind) {
         String path = "src/itest/resources/json/input/psc_delete_delta.json";
-        return readFile(path);
+        return readFile(path).replaceAll("<kind>", kind);
     }
 
     private static String readFile(String path) {
