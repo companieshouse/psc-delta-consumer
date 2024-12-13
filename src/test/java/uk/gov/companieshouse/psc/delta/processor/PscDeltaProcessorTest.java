@@ -2,6 +2,7 @@ package uk.gov.companieshouse.psc.delta.processor;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -68,7 +69,7 @@ class PscDeltaProcessorTest {
         Message<ChsDelta> mockChsDeltaMessage = testHelper.createInvalidChsDeltaMessage();
         assertThrows(RetryableErrorException.class, () -> deltaProcessor.processDelta(mockChsDeltaMessage));
         Mockito.verify(apiClientService, times(0)).
-                putPscFullRecord(any(), any(), any());
+                putPscFullRecord(anyString(), anyString(), any());
     }
 
     @Test

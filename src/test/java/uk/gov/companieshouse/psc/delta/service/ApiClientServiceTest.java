@@ -20,12 +20,15 @@ import uk.gov.companieshouse.api.handler.delta.pscfullrecord.request.PscFullReco
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
+import uk.gov.companieshouse.psc.delta.processor.DeletePscApiClientRequest;
 
 @ExtendWith(MockitoExtension.class)
 class ApiClientServiceTest {
 
     private static final String COMPANY_NUMBER = "company_number";
     private static final String NOTIFICATION_ID = "notification_id";
+    private static final String DELTA_AT = "20240219123045999999";
+    private static final String INDIVIDUAL_KIND = "individual-person-with-significant-control";
     private static final String URI = "/company/%s/persons-with-significant-control/%s/full_record";
     private static final ApiResponse<Void> SUCCESS_RESPONSE = new ApiResponse<>(200, null);
 
@@ -47,6 +50,8 @@ class ApiClientServiceTest {
     private PscFullRecordPut pscFullRecordPut;
     @Mock
     private PscFullRecordDelete pscFullRecordDelete;
+    @Mock
+    private DeletePscApiClientRequest deletePscApiClientRequest;
 
     @Test
     void shouldSuccessfullySendPutRequestToApi() throws Exception {
@@ -108,54 +113,66 @@ class ApiClientServiceTest {
     @Test
     void shouldSuccessfullySendDeleteRequestToApi() throws Exception {
         // given
+        when(deletePscApiClientRequest.getCompanyNumber()).thenReturn(COMPANY_NUMBER);
+        when(deletePscApiClientRequest.getNotificationId()).thenReturn(NOTIFICATION_ID);
+        when(deletePscApiClientRequest.getDeltaAt()).thenReturn(DELTA_AT);
+        when(deletePscApiClientRequest.getKind()).thenReturn(INDIVIDUAL_KIND);
         when(internalApiClientSupplier.get()).thenReturn(internalApiClient);
         when(internalApiClient.privatePscFullRecordResourceHandler()).thenReturn(privateDeltaResourceHandler);
-        when(privateDeltaResourceHandler.deletePscFullRecord(anyString())).thenReturn(pscFullRecordDelete);
+        when(privateDeltaResourceHandler.deletePscFullRecord(anyString(), anyString(), anyString())).thenReturn(pscFullRecordDelete);
         when(pscFullRecordDelete.execute()).thenReturn(SUCCESS_RESPONSE);
 
         final String formattedUri = String.format(URI, COMPANY_NUMBER, NOTIFICATION_ID);
 
         // when
-        apiClientService.deletePscFullRecord(COMPANY_NUMBER, NOTIFICATION_ID);
+        apiClientService.deletePscFullRecord(deletePscApiClientRequest);
 
         // then
-        verify(privateDeltaResourceHandler).deletePscFullRecord(formattedUri);
+        verify(privateDeltaResourceHandler).deletePscFullRecord(formattedUri, DELTA_AT, INDIVIDUAL_KIND);
         verifyNoInteractions(responseHandler);
     }
 
     @Test
     void shouldSendDeleteRequestAndHandleNon200ResponseFromApi() throws Exception {
         // given
+        when(deletePscApiClientRequest.getCompanyNumber()).thenReturn(COMPANY_NUMBER);
+        when(deletePscApiClientRequest.getNotificationId()).thenReturn(NOTIFICATION_ID);
+        when(deletePscApiClientRequest.getDeltaAt()).thenReturn(DELTA_AT);
+        when(deletePscApiClientRequest.getKind()).thenReturn(INDIVIDUAL_KIND);
         when(internalApiClientSupplier.get()).thenReturn(internalApiClient);
         when(internalApiClient.privatePscFullRecordResourceHandler()).thenReturn(privateDeltaResourceHandler);
-        when(privateDeltaResourceHandler.deletePscFullRecord(anyString())).thenReturn(pscFullRecordDelete);
+        when(privateDeltaResourceHandler.deletePscFullRecord(anyString(), anyString(), anyString())).thenReturn(pscFullRecordDelete);
         when(pscFullRecordDelete.execute()).thenThrow(ApiErrorResponseException.class);
 
         final String formattedUri = String.format(URI, COMPANY_NUMBER, NOTIFICATION_ID);
 
         // when
-        apiClientService.deletePscFullRecord(COMPANY_NUMBER, NOTIFICATION_ID);
+        apiClientService.deletePscFullRecord(deletePscApiClientRequest);
 
         // then
-        verify(privateDeltaResourceHandler).deletePscFullRecord(formattedUri);
+        verify(privateDeltaResourceHandler).deletePscFullRecord(formattedUri, DELTA_AT, INDIVIDUAL_KIND);
         verify(responseHandler).handle(any(ApiErrorResponseException.class));
     }
 
     @Test
     void shouldSendDeleteRequestAndHandleURIValidationExceptionFromApi() throws Exception {
         // given
+        when(deletePscApiClientRequest.getCompanyNumber()).thenReturn(COMPANY_NUMBER);
+        when(deletePscApiClientRequest.getNotificationId()).thenReturn(NOTIFICATION_ID);
+        when(deletePscApiClientRequest.getDeltaAt()).thenReturn(DELTA_AT);
+        when(deletePscApiClientRequest.getKind()).thenReturn(INDIVIDUAL_KIND);
         when(internalApiClientSupplier.get()).thenReturn(internalApiClient);
         when(internalApiClient.privatePscFullRecordResourceHandler()).thenReturn(privateDeltaResourceHandler);
-        when(privateDeltaResourceHandler.deletePscFullRecord(anyString())).thenReturn(pscFullRecordDelete);
+        when(privateDeltaResourceHandler.deletePscFullRecord(anyString(), anyString(), anyString())).thenReturn(pscFullRecordDelete);
         when(pscFullRecordDelete.execute()).thenThrow(URIValidationException.class);
 
         final String formattedUri = String.format(URI, COMPANY_NUMBER, NOTIFICATION_ID);
 
         // when
-        apiClientService.deletePscFullRecord(COMPANY_NUMBER, NOTIFICATION_ID);
+        apiClientService.deletePscFullRecord(deletePscApiClientRequest);
 
         // then
-        verify(privateDeltaResourceHandler).deletePscFullRecord(formattedUri);
+        verify(privateDeltaResourceHandler).deletePscFullRecord(formattedUri, DELTA_AT, INDIVIDUAL_KIND);
         verify(responseHandler).handle(any(URIValidationException.class));
     }
 }

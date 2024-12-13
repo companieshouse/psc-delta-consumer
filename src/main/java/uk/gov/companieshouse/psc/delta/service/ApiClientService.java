@@ -11,6 +11,7 @@ import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 import uk.gov.companieshouse.psc.delta.logging.DataMapHolder;
+import uk.gov.companieshouse.psc.delta.processor.DeletePscApiClientRequest;
 
 @Component
 public class ApiClientService {
@@ -44,14 +45,14 @@ public class ApiClientService {
         }
     }
 
-    public void deletePscFullRecord(String companyNumber, String notificationId) {
-        final String formattedUri = String.format(URI, companyNumber, notificationId);
+    public void deletePscFullRecord(DeletePscApiClientRequest clientRequest) {
+        final String formattedUri = String.format(URI, clientRequest.getCompanyNumber(), clientRequest.getNotificationId());
         LOGGER.info("Sending DELETE request to API", DataMapHolder.getLogMap());
 
         try {
             internalApiClientSupplier.get()
                     .privatePscFullRecordResourceHandler()
-                    .deletePscFullRecord(formattedUri)
+                    .deletePscFullRecord(formattedUri, clientRequest.getDeltaAt(), clientRequest.getKind())
                     .execute();
         } catch (ApiErrorResponseException ex) {
             responseHandler.handle(ex);
