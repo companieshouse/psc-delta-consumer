@@ -2,6 +2,7 @@ package uk.gov.companieshouse.psc.delta.processor;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -22,7 +23,7 @@ import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.psc.delta.mapper.KindMapper;
-import uk.gov.companieshouse.psc.delta.service.api.ApiClientService;
+import uk.gov.companieshouse.psc.delta.service.ApiClientService;
 import uk.gov.companieshouse.psc.delta.transformer.PscApiTransformer;
 import uk.gov.companieshouse.psc.delta.utils.TestHelper;
 
@@ -30,7 +31,6 @@ import uk.gov.companieshouse.psc.delta.utils.TestHelper;
 class PscDeltaProcessorTest {
 
     private TestHelper testHelper = new TestHelper();
-
     private PscDeltaProcessor deltaProcessor;
 
     @Mock
@@ -43,7 +43,7 @@ class PscDeltaProcessorTest {
     private KindMapper kindMapper;
     @Mock
     FullRecordCompanyPSCApi mockFullRecordPSC;
-    
+
 
     @BeforeEach
     void setUp() {
@@ -69,7 +69,7 @@ class PscDeltaProcessorTest {
         Message<ChsDelta> mockChsDeltaMessage = testHelper.createInvalidChsDeltaMessage();
         assertThrows(RetryableErrorException.class, () -> deltaProcessor.processDelta(mockChsDeltaMessage));
         Mockito.verify(apiClientService, times(0)).
-                putPscFullRecord(any(),any(),any(), any());
+                putPscFullRecord(anyString(), anyString(), any());
     }
 
     @Test
@@ -92,14 +92,14 @@ class PscDeltaProcessorTest {
 
         deltaProcessor.processDelta(mockChsDeltaMessage);
 
-        Assertions.assertDoesNotThrow(() -> deltaProcessor.processDelta(mockChsDeltaMessage));        
+        Assertions.assertDoesNotThrow(() -> deltaProcessor.processDelta(mockChsDeltaMessage));
     }
 
     @Test
     @DisplayName("Confirms the Processor does not throw when a valid delete ChsDelta is given")
     void When_ValidChsDeleteDeltaMessage_Expect_ProcessorDoesNotThrow() throws IOException {
         Message<ChsDelta> mockChsDeltaMessage = testHelper.createChsDeltaMessage(true);
-        
+
         Assertions.assertDoesNotThrow(() -> deltaProcessor.processDelete(mockChsDeltaMessage));
         Mockito.verify(apiClientService, times(1)).
                 deletePscFullRecord(any());
