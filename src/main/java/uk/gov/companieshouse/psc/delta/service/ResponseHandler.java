@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.psc.delta.service;
 
-import static uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication.NAMESPACE;
+import static uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication.APPLICATION_NAME_SPACE;
 
 import consumer.exception.NonRetryableErrorException;
 import consumer.exception.RetryableErrorException;
@@ -16,7 +16,7 @@ import uk.gov.companieshouse.psc.delta.logging.DataMapHolder;
 @Component
 public class ResponseHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NAMESPACE);
+    private static final Logger LOGGER = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
     private static final String API_INFO_RESPONSE_MESSAGE = "Call to API failed, status code: %d. %s";
     private static final String API_ERROR_RESPONSE_MESSAGE = "Call to API failed, status code: %d";
     private static final String URI_VALIDATION_EXCEPTION_MESSAGE = "Invalid URI";

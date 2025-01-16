@@ -15,35 +15,38 @@
     <properties>
         <java.version>21</java.version>
         <main.class>uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication</main.class>
-        <spring-boot-dependencies.version>3.3.5</spring-boot-dependencies.version>
-        <spring-boot-maven-plugin.version>3.3.5</spring-boot-maven-plugin.version>
+        <spring-boot-dependencies.version>3.4.1</spring-boot-dependencies.version>
+        <spring-boot-maven-plugin.version>3.4.1</spring-boot-maven-plugin.version>
+        <avro.version>1.12.0</avro.version>
+        <checkstyle.version>10.20.0</checkstyle.version>
+        <checker-qual.version>3.48.4</checker-qual.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven-build-helper-plugin.version>3.6.0</maven-build-helper-plugin.version>
         <maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <jib-maven-plugin.version>3.4.4</jib-maven-plugin.version>
+        <map-struct.version>1.6.3</map-struct.version>
+        <log4j-bom.version>3.0.0-alpha1</log4j-bom.version>
+
+        <!--CompaniesHouse library-->
         <ch-kafka.version>3.0.3</ch-kafka.version>
         <structured-logging.version>3.0.20</structured-logging.version>
         <kafka-models.version>3.0.8</kafka-models.version>
-        <private-api-sdk-java.version>4.0.471</private-api-sdk-java.version>
+        <private-api-sdk-java.version>4.0.255</private-api-sdk-java.version>
         <api-sdk-manager-java-library.version>3.0.6</api-sdk-manager-java-library.version>
-        <map-struct.version>1.6.2</map-struct.version>
         <api-helper-java-library.version>3.0.1</api-helper-java-library.version>
-        <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
-        <checkstyle.version>10.20.0</checkstyle.version>
         <java-checkstyle-config.version>1.1</java-checkstyle-config.version>
-        <avro.version>1.12.0</avro.version>
-        <checker-qual.version>3.48.2</checker-qual.version>
 
         <!-- Tests -->
-        <assertj-core.version>3.26.3</assertj-core.version>
+        <assertj-core.version>3.27.2</assertj-core.version>
         <skip.integration.tests>false</skip.integration.tests>
         <skip.unit.tests>false</skip.unit.tests>
-        <test-containers.version>1.20.1</test-containers.version>
+        <test-containers.version>1.20.4</test-containers.version>
         <io-cucumber.version>7.20.1</io-cucumber.version>
-        <wiremock.standalone.version>3.9.2</wiremock.standalone.version>
+        <wiremock.standalone.version>3.10.0</wiremock.standalone.version>
 
         <!--sonar configuration-->
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/target/site/jacoco/jacoco.xml,
@@ -53,6 +56,13 @@
     </properties>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-bom</artifactId>
+                <version>${log4j-bom.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -87,6 +97,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
+            <exclusions>
+            <exclusion>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+            </exclusion>
+        </exclusions>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>

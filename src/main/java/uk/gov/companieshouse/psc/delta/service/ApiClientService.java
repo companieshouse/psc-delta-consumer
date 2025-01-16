@@ -1,6 +1,6 @@
 package uk.gov.companieshouse.psc.delta.service;
 
-import static uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication.NAMESPACE;
+import static uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication.APPLICATION_NAME_SPACE;
 
 import java.util.function.Supplier;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ import uk.gov.companieshouse.psc.delta.processor.DeletePscApiClientRequest;
 @Component
 public class ApiClientService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NAMESPACE);
+    private static final Logger LOGGER = LoggerFactory.getLogger(APPLICATION_NAME_SPACE);
     private static final String URI = "/company/%s/persons-with-significant-control/%s/full_record";
 
     private final Supplier<InternalApiClient> internalApiClientSupplier;

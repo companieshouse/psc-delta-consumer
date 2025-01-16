@@ -22,7 +22,7 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
         this.expectedOutput = output;
         this.logger = logger;
         this.expectedUrl = expectedUrl;
-        this.fieldsToIgnore = new ArrayList();
+        this.fieldsToIgnore = new ArrayList<>();
     }
 
     public CustomRequestMatcher(Logger logger, String output, String expectedUrl, List<String> fieldsToIgnore) {

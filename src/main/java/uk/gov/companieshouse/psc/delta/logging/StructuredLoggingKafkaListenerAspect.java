@@ -2,9 +2,8 @@ package uk.gov.companieshouse.psc.delta.logging;
 
 import static org.springframework.kafka.retrytopic.RetryTopicHeaders.DEFAULT_HEADER_ATTEMPTS;
 import static org.springframework.kafka.support.KafkaHeaders.OFFSET;
-import static org.springframework.kafka.support.KafkaHeaders.PARTITION_ID;
+import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_PARTITION;
 import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_TOPIC;
-import static uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication.NAMESPACE;
 
 import consumer.exception.NonRetryableErrorException;
 import consumer.exception.RetryableErrorException;
@@ -61,7 +60,7 @@ class StructuredLoggingKafkaListenerAspect {
                     .retryCount(retryCount)
                     .topic((String) headers.get(RECEIVED_TOPIC))
                     .partition((Integer) headers.get(
-                            PARTITION_ID)) // This will need to change to RECEIVED_PARTITION after Java 21 upgrade
+                            RECEIVED_PARTITION))
                     .offset((Long) headers.get(OFFSET));
 
             LOGGER.info(chsDelta.getIsDelete() ? LOG_MESSAGE_DELETE_RECEIVED : LOG_MESSAGE_RECEIVED,
