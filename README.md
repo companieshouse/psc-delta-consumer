@@ -7,6 +7,13 @@ The psc-delta-consumer is responsible for transforming psc data from the psc-del
 - [Maven](https://maven.apache.org/download.cgi)
 - [Git](https://git-scm.com/downloads)
 
+### Building Docker Image Locally
+
+_Note: this will change once the service is upgraded to Java 21_
+
+```bash
+mvn compile jib:dockerBuild -Dimage=169942020521.dkr.ecr.eu-west-2.amazonaws.com/local/psc-delta-consumer:latest
+```
 ## Terraform ECS
 
 ### What does this code do?

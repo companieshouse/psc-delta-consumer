@@ -19,12 +19,24 @@ Feature: Psc delta
     When a message with invalid data is sent
     Then the message should retry 3 times and then error
 
-  Scenario: Process message when the api returns 400
+  Scenario Outline: Process message when the api returns 400
     Given the application is running
-    When the consumer receives a message for company "00623672" with notification id "lXgouUAR16hSIwxdJSpbr_dhyT8" but the api returns a 400
+    When the consumer receives a message for company "00623672" with notification id "lXgouUAR16hSIwxdJSpbr_dhyT8" but the api returns a <status_code>
     Then the message should be moved to topic psc-delta-invalid
+    Examples:
+      | status_code |
+      | 400         |
+      | 409         |
 
-  Scenario: Process message when the api returns 503
+  Scenario Outline: Process message when the api returns 503
     Given the application is running
-    When the consumer receives a message for company "00623672" with notification id "lXgouUAR16hSIwxdJSpbr_dhyT8" but the api returns a 503
+    When the consumer receives a message for company "00623672" with notification id "lXgouUAR16hSIwxdJSpbr_dhyT8" but the api returns a <status_code>
     Then the message should retry 3 times and then error
+    Examples:
+      | status_code |
+      | 401         |
+      | 403         |
+      | 404         |
+      | 405         |
+      | 500         |
+      | 503         |

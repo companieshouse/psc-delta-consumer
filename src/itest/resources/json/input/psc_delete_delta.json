@@ -3,5 +3,6 @@
     "company_number": "OE623672",
     "psc_id": "3",
     "action": "DELETE",
+    "kind": "<kind>",
     "delta_at": "20230724093435661593"
   }

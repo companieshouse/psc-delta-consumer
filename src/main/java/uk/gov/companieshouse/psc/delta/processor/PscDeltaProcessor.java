@@ -1,9 +1,7 @@
 package uk.gov.companieshouse.psc.delta.processor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import consumer.exception.NonRetryableErrorException;
 import consumer.exception.RetryableErrorException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.delta.Psc;
@@ -13,8 +11,9 @@ import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.psc.delta.logging.DataMapHolder;
+import uk.gov.companieshouse.psc.delta.mapper.KindMapper;
 import uk.gov.companieshouse.psc.delta.mapper.MapperUtils;
-import uk.gov.companieshouse.psc.delta.service.api.ApiClientService;
+import uk.gov.companieshouse.psc.delta.service.ApiClientService;
 import uk.gov.companieshouse.psc.delta.transformer.PscApiTransformer;
 
 @Component
@@ -23,21 +22,15 @@ public class PscDeltaProcessor {
     private final PscApiTransformer transformer;
     private final Logger logger;
     private final ApiClientService apiClientService;
+    private final KindMapper kindMapper;
 
-    /**
-     * Constructor for processor.
-     */
-    @Autowired
-    public PscDeltaProcessor(
-            Logger logger, ApiClientService apiClientService, PscApiTransformer transformer) {
+    public PscDeltaProcessor(Logger logger, ApiClientService apiClientService, PscApiTransformer transformer, KindMapper kindMapper) {
         this.logger = logger;
         this.apiClientService = apiClientService;
         this.transformer = transformer;
+        this.kindMapper = kindMapper;
     }
 
-    /**
-     * Process PSC Statement Delta message.
-     */
     public void processDelta(Message<ChsDelta> chsDelta) {
 
         final ChsDelta payload = chsDelta.getPayload();
@@ -68,19 +61,14 @@ public class PscDeltaProcessor {
             throw new RetryableErrorException("Error when transforming into api object", ex);
         }
 
-        apiClientService.putPscFullRecord(contextId,
-                fullRecordCompanyPscApi.getExternalData().getCompanyNumber(),
+        apiClientService.putPscFullRecord(fullRecordCompanyPscApi.getExternalData().getCompanyNumber(),
                 fullRecordCompanyPscApi.getExternalData().getNotificationId(),
                 fullRecordCompanyPscApi);
     }
 
-    /**
-     * Process CHS Delta delete message.
-     */
     public void processDelete(Message<ChsDelta> chsDelta) {
         final ChsDelta payload = chsDelta.getPayload();
-        final String logContext = payload.getContextId();
-        final String notificationId;
+        final String contextId = payload.getContextId();
 
         ObjectMapper mapper = new ObjectMapper();
         PscDeleteDelta pscDelete;
@@ -93,11 +81,20 @@ public class PscDeltaProcessor {
         }
 
         logger.info(String.format("PscDeleteDelta extracted for context ID"
-                + " [%s] Kafka message: [%s]", logContext, pscDelete));
-        notificationId = MapperUtils.encode(pscDelete.getInternalId());
+                + " [%s] Kafka message: [%s]", contextId, pscDelete));
+        final String notificationId = MapperUtils.encode(pscDelete.getInternalId());
+        final String kind = kindMapper.mapKindForDelete(pscDelete.getKind());
         final String companyNumber = pscDelete.getCompanyNumber();
+        DeletePscApiClientRequest clientRequest = DeletePscApiClientRequest.Builder.builder()
+                .contextId(contextId)
+                .notificationId(notificationId)
+                .companyNumber(companyNumber)
+                .deltaAt(pscDelete.getDeltaAt())
+                .kind(kind)
+                .build();
+
         logger.info(String.format(
                 "Performing a DELETE for PSC id: [%s]", notificationId));
-        apiClientService.deletePscFullRecord(logContext, notificationId, companyNumber);
+        apiClientService.deletePscFullRecord(clientRequest);
     }
 }
