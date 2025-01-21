@@ -14,7 +14,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import consumer.matcher.RequestMatcher;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -34,6 +33,7 @@ import uk.gov.companieshouse.api.delta.PscDeleteDelta.KindEnum;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.psc.delta.data.TestData;
+import uk.gov.companieshouse.psc.delta.matcher.CustomRequestMatcher;
 
 public class PscSteps {
 
@@ -135,12 +135,14 @@ public class PscSteps {
         countDown();
     }
 
-     @Then("a PUT request is sent to the psc api with the transformed data for psc of kind {string} for company {string} with id {string}")
+    @Then("a PUT request is sent to the psc api with the transformed data for psc of kind {string} for company {string} with id {string}")
     public void aPutRequestIsSent(String pscKind, String companyNumber, String pscId) {
         String output = TestData.getOutputData(pscKind + "_psc_expected_output.json");
-        verify(1, requestMadeFor(new RequestMatcher(logger, output,
-                "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record",
-                List.of("external_data.data.etag", "internal_data.delta_at"))));
+
+        verify(1, requestMadeFor(
+                new CustomRequestMatcher(logger, output,
+                        "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record",
+                        List.of("external_data.data.etag", "internal_data.delta_at"))));
     }
 
     @Then("^the message should be moved to topic (.*)$")
