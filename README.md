@@ -3,7 +3,7 @@ The psc-delta-consumer is responsible for transforming psc data from the psc-del
 
 # Requirements
 
-- [Java 11](https://www.oracle.com/uk/java/technologies/javase/jdk11-archive-downloads.html)
+- [Java 21](https://www.oracle.com/java/technologies/downloads/#java21)
 - [Maven](https://maven.apache.org/download.cgi)
 - [Git](https://git-scm.com/downloads)
 
@@ -12,5 +12,33 @@ The psc-delta-consumer is responsible for transforming psc data from the psc-del
 _Note: this will change once the service is upgraded to Java 21_
 
 ```bash
-mvn compile jib:dockerBuild -Dimage=169942020521.dkr.ecr.eu-west-2.amazonaws.com/local/psc-delta-consumer:latest
+mvn compile jib:dockerBuild -Dimage=416670754337.dkr.ecr.eu-west-2.amazonaws.com/psc-delta-consumer:latest
 ```
+## Terraform ECS
+
+### What does this code do?
+
+The code present in this repository is used to define and deploy a dockerised container in AWS ECS.
+This is done by calling a [module](https://github.com/companieshouse/terraform-modules/tree/main/aws/ecs) from terraform-modules. Application specific attributes are injected and the service is then deployed using Terraform via the CICD platform 'Concourse'.
+
+
+Application specific attributes | Value                                | Description
+:---------|:-----------------------------------------------------------------------------|:-----------
+**ECS Cluster**        |data-sync                                      | ECS cluster (stack) the service belongs to
+**Load balancer**      |N/A - consumer service                                            | The load balancer that sits in front of the service
+**Concourse pipeline**     |[Pipeline link](https://ci-platform.companieshouse.gov.uk/teams/team-development/pipelines/psc-delta-consumer) <br> [Pipeline code](https://github.com/companieshouse/ci-pipelines/blob/master/pipelines/ssplatform/team-development/psc-delta-consumer)                                  | Concourse pipeline link in shared services
+
+
+### Contributing
+- Please refer to the [ECS Development and Infrastructure Documentation](https://companieshouse.atlassian.net/wiki/spaces/DEVOPS/pages/4390649858/Copy+of+ECS+Development+and+Infrastructure+Documentation+Updated) for detailed information on the infrastructure being deployed.
+
+### Testing
+- Ensure the terraform runner local plan executes without issues. For information on terraform runners please see the [Terraform Runner Quickstart guide](https://companieshouse.atlassian.net/wiki/spaces/DEVOPS/pages/1694236886/Terraform+Runner+Quickstart).
+- If you encounter any issues or have questions, reach out to the team on the **#platform** slack channel.
+
+### Vault Configuration Updates
+- Any secrets required for this service will be stored in Vault. For any updates to the Vault configuration, please consult with the **#platform** team and submit a workflow request.
+
+### Useful Links
+- [ECS service config dev repository](https://github.com/companieshouse/ecs-service-configs-dev)
+- [ECS service config production repository](https://github.com/companieshouse/ecs-service-configs-production)

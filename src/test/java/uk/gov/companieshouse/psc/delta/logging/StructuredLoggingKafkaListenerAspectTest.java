@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.kafka.retrytopic.RetryTopicHeaders.DEFAULT_HEADER_ATTEMPTS;
 import static org.springframework.kafka.support.KafkaHeaders.OFFSET;
-import static org.springframework.kafka.support.KafkaHeaders.PARTITION_ID;
+import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_PARTITION;
 import static org.springframework.kafka.support.KafkaHeaders.RECEIVED_TOPIC;
 
 import consumer.exception.NonRetryableErrorException;
@@ -73,7 +73,7 @@ class StructuredLoggingKafkaListenerAspectTest {
         MessageHeaders headers = new MessageHeaders(
                 Map.of(
                         RECEIVED_TOPIC, TOPIC,
-                        PARTITION_ID, 0,
+                        RECEIVED_PARTITION, 0,
                         OFFSET, 0L));
         Object expected = "result";
         when(joinPoint.getArgs()).thenReturn(new Object[]{message});
@@ -98,7 +98,7 @@ class StructuredLoggingKafkaListenerAspectTest {
         MessageHeaders headers = new MessageHeaders(
                 Map.of(
                         RECEIVED_TOPIC, TOPIC,
-                        PARTITION_ID, 0,
+                        RECEIVED_PARTITION, 0,
                         OFFSET, 0L));
         Object expected = "result";
         when(joinPoint.getArgs()).thenReturn(new Object[]{message});
@@ -124,7 +124,7 @@ class StructuredLoggingKafkaListenerAspectTest {
         MessageHeaders headers = new MessageHeaders(
                 Map.of(
                         RECEIVED_TOPIC, TOPIC,
-                        PARTITION_ID, 0,
+                        RECEIVED_PARTITION, 0,
                         OFFSET, 0L));
         when(joinPoint.getArgs()).thenReturn(new Object[]{message});
         when(message.getPayload()).thenReturn(delta);
@@ -150,7 +150,7 @@ class StructuredLoggingKafkaListenerAspectTest {
                         // attempts header returns a byte array not an integer
                         DEFAULT_HEADER_ATTEMPTS, ByteBuffer.allocate(4).putInt(5).array(),
                         RECEIVED_TOPIC, TOPIC,
-                        PARTITION_ID, 0,
+                        RECEIVED_PARTITION, 0,
                         OFFSET, 0L));
         when(joinPoint.getArgs()).thenReturn(new Object[]{message});
         when(message.getPayload()).thenReturn(delta);
@@ -179,7 +179,7 @@ class StructuredLoggingKafkaListenerAspectTest {
         MessageHeaders headers = new MessageHeaders(
                 Map.of(
                         RECEIVED_TOPIC, TOPIC,
-                        PARTITION_ID, 0,
+                        RECEIVED_PARTITION, 0,
                         OFFSET, 0L));
         when(joinPoint.getArgs()).thenReturn(new Object[]{invalidMessage});
         when(invalidMessage.getPayload()).thenReturn("message payload");
