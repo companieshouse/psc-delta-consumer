@@ -34,10 +34,13 @@ public class ApiClientService {
         LOGGER.info("Sending PUT request to API", DataMapHolder.getLogMap());
 
         try {
-            internalApiClientSupplier.get()
-                    .privatePscFullRecordResourceHandler()
+            InternalApiClient apiClient = internalApiClientSupplier.get();
+            apiClient.getHttpClient().setRequestId(DataMapHolder.getRequestId());
+
+            apiClient.privatePscFullRecordResourceHandler()
                     .putPscFullRecord(formattedUri, fullRecordCompanyPscApi)
                     .execute();
+
         } catch (ApiErrorResponseException ex) {
             responseHandler.handle(ex);
         } catch (URIValidationException ex) {
@@ -50,10 +53,13 @@ public class ApiClientService {
         LOGGER.info("Sending DELETE request to API", DataMapHolder.getLogMap());
 
         try {
-            internalApiClientSupplier.get()
-                    .privatePscFullRecordResourceHandler()
+            InternalApiClient apiClient = internalApiClientSupplier.get();
+            apiClient.getHttpClient().setRequestId(DataMapHolder.getRequestId());
+
+            apiClient.privatePscFullRecordResourceHandler()
                     .deletePscFullRecord(formattedUri, clientRequest.getDeltaAt(), clientRequest.getKind())
                     .execute();
+
         } catch (ApiErrorResponseException ex) {
             responseHandler.handle(ex);
         } catch (URIValidationException ex) {

@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.psc.delta.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import consumer.deserialization.AvroDeserializer;
 import consumer.serialization.AvroSerializer;
 import java.util.function.Supplier;
@@ -53,6 +54,11 @@ public class ApplicationConfig implements WebMvcConfigurer {
     @Bean
     AvroDeserializer<ChsDelta> deserializer() {
         return new AvroDeserializer<>(ChsDelta.class);
+    }
+
+    @Bean
+    ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 
     @Bean
