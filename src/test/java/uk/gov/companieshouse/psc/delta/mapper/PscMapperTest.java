@@ -150,7 +150,7 @@ class PscMapperTest {
         assertNull(sensitiveData.getUsualResidentialAddress());
         assertNull(sensitiveData.getResidentialAddressSameAsServiceAddress());
         assertNull(sensitiveData.getDateOfBirth());
-        assertEquals(internalId, sensitiveData.getInternalId().toString());
+        assertNull(sensitiveData.getInternalId());
     }
 
     @Test
@@ -197,7 +197,7 @@ class PscMapperTest {
         assertNull(sensitiveData.getUsualResidentialAddress());
         assertNull(sensitiveData.getResidentialAddressSameAsServiceAddress());
         assertNull(sensitiveData.getDateOfBirth());
-        assertEquals(internalId, sensitiveData.getInternalId().toString());
+        assertNull(sensitiveData.getInternalId());
     }
 
     @Test
@@ -232,7 +232,7 @@ class PscMapperTest {
         assertNull(data.getServiceAddress());
         assertNull(sensitiveData.getUsualResidentialAddress());
         assertNull(sensitiveData.getDateOfBirth());
-        assertEquals(internalId, sensitiveData.getInternalId().toString());
+        assertNull(sensitiveData.getInternalId());
         assertNull(data.getLinks().get(0).getStatement());
     }
 
