@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.psc.delta.mapper;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -150,7 +151,8 @@ class PscMapperTest {
         assertNull(sensitiveData.getUsualResidentialAddress());
         assertNull(sensitiveData.getResidentialAddressSameAsServiceAddress());
         assertNull(sensitiveData.getDateOfBirth());
-        assertNull(sensitiveData.getInternalId());
+
+        assertEquals(internalId, sensitiveData.getInternalId().toString());
     }
 
     @Test
@@ -197,7 +199,8 @@ class PscMapperTest {
         assertNull(sensitiveData.getUsualResidentialAddress());
         assertNull(sensitiveData.getResidentialAddressSameAsServiceAddress());
         assertNull(sensitiveData.getDateOfBirth());
-        assertNull(sensitiveData.getInternalId());
+
+        assertEquals(internalId, sensitiveData.getInternalId().toString());
     }
 
     @Test
@@ -232,8 +235,9 @@ class PscMapperTest {
         assertNull(data.getServiceAddress());
         assertNull(sensitiveData.getUsualResidentialAddress());
         assertNull(sensitiveData.getDateOfBirth());
-        assertNull(sensitiveData.getInternalId());
         assertNull(data.getLinks().get(0).getStatement());
+
+        assertEquals(internalId, sensitiveData.getInternalId().toString());
     }
 
     @Test
