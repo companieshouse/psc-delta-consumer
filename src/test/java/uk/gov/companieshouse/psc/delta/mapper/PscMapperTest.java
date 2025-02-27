@@ -1,5 +1,6 @@
 package uk.gov.companieshouse.psc.delta.mapper;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -60,13 +61,13 @@ class PscMapperTest {
 
     @Test
     void shouldMapIndividualPscToPsc() throws Exception {
-
         pscObject = createPscObject("individual-psc");
         FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
 
         ExternalData externalData = fullRecordCompanyPSCApi.getExternalData();
+        String internalId = externalData.getInternalId();
         Data data = externalData.getData();
-        SensitiveData sensitivedata = externalData.getSensitiveData();
+        SensitiveData sensitiveData = externalData.getSensitiveData();
 
         fullRecordCompanyPSCApi.getExternalData().getData().setEtag(null);
 
@@ -97,20 +98,21 @@ class PscMapperTest {
         assertEquals("Welsh", data.getNationality());
         assertEquals(LocalDate.of(2016, 1, 1), data.getNotificationDate());
 
-        assertEquals(usualResidentialAddress, sensitivedata.getUsualResidentialAddress());
-        assertEquals(Boolean.TRUE, sensitivedata.getResidentialAddressSameAsServiceAddress());
-        assertEquals(dateOfBirth, sensitivedata.getDateOfBirth());
+        assertEquals(usualResidentialAddress, sensitiveData.getUsualResidentialAddress());
+        assertEquals(Boolean.TRUE, sensitiveData.getResidentialAddressSameAsServiceAddress());
+        assertEquals(dateOfBirth, sensitiveData.getDateOfBirth());
+        assertEquals(internalId, sensitiveData.getInternalId().toString());
     }
 
     @Test
     void shouldMapCorpPscToPsc() throws Exception {
-
         pscObject = createPscObject("corporate-entity-psc");
         FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
 
         ExternalData externalData = fullRecordCompanyPSCApi.getExternalData();
+        String internalId = externalData.getInternalId();
         Data data = externalData.getData();
-        SensitiveData sensitivedata = externalData.getSensitiveData();
+        SensitiveData sensitiveData = externalData.getSensitiveData();
         identification = createCorporateIdentification();
 
         fullRecordCompanyPSCApi.getExternalData().getData().setEtag(null);
@@ -146,20 +148,22 @@ class PscMapperTest {
         assertEquals(LocalDate.of(2016, 1, 1), data.getNotificationDate());
 
         assertNull(data.getServiceAddressSameAsRegisteredOfficeAddress());
-        assertNull(sensitivedata.getUsualResidentialAddress());
-        assertNull(sensitivedata.getResidentialAddressSameAsServiceAddress());
-        assertNull(sensitivedata.getDateOfBirth());
+        assertNull(sensitiveData.getUsualResidentialAddress());
+        assertNull(sensitiveData.getResidentialAddressSameAsServiceAddress());
+        assertNull(sensitiveData.getDateOfBirth());
+
+        assertEquals(internalId, sensitiveData.getInternalId().toString());
     }
 
     @Test
     void shouldMapLegalPscToPsc() throws Exception {
-
         pscObject = createPscObject("legal-person-psc");
         FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
 
         ExternalData externalData = fullRecordCompanyPSCApi.getExternalData();
+        String internalId = externalData.getInternalId();
         Data data = externalData.getData();
-        SensitiveData sensitivedata = externalData.getSensitiveData();
+        SensitiveData sensitiveData = externalData.getSensitiveData();
         identification = createLegalIdentification();
 
         fullRecordCompanyPSCApi.getExternalData().getData().setEtag(null);
@@ -192,20 +196,23 @@ class PscMapperTest {
         assertEquals(LocalDate.of(2016, 1, 1), data.getNotificationDate());
 
         assertNull(data.getServiceAddressSameAsRegisteredOfficeAddress());
-        assertNull(sensitivedata.getUsualResidentialAddress());
-        assertNull(sensitivedata.getResidentialAddressSameAsServiceAddress());
-        assertNull(sensitivedata.getDateOfBirth());
+        assertNull(sensitiveData.getUsualResidentialAddress());
+        assertNull(sensitiveData.getResidentialAddressSameAsServiceAddress());
+        assertNull(sensitiveData.getDateOfBirth());
+
+        assertEquals(internalId, sensitiveData.getInternalId().toString());
     }
 
     @Test
     void shouldMapSuperSecurePscToPsc() throws Exception {
-
         pscObject = createPscObject("super-secure-psc");
         pscObject.setPscId(null);
+
         FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
         fullRecordCompanyPSCApi.getExternalData().getData().setEtag(null);
 
         ExternalData externalData = fullRecordCompanyPSCApi.getExternalData();
+        String internalId = externalData.getInternalId();
         Data data = externalData.getData();
         SensitiveData sensitiveData = externalData.getSensitiveData();
 
@@ -230,17 +237,18 @@ class PscMapperTest {
         assertNull(sensitiveData.getDateOfBirth());
         assertNull(data.getLinks().get(0).getStatement());
 
+        assertEquals(internalId, sensitiveData.getInternalId().toString());
     }
 
     @Test
     void shouldMapIndividualBOToBO() throws Exception {
-
         pscObject = createPscObject("individual-beneficial-owner");
         FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
 
         ExternalData externalData = fullRecordCompanyPSCApi.getExternalData();
+        String internalId = externalData.getInternalId();
         Data data = externalData.getData();
-        SensitiveData sensitivedata = externalData.getSensitiveData();
+        SensitiveData sensitiveData = externalData.getSensitiveData();
 
         fullRecordCompanyPSCApi.getExternalData().getData().setEtag(null);
 
@@ -271,9 +279,10 @@ class PscMapperTest {
         assertEquals("Welsh", data.getNationality());
         assertEquals(LocalDate.of(2016, 1, 1), data.getNotificationDate());
 
-        assertEquals(usualResidentialAddress, sensitivedata.getUsualResidentialAddress());
-        assertEquals(Boolean.TRUE, sensitivedata.getResidentialAddressSameAsServiceAddress());
-        assertEquals(dateOfBirth, sensitivedata.getDateOfBirth());
+        assertEquals(usualResidentialAddress, sensitiveData.getUsualResidentialAddress());
+        assertEquals(Boolean.TRUE, sensitiveData.getResidentialAddressSameAsServiceAddress());
+        assertEquals(dateOfBirth, sensitiveData.getDateOfBirth());
+        assertEquals(internalId, sensitiveData.getInternalId().toString());
     }
 
     Address createServiceAddress() {

@@ -15,7 +15,7 @@
     <properties>
         <java.version>21</java.version>
         <main.class>uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication</main.class>
-        <spring-boot-dependencies.version>3.4.1</spring-boot-dependencies.version>
+        <spring-boot-dependencies.version>3.4.2</spring-boot-dependencies.version>
         <spring-boot-maven-plugin.version>3.4.1</spring-boot-maven-plugin.version>
         <avro.version>1.12.0</avro.version>
         <checkstyle.version>10.20.0</checkstyle.version>
@@ -34,8 +34,8 @@
         <!--CompaniesHouse library-->
         <ch-kafka.version>3.0.3</ch-kafka.version>
         <structured-logging.version>3.0.20</structured-logging.version>
-        <kafka-models.version>3.0.8</kafka-models.version>
-        <private-api-sdk-java.version>4.0.255</private-api-sdk-java.version>
+        <kafka-models.version>3.0.10</kafka-models.version>
+        <private-api-sdk-java.version>4.0.267</private-api-sdk-java.version>
         <api-sdk-manager-java-library.version>3.0.6</api-sdk-manager-java-library.version>
         <api-helper-java-library.version>3.0.1</api-helper-java-library.version>
         <java-checkstyle-config.version>1.1</java-checkstyle-config.version>

@@ -23,25 +23,28 @@ public class PscDeltaProcessor {
     private final Logger logger;
     private final ApiClientService apiClientService;
     private final KindMapper kindMapper;
+    private final ObjectMapper objectMapper;
 
-    public PscDeltaProcessor(Logger logger, ApiClientService apiClientService, PscApiTransformer transformer, KindMapper kindMapper) {
+    public PscDeltaProcessor(Logger logger, ApiClientService apiClientService, PscApiTransformer transformer,
+                             KindMapper kindMapper, ObjectMapper objectMapper) {
         this.logger = logger;
         this.apiClientService = apiClientService;
         this.transformer = transformer;
         this.kindMapper = kindMapper;
+        this.objectMapper = objectMapper;
     }
 
     public void processDelta(Message<ChsDelta> chsDelta) {
-
         final ChsDelta payload = chsDelta.getPayload();
         final String contextId = payload.getContextId();
         PscDelta pscDelta;
         try {
-            pscDelta = new ObjectMapper().readValue(payload.getData(), PscDelta.class);
+            pscDelta = objectMapper.readValue(payload.getData(), PscDelta.class);
             Psc psc = pscDelta.getPscs().get(0); // We will only ever get one PSC per request
 
             DataMapHolder.get()
                     .companyNumber(psc.getCompanyNumber())
+                    .requestId(contextId)
                     .itemId(psc.getPscId());
 
             logger.infoContext(contextId, "Successfully extracted psc delta",
@@ -70,14 +73,14 @@ public class PscDeltaProcessor {
         final ChsDelta payload = chsDelta.getPayload();
         final String contextId = payload.getContextId();
 
-        ObjectMapper mapper = new ObjectMapper();
         PscDeleteDelta pscDelete;
         try {
-            pscDelete = mapper.readValue(
-                    payload.getData(), PscDeleteDelta.class);
+            pscDelete = objectMapper.readValue(payload.getData(), PscDeleteDelta.class);
+
+            DataMapHolder.get().requestId(contextId);
+
         } catch (Exception ex) {
-            throw new RetryableErrorException(
-                    "Error when extracting psc delete delta", ex);
+            throw new RetryableErrorException("Error when extracting psc delete delta", ex);
         }
 
         logger.info(String.format("PscDeleteDelta extracted for context ID"

@@ -38,7 +38,8 @@
     "sensitive_data": {
       "date_of_birth": null,
       "residential_address_same_as_service_address": null,
-      "usual_residential_address": null
+      "usual_residential_address": null,
+      "internal_id": 9
     }
   }
 }

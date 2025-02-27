@@ -41,10 +41,8 @@ public interface PscMapper {
     @Mapping(target = "externalData.data.isSanctioned", ignore = true)
     @Mapping(target = "externalData.data.ceasedOn", source = "ceasedOn", ignore = true)
     @Mapping(target = "externalData.pscId", source = "pscId", ignore = true)
-    @Mapping(target = "externalData.data.notifiedOn", source = "notificationDate",
-            dateFormat = "yyyyMMdd")
-    @Mapping(target = "externalData.data.notificationDate", source = "notificationDate",
-            dateFormat = "yyyyMMdd")
+    @Mapping(target = "externalData.data.notifiedOn", source = "notificationDate", dateFormat = "yyyyMMdd")
+    @Mapping(target = "externalData.data.notificationDate", source = "notificationDate", dateFormat = "yyyyMMdd")
     @Mapping(target = "externalData.data.serviceAddress", source = "address")
     @Mapping(target = "externalData.data.principalOfficeAddress", source = "principalOfficeAddress")
     @Mapping(target = "externalData.data.nameElements", source = "nameElements")
@@ -56,11 +54,10 @@ public interface PscMapper {
     @Mapping(target = "externalData.sensitiveData.residentialAddressSameAsServiceAddress",
             source = "residentialAddressSameAsServiceAddress", ignore = true)
     @Mapping(target = "externalData.sensitiveData.dateOfBirth", ignore = true)
-    @Mapping(target = "externalData.sensitiveData.usualResidentialAddress",
-            source = "usualResidentialAddress")
+    @Mapping(target = "externalData.sensitiveData.usualResidentialAddress", source = "usualResidentialAddress")
+    @Mapping(target = "externalData.sensitiveData.internalId", source = "internalId")
     @Mapping(target = "externalData.data.identification", ignore = true)
 
-    
     FullRecordCompanyPSCApi mapPscData(Psc psc);
 
     /** encode internal_id and map to id and notification_id. */
