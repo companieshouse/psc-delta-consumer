@@ -2,14 +2,7 @@ artifact_name       := psc-delta-consumer
 version             := "unversioned"
 
 dependency_check_base_suppressions:=common_suppressions_spring_6.xml
-
-# dependency_check_suppressions_repo_branch
-# The branch of the dependency-check-suppressions repository to use
-# as the source of the suppressions file.
-# This should point to "main" branch when being used for release,
-# but can point to a different branch for experimentation/development.
 dependency_check_suppressions_repo_branch:=main
-
 dependency_check_minimum_cvss := 4
 dependency_check_assembly_analyzer_enabled := false
 dependency_check_suppressions_repo_url:=git@github.com:companieshouse/dependency-check-suppressions.git
@@ -65,12 +58,12 @@ publish:
 	mvn jar:jar deploy:deploy
 
 .PHONY: sonar
-sonar:
-	mvn sonar:sonar
+sonar: security-check
+	mvn sonar:sonar -Dsonar.dependencyCheck.htmlReportPath=./target/dependency-check-report.html
 
 .PHONY: sonar-pr-analysis
-sonar-pr-analysis:
-	mvn sonar:sonar -P sonar-pr-analysis
+sonar-pr-analysis: dependency-check
+	mvn sonar:sonar -P sonar-pr-analysis -Dsonar.dependencyCheck.htmlReportPath=./target/dependency-check-report.html
 
 ##### Start of dependency-check block to be put at bottom of Makefile
 .PHONY: dependency-check
