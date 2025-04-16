@@ -7,13 +7,13 @@
   "external_data": {
     "company_number": "00623672",
     "id": "Gh7E2SSkj-YBM3i396MI-ycubGY",
-    "psc_id" : "AoRE4bhxdSdXur_NLdfh4JF81Y4",
+    "psc_id": "AoRE4bhxdSdXur_NLdfh4JF81Y4",
     "notification_id": "Gh7E2SSkj-YBM3i396MI-ycubGY",
-    "psc_statement_id" : null,
-    "data" : {
-      "kind" : "super-secure-person-with-significant-control",
+    "psc_statement_id": null,
+    "data": {
+      "kind": "super-secure-person-with-significant-control",
       "is_sanctioned": null,
-      "service_address" : null,
+      "service_address": null,
       "principal_office_address": null,
       "natures_of_control": null,
       "links": [
@@ -22,7 +22,11 @@
           "statement": null
         }
       ],
-      "ceased_on": [2018, 2, 1],
+      "ceased_on": [
+        2018,
+        2,
+        1
+      ],
       "notification_date": null,
       "notified_on": null,
       "company_number": null,

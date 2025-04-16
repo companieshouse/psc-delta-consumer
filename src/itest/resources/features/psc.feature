@@ -1,13 +1,14 @@
 Feature: Psc delta
+
   Scenario Outline: Can transform and send a company profile of kind "<pscKind>"
     Given the application is running
     When the consumer receives a message of kind "<pscKind>" for company "<companyNumber>" with psc id "<pscId>"
     Then a PUT request is sent to the psc api with the transformed data for psc of kind "<pscKind>" for company "<companyNumber>" with id "<pscId>"
 
     Examples:
-      | pscKind                 | companyNumber       | pscId                       |
-      | super_secure_entity_BO  | OE623672            | 0ewxT9lV_MPjngrHhR-vsOUHOpo |
-      | super_secure_entity     | 00623672            | Gh7E2SSkj-YBM3i396MI-ycubGY |
+      | pscKind                | companyNumber | pscId                       |
+      | super_secure_entity_BO | OE623672      | 0ewxT9lV_MPjngrHhR-vsOUHOpo |
+      | super_secure_entity    | 00623672      | Gh7E2SSkj-YBM3i396MI-ycubGY |
 
   Scenario: Process invalid avro message
     Given the application is running

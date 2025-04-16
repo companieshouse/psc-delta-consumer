@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import uk.gov.companieshouse.logging.Logger;
 
 public class CustomRequestMatcher implements ValueMatcher<Request> {
+
     private final String expectedOutput;
     private final String expectedUrl;
     private final List<String> fieldsToIgnore;

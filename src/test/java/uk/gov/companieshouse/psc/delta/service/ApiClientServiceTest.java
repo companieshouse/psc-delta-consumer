@@ -13,12 +13,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.companieshouse.api.InternalApiClient;
-import uk.gov.companieshouse.api.http.HttpClient;
 import uk.gov.companieshouse.api.error.ApiErrorResponseException;
 import uk.gov.companieshouse.api.handler.delta.PrivateDeltaResourceHandler;
 import uk.gov.companieshouse.api.handler.delta.pscfullrecord.request.PscFullRecordDelete;
 import uk.gov.companieshouse.api.handler.delta.pscfullrecord.request.PscFullRecordPut;
 import uk.gov.companieshouse.api.handler.exception.URIValidationException;
+import uk.gov.companieshouse.api.http.HttpClient;
 import uk.gov.companieshouse.api.model.ApiResponse;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.psc.delta.processor.DeletePscApiClientRequest;
@@ -126,7 +126,8 @@ class ApiClientServiceTest {
         when(internalApiClientSupplier.get()).thenReturn(internalApiClient);
         when(internalApiClient.getHttpClient()).thenReturn(httpClient);
         when(internalApiClient.privatePscFullRecordResourceHandler()).thenReturn(privateDeltaResourceHandler);
-        when(privateDeltaResourceHandler.deletePscFullRecord(anyString(), anyString(), anyString())).thenReturn(pscFullRecordDelete);
+        when(privateDeltaResourceHandler.deletePscFullRecord(anyString(), anyString(), anyString())).thenReturn(
+                pscFullRecordDelete);
         when(pscFullRecordDelete.execute()).thenReturn(SUCCESS_RESPONSE);
 
         final String formattedUri = String.format(URI, COMPANY_NUMBER, NOTIFICATION_ID);
@@ -149,7 +150,8 @@ class ApiClientServiceTest {
         when(internalApiClientSupplier.get()).thenReturn(internalApiClient);
         when(internalApiClient.getHttpClient()).thenReturn(httpClient);
         when(internalApiClient.privatePscFullRecordResourceHandler()).thenReturn(privateDeltaResourceHandler);
-        when(privateDeltaResourceHandler.deletePscFullRecord(anyString(), anyString(), anyString())).thenReturn(pscFullRecordDelete);
+        when(privateDeltaResourceHandler.deletePscFullRecord(anyString(), anyString(), anyString())).thenReturn(
+                pscFullRecordDelete);
         when(pscFullRecordDelete.execute()).thenThrow(ApiErrorResponseException.class);
 
         final String formattedUri = String.format(URI, COMPANY_NUMBER, NOTIFICATION_ID);
@@ -172,7 +174,8 @@ class ApiClientServiceTest {
         when(internalApiClientSupplier.get()).thenReturn(internalApiClient);
         when(internalApiClient.getHttpClient()).thenReturn(httpClient);
         when(internalApiClient.privatePscFullRecordResourceHandler()).thenReturn(privateDeltaResourceHandler);
-        when(privateDeltaResourceHandler.deletePscFullRecord(anyString(), anyString(), anyString())).thenReturn(pscFullRecordDelete);
+        when(privateDeltaResourceHandler.deletePscFullRecord(anyString(), anyString(), anyString())).thenReturn(
+                pscFullRecordDelete);
         when(pscFullRecordDelete.execute()).thenThrow(URIValidationException.class);
 
         final String formattedUri = String.format(URI, COMPANY_NUMBER, NOTIFICATION_ID);

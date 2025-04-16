@@ -1,8 +1,8 @@
 {
-    "internal_id": "5",
-    "company_number": "00623672",
-    "psc_id": "3",
-    "action": "DELETE",
-    "kind": "corporate-entity",
-    "delta_at": "20230724093435661593"
-  }
+  "internal_id": "5",
+  "company_number": "00623672",
+  "psc_id": "3",
+  "action": "DELETE",
+  "kind": "corporate-entity",
+  "delta_at": "20230724093435661593"
+}

@@ -26,7 +26,7 @@ public class PscDeltaProcessor {
     private final ObjectMapper objectMapper;
 
     public PscDeltaProcessor(Logger logger, ApiClientService apiClientService, PscApiTransformer transformer,
-                             KindMapper kindMapper, ObjectMapper objectMapper) {
+            KindMapper kindMapper, ObjectMapper objectMapper) {
         this.logger = logger;
         this.apiClientService = apiClientService;
         this.transformer = transformer;

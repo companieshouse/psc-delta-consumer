@@ -1,16 +1,15 @@
 package uk.gov.companieshouse.psc.delta.mapper;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,10 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.FileCopyUtils;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import uk.gov.companieshouse.api.psc.NameElements;
 import uk.gov.companieshouse.api.delta.Psc;
 import uk.gov.companieshouse.api.delta.PscDelta;
 import uk.gov.companieshouse.api.psc.Address;
@@ -31,6 +26,7 @@ import uk.gov.companieshouse.api.psc.ExternalData;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.api.psc.Identification;
 import uk.gov.companieshouse.api.psc.ItemLinkTypes;
+import uk.gov.companieshouse.api.psc.NameElements;
 import uk.gov.companieshouse.api.psc.SensitiveData;
 import uk.gov.companieshouse.api.psc.UsualResidentialAddress;
 
@@ -254,7 +250,8 @@ class PscMapperTest {
 
         List<ItemLinkTypes> links = new ArrayList<>();
         ItemLinkTypes linkTypes = new ItemLinkTypes();
-        linkTypes.setSelf("/company/00623672/persons-with-significant-control/individual-beneficial-owner/lXgouUAR16hSIwxdJSpbr_dhyT8");
+        linkTypes.setSelf(
+                "/company/00623672/persons-with-significant-control/individual-beneficial-owner/lXgouUAR16hSIwxdJSpbr_dhyT8");
         linkTypes.setStatement("/company/00623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs");
         links.add(linkTypes);
 
@@ -382,11 +379,11 @@ class PscMapperTest {
         source.setNaturesOfControl(Arrays.asList(Psc.NaturesOfControlEnum.OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON));
         source.setCompanyNumber("00623672");
         Data target = new Data();
-        pscMapper.mapNaturesOfControl(target,source);
+        pscMapper.mapNaturesOfControl(target, source);
 
         List<String> expectedValue = Arrays.asList("ownership-of-shares-25-to-50-percent");
 
-        assertEquals(expectedValue,target.getNaturesOfControl());
+        assertEquals(expectedValue, target.getNaturesOfControl());
     }
 
     @Test
@@ -395,11 +392,12 @@ class PscMapperTest {
         source.setNaturesOfControl(Arrays.asList(Psc.NaturesOfControlEnum.RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_FIRM));
         source.setCompanyNumber("OC623672");
         Data target = new Data();
-        pscMapper.mapNaturesOfControl(target,source);
+        pscMapper.mapNaturesOfControl(target, source);
 
-        List<String> expectedValue = Arrays.asList("right-to-share-surplus-assets-25-to-50-percent-as-firm-limited-liability-partnership");
+        List<String> expectedValue = Arrays.asList(
+                "right-to-share-surplus-assets-25-to-50-percent-as-firm-limited-liability-partnership");
 
-        assertEquals(expectedValue,target.getNaturesOfControl());
+        assertEquals(expectedValue, target.getNaturesOfControl());
     }
 
     @Test

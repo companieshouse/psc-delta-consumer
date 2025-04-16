@@ -74,7 +74,7 @@ public class PscSteps {
     }
 
     @When("the consumer receives a message of kind {string} for company {string} with psc id {string}")
-    public void the_consumer_receives_a_message(String pscKind, String companyNumber, String pscId)  throws Exception {
+    public void the_consumer_receives_a_message(String pscKind, String companyNumber, String pscId) throws Exception {
         configureWireMock();
         stubPutStatement(companyNumber, pscId, 200);
         ChsDelta delta = new ChsDelta(TestData.getCompanyDelta(pscKind + "_psc_delta.json"), 1, contextId, false);
@@ -116,7 +116,8 @@ public class PscSteps {
     }
 
     @When("the consumer receives a message for company {string} with notification id {string} but the api returns a {int}")
-    public void theConsumerReceivesMessageButDataApiReturns(String companyNumber, String notificationId, int responseCode) throws Exception{
+    public void theConsumerReceivesMessageButDataApiReturns(String companyNumber, String notificationId, int responseCode)
+            throws Exception {
         configureWireMock();
         stubPutStatement(companyNumber, notificationId, responseCode);
         ChsDelta delta = new ChsDelta(TestData.getCompanyDelta("individual_psc_delta.json"), 1, contextId, false);
@@ -126,7 +127,7 @@ public class PscSteps {
     }
 
     @When("^the consumer receives a delete message but the data api returns a (\\d*)$")
-    public void theConsumerReceivesDeleteMessageButDataApiReturns(int responseCode) throws Exception{
+    public void theConsumerReceivesDeleteMessageButDataApiReturns(int responseCode) throws Exception {
         configureWireMock();
         stubDeleteStatement(KindEnum.INDIVIDUAL.getValue(), responseCode);
         ChsDelta delta = new ChsDelta(TestData.getDeleteData(KindEnum.INDIVIDUAL.getValue()), 1, "1", true);
@@ -155,8 +156,8 @@ public class PscSteps {
     @Then("^the message should retry (\\d*) times and then error$")
     public void theMessageShouldRetryAndError(int retries) {
         ConsumerRecords<String, Object> records = KafkaTestUtils.getRecords(kafkaConsumer);
-        Iterable<ConsumerRecord<String, Object>> retryRecords =  records.records("psc-delta-retry");
-        Iterable<ConsumerRecord<String, Object>> errorRecords =  records.records("psc-delta-error");
+        Iterable<ConsumerRecord<String, Object>> retryRecords = records.records("psc-delta-retry");
+        Iterable<ConsumerRecord<String, Object>> errorRecords = records.records("psc-delta-error");
 
         int actualRetries = (int) StreamSupport.stream(retryRecords.spliterator(), false).count();
         int errors = (int) StreamSupport.stream(errorRecords.spliterator(), false).count();
@@ -174,11 +175,12 @@ public class PscSteps {
     }
 
     @After
-    public void shutdownWiremock(){
-        if (wireMockServer != null)
+    public void shutdownWiremock() {
+        if (wireMockServer != null) {
             wireMockServer.stop();
+        }
     }
-    
+
     private void stubPutStatement(String companyNumber, String notificationId, int responseCode) {
         stubFor(put(urlEqualTo(
                 "/company/" + companyNumber + "/persons-with-significant-control/" + notificationId + "/full_record"))

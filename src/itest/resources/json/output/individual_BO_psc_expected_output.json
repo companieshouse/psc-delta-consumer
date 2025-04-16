@@ -7,13 +7,13 @@
   "external_data": {
     "company_number": "OE623672",
     "id": "ERyiOut_ZiY1GMAZbkeN6PLCDNc",
-    "psc_id" : "AoRE4bhxdSdXur_NLdfh4JF81Y4",
+    "psc_id": "AoRE4bhxdSdXur_NLdfh4JF81Y4",
     "notification_id": "ERyiOut_ZiY1GMAZbkeN6PLCDNc",
-    "psc_statement_id" : "UKWLhOXMpdjzt-Maq7hbxAyPyQs",
-    "data" : {
-      "kind" : "individual-beneficial-owner",
+    "psc_statement_id": "UKWLhOXMpdjzt-Maq7hbxAyPyQs",
+    "data": {
+      "kind": "individual-beneficial-owner",
       "is_sanctioned": true,
-      "service_address" : {
+      "service_address": {
         "premises": "3",
         "address_line_1": "Clos Rhiannon",
         "address_line_2": "Thornhill",
@@ -37,9 +37,21 @@
           "statements": "/company/OE623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs"
         }
       ],
-      "ceased_on": [2018, 2, 1],
-      "notification_date": [2016, 1, 1],
-      "notified_on": [2016, 1, 1],
+      "ceased_on": [
+        2018,
+        2,
+        1
+      ],
+      "notification_date": [
+        2016,
+        1,
+        1
+      ],
+      "notified_on": [
+        2016,
+        1,
+        1
+      ],
       "company_number": null,
       "country_of_residence": "Italy",
       "description": null,

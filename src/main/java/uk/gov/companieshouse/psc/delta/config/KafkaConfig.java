@@ -3,10 +3,8 @@ package uk.gov.companieshouse.psc.delta.config;
 import consumer.deserialization.AvroDeserializer;
 import consumer.exception.TopicErrorInterceptor;
 import consumer.serialization.AvroSerializer;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -42,9 +40,9 @@ public class KafkaConfig {
      */
     @Autowired
     public KafkaConfig(AvroDeserializer<ChsDelta> deserializer,
-                       AvroSerializer serializer,
-                       @Value("${spring.kafka.bootstrap-servers}") String bootstrapServers,
-                       @Value("${spring.kafka.listener.concurrency}") Integer listenerConcurrency) {
+            AvroSerializer serializer,
+            @Value("${spring.kafka.bootstrap-servers}") String bootstrapServers,
+            @Value("${spring.kafka.listener.concurrency}") Integer listenerConcurrency) {
         this.serializer = serializer;
         this.deserializer = deserializer;
         this.bootstrapServers = bootstrapServers;
