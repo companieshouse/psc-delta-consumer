@@ -1,7 +1,5 @@
 package uk.gov.companieshouse.psc.delta.consumer;
 
-import static uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication.NAMESPACE;
-
 import consumer.exception.NonRetryableErrorException;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
@@ -11,15 +9,10 @@ import org.springframework.messaging.Message;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.delta.ChsDelta;
-import uk.gov.companieshouse.logging.Logger;
-import uk.gov.companieshouse.logging.LoggerFactory;
-import uk.gov.companieshouse.psc.delta.logging.DataMapHolder;
 import uk.gov.companieshouse.psc.delta.processor.PscDeltaProcessor;
 
 @Component
 public class PscDeltaConsumer {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(NAMESPACE);
 
     private final PscDeltaProcessor pscDeltaProcessor;
 
@@ -39,12 +32,10 @@ public class PscDeltaConsumer {
             groupId = "${pscs.delta.group-id}",
             containerFactory = "listenerContainerFactory")
     public void receiveMainMessages(Message<ChsDelta> chsDeltaMessage) {
-        LOGGER.info("Received PSC delta", DataMapHolder.getLogMap());
         if (chsDeltaMessage.getPayload().getIsDelete()) {
             pscDeltaProcessor.processDelete(chsDeltaMessage);
         } else {
             pscDeltaProcessor.processDelta(chsDeltaMessage);
         }
-        LOGGER.info("Finished processing PSC delta", DataMapHolder.getLogMap());
     }
 }
