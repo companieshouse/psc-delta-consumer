@@ -26,7 +26,7 @@ public class ResponseHandler {
         final HttpStatus httpStatus = HttpStatus.valueOf(statusCode);
 
         if (HttpStatus.CONFLICT.equals(httpStatus) || HttpStatus.BAD_REQUEST.equals(httpStatus)) {
-            LOGGER.error(String.format(API_ERROR_RESPONSE_MESSAGE,statusCode), ex, DataMapHolder.getLogMap());
+            LOGGER.error(String.format(API_ERROR_RESPONSE_MESSAGE, statusCode), ex, DataMapHolder.getLogMap());
             throw new NonRetryableErrorException(String.format(API_ERROR_RESPONSE_MESSAGE, statusCode), ex);
         } else {
             LOGGER.info(String.format(API_INFO_RESPONSE_MESSAGE, statusCode, Arrays.toString(ex.getStackTrace())),

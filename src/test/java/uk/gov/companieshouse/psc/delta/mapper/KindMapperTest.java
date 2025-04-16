@@ -19,13 +19,13 @@ class KindMapperTest {
 
     @ParameterizedTest
     @MethodSource("scenarios")
-    void shouldCorrectlyMapKindEnum (KindEnum kindEnum, String expectedKind) {
+    void shouldCorrectlyMapKindEnum(KindEnum kindEnum, String expectedKind) {
 
         // when
         String actualKind = kindMapper.mapKindForDelete(kindEnum);
 
         // then
-        assertEquals(expectedKind,  actualKind);
+        assertEquals(expectedKind, actualKind);
     }
 
     private static Stream<Arguments> scenarios() {

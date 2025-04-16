@@ -7,14 +7,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
 import org.mapstruct.MappingTarget;
 import uk.gov.companieshouse.GenerateEtagUtil;
-
 import uk.gov.companieshouse.api.delta.NameElements;
 import uk.gov.companieshouse.api.delta.Psc;
 import uk.gov.companieshouse.api.delta.PscAddress;
@@ -57,10 +54,11 @@ public interface PscMapper {
     @Mapping(target = "externalData.sensitiveData.usualResidentialAddress", source = "usualResidentialAddress")
     @Mapping(target = "externalData.sensitiveData.internalId", source = "internalId")
     @Mapping(target = "externalData.data.identification", ignore = true)
-
     FullRecordCompanyPSCApi mapPscData(Psc psc);
 
-    /** encode internal_id and map to id and notification_id. */
+    /**
+     * encode internal_id and map to id and notification_id.
+     */
     @AfterMapping
     default void mapEncodedInternalId(@MappingTarget ExternalData target, Psc source) {
         target.setId(MapperUtils.encode(source.getInternalId()));
@@ -79,11 +77,11 @@ public interface PscMapper {
     }
 
     /**
-    * Invoked at the end of the auto-generated mapping methods.
-    *
-    * @param target     the target PSC
-    * @param source     the source PSC
-    */
+     * Invoked at the end of the auto-generated mapping methods.
+     *
+     * @param target the target PSC
+     * @param source the source PSC
+     */
     @AfterMapping
     default void mapAddressPremiseToPremises(@MappingTarget Data target, Psc source) {
         Address serviceAddress = target.getServiceAddress();
@@ -99,8 +97,8 @@ public interface PscMapper {
     /**
      * Invoked at the end of the auto-generated mapping methods.
      *
-     * @param target     the target PSC
-     * @param source     the source PSC
+     * @param target the target PSC
+     * @param source the source PSC
      */
     @AfterMapping
     default void mapCareOf(@MappingTarget ExternalData target, Psc source) {
@@ -116,6 +114,7 @@ public interface PscMapper {
 
     /**
      * Manually map Description for Super Secure.
+     *
      * @param target Data object within FullRecordCompanyPSCApi object to map to
      * @param source Psc delta object that will be mapped from
      */
@@ -130,6 +129,7 @@ public interface PscMapper {
 
     /**
      * Manually map Name.
+     *
      * @param target Data object within FullRecordCompanyPSCApi object to map to
      * @param source Psc delta object that will be mapped from
      */
@@ -154,6 +154,7 @@ public interface PscMapper {
 
     /**
      * Manually map IsSanctioned.
+     *
      * @param target Data object within FullRecordCompanyPSCApi object to map to
      * @param source Psc delta object that will be mapped from
      */
@@ -169,6 +170,7 @@ public interface PscMapper {
 
     /**
      * Manually map links.
+     *
      * @param target Data object within FullRecordCompanyPSCApi object to map to
      * @param source Psc delta object that will be mapped from
      */
@@ -194,6 +196,7 @@ public interface PscMapper {
 
     /**
      * Manually map kind.
+     *
      * @param target Data object within FullRecordCompanyPSCApi object to map to
      * @param source Psc delta object that will be mapped from
      */
@@ -245,7 +248,9 @@ public interface PscMapper {
         }
     }
 
-    /**removes empty objects from the target to ensure they are not persisted to Mongo. */
+    /**
+     * removes empty objects from the target to ensure they are not persisted to Mongo.
+     */
     @AfterMapping
     default void removeEmptyIdentificationObject(@MappingTarget Data target, Psc source) {
         if (Objects.equals(target.getIdentification(), new Identification())) {
@@ -256,6 +261,7 @@ public interface PscMapper {
 
     /**
      * Manually map CeasedOn.
+     *
      * @param target Data object within FullRecordCompanyPSCApi object to map to
      * @param source Psc delta object that will be mapped from
      */
@@ -266,7 +272,9 @@ public interface PscMapper {
         }
     }
 
-    /** encode psc_id. */
+    /**
+     * encode psc_id.
+     */
     @AfterMapping
     default void mapEncodedPscId(@MappingTarget ExternalData target, Psc source) {
         if (source.getPscId() != null) {
@@ -276,6 +284,7 @@ public interface PscMapper {
 
     /**
      * Manually map ServiceAddressSameAsRegisteredAddress.
+     *
      * @param target Data object within FullRecordCompanyPSCApi object to map to
      * @param source Psc delta object that will be mapped from
      */
@@ -292,6 +301,7 @@ public interface PscMapper {
 
     /**
      * Manually map ResidentialAddressSameAsServiceAddress.
+     *
      * @param target Data object within FullRecordCompanyPSCApi object to map to
      * @param source Psc delta object that will be mapped from
      */
@@ -309,6 +319,7 @@ public interface PscMapper {
 
     /**
      * Manually map Date of Birth.
+     *
      * @param target SensitiveData object within FullRecordCompanyPSCApi object to map to
      * @param source Psc delta object that will be mapped from
      */
@@ -337,6 +348,7 @@ public interface PscMapper {
 
     /**
      * Manually map NaturesOfControl.
+     *
      * @param target Data object within FullRecordCompanyPSCApi object to map to
      * @param source Psc delta object that will be mapped from.
      */
@@ -344,7 +356,7 @@ public interface PscMapper {
     @AfterMapping
     default void mapNaturesOfControl(@MappingTarget Data target, Psc source) {
         if (source.getNaturesOfControl() != null && !source.getNaturesOfControl().isEmpty()) {
-            HashMap<String,String> naturesOfControlMap =
+            HashMap<String, String> naturesOfControlMap =
                     MapperUtils.getNaturesOfControlMap(source.getCompanyNumber());
             List<String> mappedNaturesOfControl = new ArrayList<>();
             for (Psc.NaturesOfControlEnum nature : source.getNaturesOfControl()) {
@@ -355,7 +367,6 @@ public interface PscMapper {
             target.setNaturesOfControl(mappedNaturesOfControl);
         }
     }
-
 
 
 }

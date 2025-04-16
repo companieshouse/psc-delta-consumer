@@ -10,8 +10,6 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import consumer.exception.RetryableErrorException;
 import java.io.IOException;
-import java.net.http.HttpClient;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

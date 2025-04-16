@@ -3,10 +3,8 @@ package uk.gov.companieshouse.psc.delta.transformer;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import uk.gov.companieshouse.api.delta.Psc;
 import uk.gov.companieshouse.api.delta.PscDelta;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
@@ -20,8 +18,8 @@ public class PscApiTransformer {
 
     /**
      * Constructor for the transformer.
-     * @param pscMapper returns the FullRecordCompanyPSCApi
-     *                      object for Super Secure PSCs and BOs.
+     *
+     * @param pscMapper returns the FullRecordCompanyPSCApi object for Super Secure PSCs and BOs.
      */
     @Autowired
     public PscApiTransformer(PscMapper pscMapper) {
@@ -30,6 +28,7 @@ public class PscApiTransformer {
 
     /**
      * Maps the psc delta to an api object.
+     *
      * @param pscDelta the CHIPS delta
      * @return the FullRecordCompanyPSCApi object
      */
@@ -44,8 +43,9 @@ public class PscApiTransformer {
 
     /**
      * Maps the delta at which is not passed into the mapper.
+     *
      * @param apiObject the FullRecordCompanyPSCApi object from the mapper.
-     * @param pscDelta the delta from CHIPS containing the delta_at
+     * @param pscDelta  the delta from CHIPS containing the delta_at
      * @return the original api object with the delta_at parsed.
      */
     private FullRecordCompanyPSCApi parseDeltaAt(

@@ -1,24 +1,21 @@
 package uk.gov.companieshouse.psc.delta.transformer;
 
-import static org.mockito.Mockito.when;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import uk.gov.companieshouse.api.delta.Psc;
-import uk.gov.companieshouse.api.delta.PscDelta;
-import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
-import uk.gov.companieshouse.psc.delta.mapper.PscMapper;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.gov.companieshouse.api.delta.Psc;
+import uk.gov.companieshouse.api.delta.PscDelta;
+import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
+import uk.gov.companieshouse.psc.delta.mapper.PscMapper;
 
 @ExtendWith(SpringExtension.class)
 class PscTransformerTest {
@@ -48,6 +45,6 @@ class PscTransformerTest {
         FullRecordCompanyPSCApi actual = transformer.transform(input);
         assertThat(actual).isEqualTo(mock);
         assertThat(actual.getInternalData().getDeltaAt()).isEqualTo(OffsetDateTime.of(
-                2021,10,8,15,28,23,383176000, ZoneOffset.UTC));
+                2021, 10, 8, 15, 28, 23, 383176000, ZoneOffset.UTC));
     }
 }

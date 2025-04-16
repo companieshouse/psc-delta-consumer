@@ -3,6 +3,9 @@ package uk.gov.companieshouse.psc.delta.config;
 import consumer.deserialization.AvroDeserializer;
 import consumer.exception.TopicErrorInterceptor;
 import consumer.serialization.AvroSerializer;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -23,12 +26,9 @@ import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.utility.DockerImageName;
 import uk.gov.companieshouse.delta.ChsDelta;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @TestConfiguration
 public class KafkaTestContainerConfig {
+
     private final AvroDeserializer<ChsDelta> deserializer;
     private final AvroSerializer serializer;
 
@@ -60,6 +60,7 @@ public class KafkaTestContainerConfig {
                 new StringDeserializer(),
                 new ErrorHandlingDeserializer<>(deserializer));
     }
+
     @Bean
     public Map<String, Object> consumerConfigs(KafkaContainer kafkaContainer) {
         Map<String, Object> props = new HashMap<>();

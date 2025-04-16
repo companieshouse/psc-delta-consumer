@@ -3,12 +3,10 @@ package uk.gov.companieshouse.psc.delta.utils;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
-
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.util.FileCopyUtils;
-
 import uk.gov.companieshouse.api.delta.Psc;
 import uk.gov.companieshouse.api.delta.PscDelta;
 import uk.gov.companieshouse.api.psc.Data;
@@ -27,7 +25,7 @@ public class TestHelper {
                 .build();
     }
 
-    private Message<ChsDelta> buildMessage (String data, boolean isDelete) {
+    private Message<ChsDelta> buildMessage(String data, boolean isDelete) {
         return MessageBuilder
                 .withPayload(buildDelta(data, isDelete))
                 .setHeader(KafkaHeaders.RECEIVED_TOPIC, "test")
@@ -66,7 +64,7 @@ public class TestHelper {
 
         return buildMessage(data, isDelete);
     }
-    
+
     public PscDelta createPscDelta() {
         Psc psc = new Psc();
 
