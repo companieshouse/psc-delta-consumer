@@ -87,14 +87,14 @@ class StructuredLoggingKafkaListenerAspect {
     }
 
     private ChsDelta extractChsDelta(Object payload) {
-        if (payload instanceof ChsDelta) {
-            return (ChsDelta) Optional.of(payload)
+        if (payload instanceof ChsDelta chsDelta) {
+            return Optional.of(chsDelta)
                     .orElseGet(() -> {
                         LOGGER.error("Null payload", DataMapHolder.getLogMap());
                         throw new NonRetryableErrorException("Null payload");
                     });
         }
-        String errorMessage = String.format("Invalid payload type, payload: [%s]", payload);
+        final String errorMessage = "Invalid payload type, payload: [%s]".formatted(payload);
         LOGGER.error(errorMessage, DataMapHolder.getLogMap());
         throw new NonRetryableErrorException(errorMessage);
     }

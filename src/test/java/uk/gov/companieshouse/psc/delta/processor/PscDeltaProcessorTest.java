@@ -49,7 +49,7 @@ class PscDeltaProcessorTest {
     @BeforeEach
     void setUp() {
         ObjectMapper objectMapper = new ObjectMapper();
-        deltaProcessor = new PscDeltaProcessor(logger, apiClientService, transformer, kindMapper, objectMapper);
+        deltaProcessor = new PscDeltaProcessor(transformer, apiClientService, kindMapper, objectMapper);
     }
 
     @Test
