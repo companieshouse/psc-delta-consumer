@@ -1,5 +1,8 @@
 package uk.gov.companieshouse.psc.delta.processor;
 
+import static uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication.NAMESPACE;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import consumer.exception.RetryableErrorException;
 import org.springframework.messaging.Message;
@@ -10,6 +13,7 @@ import uk.gov.companieshouse.api.delta.PscDelta;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
 import uk.gov.companieshouse.psc.delta.logging.DataMapHolder;
 import uk.gov.companieshouse.psc.delta.mapper.KindMapper;
 import uk.gov.companieshouse.psc.delta.mapper.MapperUtils;
@@ -19,50 +23,42 @@ import uk.gov.companieshouse.psc.delta.transformer.PscApiTransformer;
 @Component
 public class PscDeltaProcessor {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(NAMESPACE);
+
     private final PscApiTransformer transformer;
-    private final Logger logger;
     private final ApiClientService apiClientService;
     private final KindMapper kindMapper;
     private final ObjectMapper objectMapper;
 
-    public PscDeltaProcessor(Logger logger, ApiClientService apiClientService, PscApiTransformer transformer,
-            KindMapper kindMapper, ObjectMapper objectMapper) {
-        this.logger = logger;
-        this.apiClientService = apiClientService;
+    public PscDeltaProcessor(PscApiTransformer transformer, ApiClientService apiClientService, KindMapper kindMapper,
+            ObjectMapper objectMapper) {
         this.transformer = transformer;
+        this.apiClientService = apiClientService;
         this.kindMapper = kindMapper;
         this.objectMapper = objectMapper;
     }
 
     public void processDelta(Message<ChsDelta> chsDelta) {
-        final ChsDelta payload = chsDelta.getPayload();
-        final String contextId = payload.getContextId();
+        LOGGER.info("Processing PSC delta", DataMapHolder.getLogMap());
+
+        ChsDelta payload = chsDelta.getPayload();
         PscDelta pscDelta;
         try {
             pscDelta = objectMapper.readValue(payload.getData(), PscDelta.class);
-            Psc psc = pscDelta.getPscs().get(0); // We will only ever get one PSC per request
-
-            DataMapHolder.get()
-                    .companyNumber(psc.getCompanyNumber())
-                    .requestId(contextId)
-                    .itemId(psc.getPscId());
-
-            logger.infoContext(contextId, "Successfully extracted psc delta",
-                    DataMapHolder.getLogMap());
-        } catch (Exception ex) {
-            logger.errorContext(contextId, ex.getMessage(), ex, DataMapHolder.getLogMap());
-            throw new RetryableErrorException("Error when extracting psc delta", ex);
+        } catch (JsonProcessingException ex) {
+            final String msg = "Failed to extract PSC delta";
+            LOGGER.info(msg, DataMapHolder.getLogMap());
+            throw new RetryableErrorException(msg, ex);
         }
 
-        FullRecordCompanyPSCApi fullRecordCompanyPscApi;
-        try {
-            fullRecordCompanyPscApi = transformer.transform(pscDelta);
-            logger.infoContext(contextId, "Successfully transformed psc",
-                    DataMapHolder.getLogMap());
-        } catch (Exception ex) {
-            logger.errorContext(contextId, ex.getMessage(), ex, DataMapHolder.getLogMap());
-            throw new RetryableErrorException("Error when transforming into api object", ex);
-        }
+        Psc psc = pscDelta.getPscs().getFirst(); // We will only ever get one PSC per request
+
+        DataMapHolder.get()
+                .companyNumber(psc.getCompanyNumber())
+                .itemId(psc.getInternalId());
+
+        FullRecordCompanyPSCApi fullRecordCompanyPscApi = transformer.transform(pscDelta);
+        LOGGER.info("Successfully transformed PSC", DataMapHolder.getLogMap());
 
         apiClientService.putPscFullRecord(fullRecordCompanyPscApi.getExternalData().getCompanyNumber(),
                 fullRecordCompanyPscApi.getExternalData().getNotificationId(),
@@ -70,21 +66,24 @@ public class PscDeltaProcessor {
     }
 
     public void processDelete(Message<ChsDelta> chsDelta) {
+        LOGGER.info("Processing PSC delete delta", DataMapHolder.getLogMap());
+
         final ChsDelta payload = chsDelta.getPayload();
         final String contextId = payload.getContextId();
 
         PscDeleteDelta pscDelete;
         try {
             pscDelete = objectMapper.readValue(payload.getData(), PscDeleteDelta.class);
-
-            DataMapHolder.get().requestId(contextId);
-
-        } catch (Exception ex) {
-            throw new RetryableErrorException("Error when extracting psc delete delta", ex);
+        } catch (JsonProcessingException ex) {
+            final String msg = "Failed to extract PSC delete delta";
+            LOGGER.info(msg, DataMapHolder.getLogMap());
+            throw new RetryableErrorException(msg, ex);
         }
 
-        logger.info(String.format("PscDeleteDelta extracted for context ID"
-                + " [%s] Kafka message: [%s]", contextId, pscDelete));
+        DataMapHolder.get()
+                .companyNumber(pscDelete.getCompanyNumber())
+                .itemId(pscDelete.getInternalId());
+
         final String notificationId = MapperUtils.encode(pscDelete.getInternalId());
         final String kind = kindMapper.mapKindForDelete(pscDelete.getKind());
         final String companyNumber = pscDelete.getCompanyNumber();
@@ -96,8 +95,6 @@ public class PscDeltaProcessor {
                 .kind(kind)
                 .build();
 
-        logger.info(String.format(
-                "Performing a DELETE for PSC id: [%s]", notificationId));
         apiClientService.deletePscFullRecord(clientRequest);
     }
 }
