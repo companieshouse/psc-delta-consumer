@@ -30,7 +30,7 @@ test: test-unit test-integration
 
 .PHONY: test-unit
 test-unit: clean
-	mvn verify -Dskip.unit.tests=false -Dskip.integration.tests=false
+	mvn test
 
 .PHONY: test-integration
 test-integration: clean
