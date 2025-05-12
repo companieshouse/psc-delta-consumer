@@ -1,5 +1,7 @@
 package uk.gov.companieshouse.psc.delta.matcher;
 
+import static uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication.NAMESPACE;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,24 +13,25 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 import uk.gov.companieshouse.logging.Logger;
+import uk.gov.companieshouse.logging.LoggerFactory;
 
 public class CustomRequestMatcher implements ValueMatcher<Request> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(NAMESPACE);
+    private static final String PUT = "PUT";
 
     private final String expectedOutput;
     private final String expectedUrl;
     private final List<String> fieldsToIgnore;
-    private final Logger logger;
 
-    public CustomRequestMatcher(Logger logger, String output, String expectedUrl) {
+    public CustomRequestMatcher(String output, String expectedUrl) {
         this.expectedOutput = output;
-        this.logger = logger;
         this.expectedUrl = expectedUrl;
         this.fieldsToIgnore = new ArrayList<>();
     }
 
-    public CustomRequestMatcher(Logger logger, String output, String expectedUrl, List<String> fieldsToIgnore) {
+    public CustomRequestMatcher(String output, String expectedUrl, List<String> fieldsToIgnore) {
         this.expectedOutput = output;
-        this.logger = logger;
         this.expectedUrl = expectedUrl;
         this.fieldsToIgnore = fieldsToIgnore;
     }
@@ -44,17 +47,16 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
     private boolean matchUrl(String actualUrl) {
         boolean urlResult = this.expectedUrl.equals(actualUrl);
         if (!urlResult) {
-            this.logger.error("URL does not match expected: <" + this.expectedUrl + "> actual: <" + actualUrl + ">");
+            LOGGER.error("URL does not match - expected: [%s], actual: [%s]".formatted(expectedUrl, actualUrl));
         }
 
         return urlResult;
     }
 
     private boolean matchMethod(String actualMethod) {
-        String expectedMethod = "PUT";
-        boolean typeResult = expectedMethod.equals(actualMethod);
+        boolean typeResult = PUT.equals(actualMethod);
         if (!typeResult) {
-            this.logger.error("Method does not match expected: <" + expectedMethod + "> actual: <" + actualMethod + ">");
+            LOGGER.error("Method does not match - expected: [%s], actual: [%s]".formatted(PUT, actualMethod));
         }
 
         return typeResult;
@@ -77,15 +79,14 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
             JsonNode actualNode = mapper.readTree(actual.toString());
             boolean bodyResult = expectedNode.equals(actualNode);
             if (!bodyResult) {
-                Logger var10000 = this.logger;
                 String var10001 = String.valueOf(expectedBody);
-                var10000.error("Body does not match expected: <" + var10001 + "> actual: <" + actualBody + ">");
+                LOGGER.error("Body does not match - expected: [%s], actual: [%s]".formatted(var10001, actualBody));
             }
 
             return bodyResult;
         } catch (JsonProcessingException | JSONException var8) {
             Exception ex = var8;
-            this.logger.error("Error processing JSON: " + String.valueOf(ex));
+            LOGGER.error("Error processing JSON", ex);
             return false;
         }
     }

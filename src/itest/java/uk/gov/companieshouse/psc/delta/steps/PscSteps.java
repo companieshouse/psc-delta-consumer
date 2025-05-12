@@ -31,7 +31,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import uk.gov.companieshouse.api.delta.PscDeleteDelta.KindEnum;
 import uk.gov.companieshouse.delta.ChsDelta;
-import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.psc.delta.data.TestData;
 import uk.gov.companieshouse.psc.delta.matcher.CustomRequestMatcher;
 
@@ -40,9 +39,6 @@ public class PscSteps {
     private static final String DELTA_AT = "20230724093435661593";
 
     private static WireMockServer wireMockServer;
-
-    @Autowired
-    private Logger logger;
 
     @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
@@ -141,7 +137,7 @@ public class PscSteps {
         String output = TestData.getOutputData(pscKind + "_psc_expected_output.json");
 
         verify(1, requestMadeFor(
-                new CustomRequestMatcher(logger, output,
+                new CustomRequestMatcher(output,
                         "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record",
                         List.of("external_data.data.etag", "internal_data.delta_at"))));
     }

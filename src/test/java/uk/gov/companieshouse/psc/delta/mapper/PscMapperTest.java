@@ -18,6 +18,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.FileCopyUtils;
 import uk.gov.companieshouse.api.delta.Psc;
+import uk.gov.companieshouse.api.delta.Psc.NaturesOfControlEnum;
 import uk.gov.companieshouse.api.delta.PscDelta;
 import uk.gov.companieshouse.api.psc.Address;
 import uk.gov.companieshouse.api.psc.Data;
@@ -376,12 +377,12 @@ class PscMapperTest {
     @Test
     public void shouldMapNaturesOfControl() {
         Psc source = new Psc();
-        source.setNaturesOfControl(Arrays.asList(Psc.NaturesOfControlEnum.OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON));
+        source.setNaturesOfControl(List.of(NaturesOfControlEnum.OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON));
         source.setCompanyNumber("00623672");
         Data target = new Data();
         pscMapper.mapNaturesOfControl(target, source);
 
-        List<String> expectedValue = Arrays.asList("ownership-of-shares-25-to-50-percent");
+        List<String> expectedValue = List.of("ownership-of-shares-25-to-50-percent");
 
         assertEquals(expectedValue, target.getNaturesOfControl());
     }
@@ -389,12 +390,12 @@ class PscMapperTest {
     @Test
     public void shouldMapNaturesOfControlLlp() {
         Psc source = new Psc();
-        source.setNaturesOfControl(Arrays.asList(Psc.NaturesOfControlEnum.RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_FIRM));
+        source.setNaturesOfControl(List.of(NaturesOfControlEnum.RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_FIRM));
         source.setCompanyNumber("OC623672");
         Data target = new Data();
         pscMapper.mapNaturesOfControl(target, source);
 
-        List<String> expectedValue = Arrays.asList(
+        List<String> expectedValue = List.of(
                 "right-to-share-surplus-assets-25-to-50-percent-as-firm-limited-liability-partnership");
 
         assertEquals(expectedValue, target.getNaturesOfControl());
@@ -403,12 +404,12 @@ class PscMapperTest {
     @Test
     public void shouldMapNaturesOfControlRoe() {
         Psc source = new Psc();
-        source.setNaturesOfControl((Arrays.asList(Psc.NaturesOfControlEnum.OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_FIRM)));
+        source.setNaturesOfControl((List.of(NaturesOfControlEnum.OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_FIRM)));
         source.setCompanyNumber("OE623672");
         Data target = new Data();
         pscMapper.mapNaturesOfControl(target, source);
 
-        List<String> expectedValue = Arrays.asList("ownership-of-shares-more-than-25-percent-as-firm-registered-overseas-entity");
+        List<String> expectedValue = List.of("ownership-of-shares-more-than-25-percent-as-firm-registered-overseas-entity");
 
         assertEquals(expectedValue, target.getNaturesOfControl());
     }

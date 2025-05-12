@@ -22,7 +22,6 @@ import org.springframework.messaging.Message;
 import uk.gov.companieshouse.api.delta.PscDelta;
 import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
 import uk.gov.companieshouse.delta.ChsDelta;
-import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.psc.delta.mapper.KindMapper;
 import uk.gov.companieshouse.psc.delta.service.ApiClientService;
 import uk.gov.companieshouse.psc.delta.transformer.PscApiTransformer;
@@ -31,11 +30,9 @@ import uk.gov.companieshouse.psc.delta.utils.TestHelper;
 @ExtendWith(MockitoExtension.class)
 class PscDeltaProcessorTest {
 
-    private TestHelper testHelper = new TestHelper();
+    private final TestHelper testHelper = new TestHelper();
     private PscDeltaProcessor deltaProcessor;
 
-    @Mock
-    private Logger logger;
     @Mock
     private ApiClientService apiClientService;
     @Mock
