@@ -37,10 +37,10 @@
         <apache-commons-lang3.version>3.18.0</apache-commons-lang3.version>
 
         <!--CompaniesHouse library-->
-        <ch-kafka.version>3.0.3</ch-kafka.version>
+        <ch-kafka.version>3.0.5</ch-kafka.version>
         <structured-logging.version>3.0.36</structured-logging.version>
         <kafka-models.version>3.0.18</kafka-models.version>
-        <private-api-sdk-java.version>4.0.325</private-api-sdk-java.version>
+        <private-api-sdk-java.version>4.0.328</private-api-sdk-java.version>
         <api-sdk-manager-java-library.version>3.0.9</api-sdk-manager-java-library.version>
         <api-helper-java-library.version>3.0.1</api-helper-java-library.version>
         <java-checkstyle-config.version>1.1</java-checkstyle-config.version>
@@ -65,6 +65,13 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>io.opentelemetry.instrumentation</groupId>
+                <artifactId>opentelemetry-instrumentation-bom</artifactId>
+                <version>${opentelemetry-instrumentation-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-bom</artifactId>
                 <version>${log4j-bom.version}</version>
@@ -75,13 +82,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot-dependencies.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.opentelemetry.instrumentation</groupId>
-                <artifactId>opentelemetry-instrumentation-bom</artifactId>
-                <version>${opentelemetry-instrumentation-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
