@@ -24,7 +24,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven-build-helper-plugin.version>3.6.1</maven-build-helper-plugin.version>
-        <maven-failsafe-plugin.version>3.5.3</maven-failsafe-plugin.version>
+        <maven-failsafe-plugin.version>3.5.2</maven-failsafe-plugin.version>
         <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -41,7 +41,7 @@
         <structured-logging.version>3.0.36</structured-logging.version>
         <kafka-models.version>3.0.18</kafka-models.version>
         <private-api-sdk-java.version>4.0.325</private-api-sdk-java.version>
-        <api-sdk-manager-java-library.version>3.0.7</api-sdk-manager-java-library.version>
+        <api-sdk-manager-java-library.version>3.0.9</api-sdk-manager-java-library.version>
         <api-helper-java-library.version>3.0.1</api-helper-java-library.version>
         <java-checkstyle-config.version>1.1</java-checkstyle-config.version>
 
@@ -288,6 +288,15 @@
                     <artifactId>junit-jupiter-engine</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.opentelemetry.instrumentation</groupId>
+            <artifactId>opentelemetry-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-context</artifactId>
+            <version>1.73.0</version>
         </dependency>
     </dependencies>
     <build>
