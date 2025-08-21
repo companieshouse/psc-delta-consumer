@@ -1,0 +1,46 @@
+{
+  "pscs": [
+    {
+      "company_number": "00623672",
+      "internal_id": "5",
+      "psc_id": "3",
+      "kind": "legal-person",
+      "notification_date": "20160101",
+      "identity_verification_details": {
+        "anti_money_laundering_supervisory_bodies": [
+          "Money Laundering Supervisory Body"
+        ],
+        "appointment_verification_end_on": "20180131",
+        "appointment_verification_statement_date": "20180102",
+        "appointment_verification_statement_due_on": "20180121",
+        "appointment_verification_start_on": "20180101",
+        "authorised_corporate_service_provider_name": "Corporate Service Provider Ltd",
+        "identity_verified_on": "20180112",
+        "preferred_name": "Preferred Name"
+      },
+      "ceased_on": "20180201",
+      "psc_statement_id": "12345",
+      "address": {
+        "premise": "3",
+        "address_line_1": "Clos Rhiannon",
+        "address_line_2": "Thornhill",
+        "locality": "Cardiff",
+        "region": "Here",
+        "country": "Wales",
+        "postal_code": "CF14 9HQ",
+        "care_of_name": "CareOf",
+        "po_box": "PoBox"
+      },
+      "name": "His Majesty King John Smith",
+      "legal_form": "Form",
+      "legal_authority": "Authority",
+      "nationality": "Welsh",
+      "country_of_residence": "Wales",
+      "natures_of_control": [
+        "OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"
+      ]
+    }
+  ],
+  "CreatedTime": "28-APR-22 16.51.29.000000",
+  "delta_at": "20211029142043360560"
+}

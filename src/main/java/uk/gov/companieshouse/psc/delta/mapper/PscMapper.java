@@ -15,14 +15,7 @@ import uk.gov.companieshouse.GenerateEtagUtil;
 import uk.gov.companieshouse.api.delta.NameElements;
 import uk.gov.companieshouse.api.delta.Psc;
 import uk.gov.companieshouse.api.delta.PscAddress;
-import uk.gov.companieshouse.api.psc.Address;
-import uk.gov.companieshouse.api.psc.Data;
-import uk.gov.companieshouse.api.psc.DateOfBirth;
-import uk.gov.companieshouse.api.psc.ExternalData;
-import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
-import uk.gov.companieshouse.api.psc.Identification;
-import uk.gov.companieshouse.api.psc.ItemLinkTypes;
-import uk.gov.companieshouse.api.psc.SensitiveData;
+import uk.gov.companieshouse.api.psc.*;
 
 @Mapper(componentModel = "spring")
 public interface PscMapper {
@@ -54,6 +47,7 @@ public interface PscMapper {
     @Mapping(target = "externalData.sensitiveData.usualResidentialAddress", source = "usualResidentialAddress")
     @Mapping(target = "externalData.sensitiveData.internalId", source = "internalId")
     @Mapping(target = "externalData.data.identification", ignore = true)
+    @Mapping(target = "externalData.data.identityVerificationDetails", ignore = true)
     FullRecordCompanyPSCApi mapPscData(Psc psc);
 
     /**
@@ -368,5 +362,37 @@ public interface PscMapper {
         }
     }
 
-
+    /**
+     * Manually map IdentityVerificationDetails.
+     *
+     * @param target Data object within FullRecordCompanyPSCApi object to map to
+     * @param source Psc delta object that will be mapped from.
+     */
+    @AfterMapping
+    default void mapIdentityVerificationDetails(@MappingTarget Data target, Psc source) {
+        if (source.getIdentityVerificationDetails() != null) {
+            IdentityVerificationDetails identityVerificationDetails = new IdentityVerificationDetails();
+            target.setIdentityVerificationDetails(identityVerificationDetails);
+            var identityVerificationDetailsSource = source.getIdentityVerificationDetails();
+            if (identityVerificationDetailsSource.getAntiMoneyLaunderingSupervisoryBodies() != null) {
+                identityVerificationDetails.setAntiMoneyLaunderingSupervisoryBodies(
+                                identityVerificationDetailsSource.getAntiMoneyLaunderingSupervisoryBodies());
+            }
+            identityVerificationDetails.setAppointmentVerificationEndOn(
+                    MapperUtils.parseLocalDate(identityVerificationDetailsSource.getAppointmentVerificationEndOn()));
+            identityVerificationDetails.setAppointmentVerificationStatementDate(
+                    MapperUtils.parseLocalDate(
+                            identityVerificationDetailsSource.getAppointmentVerificationStatementDate()));
+            identityVerificationDetails.setAppointmentVerificationStatementDueOn(
+                    MapperUtils.parseLocalDate(
+                            identityVerificationDetailsSource.getAppointmentVerificationStatementDueOn()));
+            identityVerificationDetails.setAppointmentVerificationStartOn(
+                    MapperUtils.parseLocalDate(identityVerificationDetailsSource.getAppointmentVerificationStartOn()));
+            identityVerificationDetails.setAuthorisedCorporateServiceProviderName(
+                    identityVerificationDetailsSource.getAuthorisedCorporateServiceProviderName());
+            identityVerificationDetails.setIdentityVerifiedOn(
+                    MapperUtils.parseLocalDate(identityVerificationDetailsSource.getIdentityVerifiedOn()));
+            identityVerificationDetails.setPreferredName(identityVerificationDetailsSource.getPreferredName());
+        }
+    }
 }

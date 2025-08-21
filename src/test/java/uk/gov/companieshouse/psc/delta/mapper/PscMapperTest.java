@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,16 +19,7 @@ import org.springframework.util.FileCopyUtils;
 import uk.gov.companieshouse.api.delta.Psc;
 import uk.gov.companieshouse.api.delta.Psc.NaturesOfControlEnum;
 import uk.gov.companieshouse.api.delta.PscDelta;
-import uk.gov.companieshouse.api.psc.Address;
-import uk.gov.companieshouse.api.psc.Data;
-import uk.gov.companieshouse.api.psc.DateOfBirth;
-import uk.gov.companieshouse.api.psc.ExternalData;
-import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
-import uk.gov.companieshouse.api.psc.Identification;
-import uk.gov.companieshouse.api.psc.ItemLinkTypes;
-import uk.gov.companieshouse.api.psc.NameElements;
-import uk.gov.companieshouse.api.psc.SensitiveData;
-import uk.gov.companieshouse.api.psc.UsualResidentialAddress;
+import uk.gov.companieshouse.api.psc.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
@@ -414,4 +404,43 @@ class PscMapperTest {
         assertEquals(expectedValue, target.getNaturesOfControl());
     }
 
+    @Test
+    void shouldMapIdentityVerificationDetails() throws Exception {
+        pscObject = createPscObject("identity-verification-details-psc");
+        FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
+
+        ExternalData externalData = fullRecordCompanyPSCApi.getExternalData();
+        Data data = externalData.getData();
+        IdentityVerificationDetails ivd = data.getIdentityVerificationDetails();
+
+        assertEquals(LocalDate.of(2018, 1, 31), ivd.getAppointmentVerificationEndOn());
+        assertEquals(LocalDate.of(2018, 1, 2), ivd.getAppointmentVerificationStatementDate());
+        assertEquals(LocalDate.of(2018, 1, 21), ivd.getAppointmentVerificationStatementDueOn());
+        assertEquals(LocalDate.of(2018, 1, 1), ivd.getAppointmentVerificationStartOn());
+        assertEquals(LocalDate.of(2018, 1, 12), ivd.getIdentityVerifiedOn());
+        assertEquals("Corporate Service Provider Ltd", ivd.getAuthorisedCorporateServiceProviderName());
+        assertEquals("Preferred Name", ivd.getPreferredName());
+        assertEquals(1, ivd.getAntiMoneyLaunderingSupervisoryBodies().size());
+        assertEquals("Money Laundering Supervisory Body", ivd.getAntiMoneyLaunderingSupervisoryBodies().getFirst());
+    }
+
+    @Test
+    void shouldMapIdentityVerificationDetailsWithoutAntiMoneyLaunderingSupervisoryBodies() throws Exception {
+        pscObject = createPscObject("identity-verification-details-psc");
+        pscObject.getIdentityVerificationDetails().setAntiMoneyLaunderingSupervisoryBodies(null);
+        FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
+
+        ExternalData externalData = fullRecordCompanyPSCApi.getExternalData();
+        Data data = externalData.getData();
+        IdentityVerificationDetails ivd = data.getIdentityVerificationDetails();
+
+        assertEquals(LocalDate.of(2018, 1, 31), ivd.getAppointmentVerificationEndOn());
+        assertEquals(LocalDate.of(2018, 1, 2), ivd.getAppointmentVerificationStatementDate());
+        assertEquals(LocalDate.of(2018, 1, 21), ivd.getAppointmentVerificationStatementDueOn());
+        assertEquals(LocalDate.of(2018, 1, 1), ivd.getAppointmentVerificationStartOn());
+        assertEquals(LocalDate.of(2018, 1, 12), ivd.getIdentityVerifiedOn());
+        assertEquals("Corporate Service Provider Ltd", ivd.getAuthorisedCorporateServiceProviderName());
+        assertEquals("Preferred Name", ivd.getPreferredName());
+        assertNull(ivd.getAntiMoneyLaunderingSupervisoryBodies());
+    }
 }
