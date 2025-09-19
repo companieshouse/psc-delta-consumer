@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.mapstruct.AfterMapping;
@@ -370,29 +371,48 @@ public interface PscMapper {
      */
     @AfterMapping
     default void mapIdentityVerificationDetails(@MappingTarget Data target, Psc source) {
-        if (source.getIdentityVerificationDetails() != null) {
-            IdentityVerificationDetails identityVerificationDetails = new IdentityVerificationDetails();
-            target.setIdentityVerificationDetails(identityVerificationDetails);
-            var identityVerificationDetailsSource = source.getIdentityVerificationDetails();
-            if (identityVerificationDetailsSource.getAntiMoneyLaunderingSupervisoryBodies() != null) {
-                identityVerificationDetails.setAntiMoneyLaunderingSupervisoryBodies(
-                                identityVerificationDetailsSource.getAntiMoneyLaunderingSupervisoryBodies());
-            }
-            identityVerificationDetails.setAppointmentVerificationEndOn(
-                    MapperUtils.parseLocalDate(identityVerificationDetailsSource.getAppointmentVerificationEndOn()));
-            identityVerificationDetails.setAppointmentVerificationStatementDate(
-                    MapperUtils.parseLocalDate(
-                            identityVerificationDetailsSource.getAppointmentVerificationStatementDate()));
-            identityVerificationDetails.setAppointmentVerificationStatementDueOn(
-                    MapperUtils.parseLocalDate(
-                            identityVerificationDetailsSource.getAppointmentVerificationStatementDueOn()));
-            identityVerificationDetails.setAppointmentVerificationStartOn(
-                    MapperUtils.parseLocalDate(identityVerificationDetailsSource.getAppointmentVerificationStartOn()));
-            identityVerificationDetails.setAuthorisedCorporateServiceProviderName(
-                    identityVerificationDetailsSource.getAuthorisedCorporateServiceProviderName());
-            identityVerificationDetails.setIdentityVerifiedOn(
-                    MapperUtils.parseLocalDate(identityVerificationDetailsSource.getIdentityVerifiedOn()));
-            identityVerificationDetails.setPreferredName(identityVerificationDetailsSource.getPreferredName());
+        var sourceDetails = source.getIdentityVerificationDetails();
+        if (sourceDetails == null) return;
+
+        IdentityVerificationDetails details = new IdentityVerificationDetails();
+
+        setIfNotNull(details::setAntiMoneyLaunderingSupervisoryBodies, sourceDetails.getAntiMoneyLaunderingSupervisoryBodies());
+
+        if (sourceDetails.getAppointmentVerificationEndOn() != null) {
+            setIfNotNull(details::setAppointmentVerificationEndOn,
+                    MapperUtils.parseLocalDate(sourceDetails.getAppointmentVerificationEndOn()));
+        }
+
+        if (sourceDetails.getAppointmentVerificationStatementDate() != null) {
+            setIfNotNull(details::setAppointmentVerificationStatementDate,
+                    MapperUtils.parseLocalDate(sourceDetails.getAppointmentVerificationStatementDate()));
+        }
+
+        if (sourceDetails.getAppointmentVerificationStatementDueOn() != null) {
+            setIfNotNull(details::setAppointmentVerificationStatementDueOn,
+                    MapperUtils.parseLocalDate(sourceDetails.getAppointmentVerificationStatementDueOn()));
+        }
+
+        if (sourceDetails.getAppointmentVerificationStartOn() != null) {
+            setIfNotNull(details::setAppointmentVerificationStartOn,
+                    MapperUtils.parseLocalDate(sourceDetails.getAppointmentVerificationStartOn()));
+        }
+
+        setIfNotNull(details::setAuthorisedCorporateServiceProviderName, sourceDetails.getAuthorisedCorporateServiceProviderName());
+
+        if (sourceDetails.getIdentityVerifiedOn() != null) {
+            setIfNotNull(details::setIdentityVerifiedOn,
+                    MapperUtils.parseLocalDate(sourceDetails.getIdentityVerifiedOn()));
+        }
+
+        setIfNotNull(details::setPreferredName, sourceDetails.getPreferredName());
+
+        target.setIdentityVerificationDetails(details);
+    }
+
+    private <T> void setIfNotNull(Consumer<T> setter, T value) {
+        if (value != null) {
+            setter.accept(value);
         }
     }
 }
