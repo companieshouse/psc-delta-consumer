@@ -1,11 +1,13 @@
 package uk.gov.companieshouse.psc.delta.mapper;
 
+import static uk.gov.companieshouse.psc.delta.mapper.MapperUtils.parseLocalDate;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.mapstruct.AfterMapping;
@@ -16,7 +18,15 @@ import uk.gov.companieshouse.GenerateEtagUtil;
 import uk.gov.companieshouse.api.delta.NameElements;
 import uk.gov.companieshouse.api.delta.Psc;
 import uk.gov.companieshouse.api.delta.PscAddress;
-import uk.gov.companieshouse.api.psc.*;
+import uk.gov.companieshouse.api.psc.Address;
+import uk.gov.companieshouse.api.psc.Data;
+import uk.gov.companieshouse.api.psc.DateOfBirth;
+import uk.gov.companieshouse.api.psc.ExternalData;
+import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
+import uk.gov.companieshouse.api.psc.Identification;
+import uk.gov.companieshouse.api.psc.IdentityVerificationDetails;
+import uk.gov.companieshouse.api.psc.ItemLinkTypes;
+import uk.gov.companieshouse.api.psc.SensitiveData;
 
 @Mapper(componentModel = "spring")
 public interface PscMapper {
@@ -263,7 +273,7 @@ public interface PscMapper {
     @AfterMapping
     default void mapCeasedOn(@MappingTarget Data target, Psc source) {
         if (source.getCeasedOn() != null) {
-            target.setCeasedOn(MapperUtils.parseLocalDate(source.getCeasedOn()));
+            target.setCeasedOn(parseLocalDate(source.getCeasedOn()));
         }
     }
 
@@ -323,14 +333,11 @@ public interface PscMapper {
 
         if (source.getDateOfBirth() != null) {
             DateOfBirth dateOfBirth = new DateOfBirth();
-            String year = String.valueOf((MapperUtils
-                    .parseLocalDate(source.getDateOfBirth()))
+            String year = String.valueOf((parseLocalDate(source.getDateOfBirth()))
                     .getYear());
-            String month = String.valueOf((MapperUtils
-                    .parseLocalDate(source.getDateOfBirth()))
+            String month = String.valueOf((parseLocalDate(source.getDateOfBirth()))
                     .getMonthValue());
-            String day = String.valueOf((MapperUtils
-                    .parseLocalDate(source.getDateOfBirth()))
+            String day = String.valueOf((parseLocalDate(source.getDateOfBirth()))
                     .getDayOfMonth());
 
             dateOfBirth.setYear(Integer.parseInt(year));
@@ -376,43 +383,22 @@ public interface PscMapper {
 
         IdentityVerificationDetails details = new IdentityVerificationDetails();
 
-        setIfNotNull(details::setAntiMoneyLaunderingSupervisoryBodies, sourceDetails.getAntiMoneyLaunderingSupervisoryBodies());
+        Optional<String> appointmentVerificationEndOn = Optional.ofNullable(sourceDetails.getAppointmentVerificationEndOn());
+        Optional<String> appointmentVerificationStatementDate = Optional.ofNullable(sourceDetails.getAppointmentVerificationStatementDate());
+        Optional<String> appointmentVerificationStatementDueOn = Optional.ofNullable(sourceDetails.getAppointmentVerificationStatementDueOn());
+        Optional<String> appointmentVerificationStartOn = Optional.ofNullable(sourceDetails.getAppointmentVerificationStartOn());
+        Optional<String> identityVerifiedOn = Optional.ofNullable(sourceDetails.getIdentityVerifiedOn());
 
-        if (sourceDetails.getAppointmentVerificationEndOn() != null) {
-            setIfNotNull(details::setAppointmentVerificationEndOn,
-                    MapperUtils.parseLocalDate(sourceDetails.getAppointmentVerificationEndOn()));
-        }
+        appointmentVerificationEndOn.ifPresent(dateString -> details.setAppointmentVerificationEndOn(parseLocalDate(dateString)));
+        appointmentVerificationStatementDate.ifPresent(dateString -> details.setAppointmentVerificationStatementDate(parseLocalDate(dateString)));
+        appointmentVerificationStatementDueOn.ifPresent(dateString -> details.setAppointmentVerificationStatementDueOn(parseLocalDate(dateString)));
+        appointmentVerificationStartOn.ifPresent(dateString -> details.setAppointmentVerificationStartOn(parseLocalDate(dateString)));
+        identityVerifiedOn.ifPresent(dateString -> details.setIdentityVerifiedOn(parseLocalDate(dateString)));
 
-        if (sourceDetails.getAppointmentVerificationStatementDate() != null) {
-            setIfNotNull(details::setAppointmentVerificationStatementDate,
-                    MapperUtils.parseLocalDate(sourceDetails.getAppointmentVerificationStatementDate()));
-        }
-
-        if (sourceDetails.getAppointmentVerificationStatementDueOn() != null) {
-            setIfNotNull(details::setAppointmentVerificationStatementDueOn,
-                    MapperUtils.parseLocalDate(sourceDetails.getAppointmentVerificationStatementDueOn()));
-        }
-
-        if (sourceDetails.getAppointmentVerificationStartOn() != null) {
-            setIfNotNull(details::setAppointmentVerificationStartOn,
-                    MapperUtils.parseLocalDate(sourceDetails.getAppointmentVerificationStartOn()));
-        }
-
-        setIfNotNull(details::setAuthorisedCorporateServiceProviderName, sourceDetails.getAuthorisedCorporateServiceProviderName());
-
-        if (sourceDetails.getIdentityVerifiedOn() != null) {
-            setIfNotNull(details::setIdentityVerifiedOn,
-                    MapperUtils.parseLocalDate(sourceDetails.getIdentityVerifiedOn()));
-        }
-
-        setIfNotNull(details::setPreferredName, sourceDetails.getPreferredName());
+        details.setAuthorisedCorporateServiceProviderName(sourceDetails.getAuthorisedCorporateServiceProviderName());
+        details.setAntiMoneyLaunderingSupervisoryBodies(sourceDetails.getAntiMoneyLaunderingSupervisoryBodies());
+        details.setPreferredName(sourceDetails.getPreferredName());
 
         target.setIdentityVerificationDetails(details);
-    }
-
-    private <T> void setIfNotNull(Consumer<T> setter, T value) {
-        if (value != null) {
-            setter.accept(value);
-        }
     }
 }
