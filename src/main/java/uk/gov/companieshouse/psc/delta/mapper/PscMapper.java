@@ -1,17 +1,13 @@
 package uk.gov.companieshouse.psc.delta.mapper;
 
-import static java.time.ZoneOffset.UTC;
 import static uk.gov.companieshouse.psc.delta.mapper.MapperUtils.parseLocalDate;
 
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.mapstruct.AfterMapping;
@@ -22,7 +18,15 @@ import uk.gov.companieshouse.GenerateEtagUtil;
 import uk.gov.companieshouse.api.delta.NameElements;
 import uk.gov.companieshouse.api.delta.Psc;
 import uk.gov.companieshouse.api.delta.PscAddress;
-import uk.gov.companieshouse.api.psc.*;
+import uk.gov.companieshouse.api.psc.Address;
+import uk.gov.companieshouse.api.psc.Data;
+import uk.gov.companieshouse.api.psc.DateOfBirth;
+import uk.gov.companieshouse.api.psc.ExternalData;
+import uk.gov.companieshouse.api.psc.FullRecordCompanyPSCApi;
+import uk.gov.companieshouse.api.psc.Identification;
+import uk.gov.companieshouse.api.psc.IdentityVerificationDetails;
+import uk.gov.companieshouse.api.psc.ItemLinkTypes;
+import uk.gov.companieshouse.api.psc.SensitiveData;
 
 @Mapper(componentModel = "spring")
 public interface PscMapper {
