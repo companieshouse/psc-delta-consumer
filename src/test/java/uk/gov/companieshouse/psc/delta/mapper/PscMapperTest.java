@@ -2,6 +2,7 @@ package uk.gov.companieshouse.psc.delta.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static uk.gov.companieshouse.api.delta.Psc.KindEnum.SUPER_SECURE;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.InputStreamReader;
@@ -441,6 +442,29 @@ class PscMapperTest {
         assertEquals(LocalDate.of(2018, 1, 12), ivd.getIdentityVerifiedOn());
         assertEquals("Corporate Service Provider Ltd", ivd.getAuthorisedCorporateServiceProviderName());
         assertEquals("Preferred Name", ivd.getPreferredName());
+        assertNull(ivd.getAntiMoneyLaunderingSupervisoryBodies());
+    }
+
+
+    @Test
+    void shouldMapIdentityVerificationDetailsForSuperSecurePscs() throws Exception {
+        pscObject = createPscObject("identity-verification-details-psc");
+        pscObject.setKind(SUPER_SECURE);
+        FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
+
+        ExternalData externalData = fullRecordCompanyPSCApi.getExternalData();
+        Data data = externalData.getData();
+        IdentityVerificationDetails ivd = data.getIdentityVerificationDetails();
+
+        assertEquals(LocalDate.of(2018, 1, 31), ivd.getAppointmentVerificationEndOn());
+        assertEquals(LocalDate.of(2018, 1, 1), ivd.getAppointmentVerificationStartOn());
+
+        assertNull(ivd.getAppointmentVerificationStatementDate());
+        assertNull(ivd.getAppointmentVerificationStatementDueOn());
+
+        assertNull(ivd.getIdentityVerifiedOn());
+        assertNull(ivd.getAuthorisedCorporateServiceProviderName());
+        assertNull(ivd.getPreferredName());
         assertNull(ivd.getAntiMoneyLaunderingSupervisoryBodies());
     }
 }
