@@ -389,15 +389,19 @@ public interface PscMapper {
         Optional<String> appointmentVerificationStartOn = Optional.ofNullable(sourceDetails.getAppointmentVerificationStartOn());
         Optional<String> identityVerifiedOn = Optional.ofNullable(sourceDetails.getIdentityVerifiedOn());
 
-        appointmentVerificationEndOn.ifPresent(dateString -> details.setAppointmentVerificationEndOn(parseLocalDate(dateString)));
-        appointmentVerificationStatementDate.ifPresent(dateString -> details.setAppointmentVerificationStatementDate(parseLocalDate(dateString)));
-        appointmentVerificationStatementDueOn.ifPresent(dateString -> details.setAppointmentVerificationStatementDueOn(parseLocalDate(dateString)));
-        appointmentVerificationStartOn.ifPresent(dateString -> details.setAppointmentVerificationStartOn(parseLocalDate(dateString)));
-        identityVerifiedOn.ifPresent(dateString -> details.setIdentityVerifiedOn(parseLocalDate(dateString)));
+        if (source.getKind() != Psc.KindEnum.SUPER_SECURE) {
+            appointmentVerificationStatementDate.ifPresent(dateString -> details.setAppointmentVerificationStatementDate(parseLocalDate(dateString)));
+            appointmentVerificationStatementDueOn.ifPresent(dateString -> details.setAppointmentVerificationStatementDueOn(parseLocalDate(dateString)));
+            appointmentVerificationStartOn.ifPresent(dateString -> details.setAppointmentVerificationStartOn(parseLocalDate(dateString)));
+            identityVerifiedOn.ifPresent(dateString -> details.setIdentityVerifiedOn(parseLocalDate(dateString)));
 
-        details.setAuthorisedCorporateServiceProviderName(sourceDetails.getAuthorisedCorporateServiceProviderName());
-        details.setAntiMoneyLaunderingSupervisoryBodies(sourceDetails.getAntiMoneyLaunderingSupervisoryBodies());
-        details.setPreferredName(sourceDetails.getPreferredName());
+            details.setAuthorisedCorporateServiceProviderName(sourceDetails.getAuthorisedCorporateServiceProviderName());
+            details.setAntiMoneyLaunderingSupervisoryBodies(sourceDetails.getAntiMoneyLaunderingSupervisoryBodies());
+            details.setPreferredName(sourceDetails.getPreferredName());
+        }
+
+        appointmentVerificationEndOn.ifPresent(dateString -> details.setAppointmentVerificationEndOn(parseLocalDate(dateString)));
+        appointmentVerificationStartOn.ifPresent(dateString -> details.setAppointmentVerificationStartOn(parseLocalDate(dateString)));
 
         target.setIdentityVerificationDetails(details);
     }
