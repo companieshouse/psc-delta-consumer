@@ -4,7 +4,6 @@ import static uk.gov.companieshouse.psc.delta.mapper.MapperUtils.parseLocalDate;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -14,6 +13,7 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.springframework.util.CollectionUtils;
 import uk.gov.companieshouse.GenerateEtagUtil;
 import uk.gov.companieshouse.api.delta.NameElements;
 import uk.gov.companieshouse.api.delta.Psc;
@@ -356,16 +356,13 @@ public interface PscMapper {
      */
 
     @AfterMapping
-    default void mapNaturesOfControl(@MappingTarget Data target, Psc source) {
-        if (source.getNaturesOfControl() != null && !source.getNaturesOfControl().isEmpty()) {
-            HashMap<String, String> naturesOfControlMap =
-                    MapperUtils.getNaturesOfControlMap(source.getCompanyNumber());
-            List<String> mappedNaturesOfControl = new ArrayList<>();
-            for (Psc.NaturesOfControlEnum nature : source.getNaturesOfControl()) {
-                String natureKey = nature.name();
-                String mappedValue = naturesOfControlMap.get(natureKey);
-                mappedNaturesOfControl.add(mappedValue);
-            }
+    default void mapNaturesOfControl(@MappingTarget final Data target, final Psc source) {
+        if (!CollectionUtils.isEmpty(source.getNaturesOfControl())) {
+            final var naturesOfControlMap = MapperUtils.getNaturesOfControlMap(source.getCompanyNumber());
+            final List<String> mappedNaturesOfControl = source.getNaturesOfControl().stream()
+                .map(nature -> naturesOfControlMap.get(nature.name()))
+                .collect(Collectors.toCollection(ArrayList::new));
+
             target.setNaturesOfControl(mappedNaturesOfControl);
         }
     }

@@ -9,7 +9,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -25,6 +24,33 @@ public final class MapperUtils {
     private static final DateTimeFormatter UTC_DATETIME_FORMATTER =
             DateTimeFormatter.ofPattern(DATETIME_PATTERN, Locale.UK).withZone(ZoneId.of("UTC"));
 
+    // Define constants for frequently used substrings
+    private static final String AS_CONTROL_OVER_FIRM = "-as-control-over-firm";
+    private static final String AS_CONTROL_OVER_TRUST = "-as-control-over-trust";
+    private static final String AS_FIRM = "-as-firm";
+    private static final String AS_NOMINEE = "-as-nominee";
+    private static final String AS_NOMINEE_PERSON = AS_NOMINEE + "-person";
+    private static final String AS_NOMINEE_ANOTHER_ENTITY = AS_NOMINEE + "-another-entity";
+    private static final String AS_TRUST = "-as-trust";
+    private static final String ENGLAND_WALES = "-england-wales";
+    private static final String LIMITED_LIABILITY_PARTNERSHIP = "-limited-liability-partnership";
+    private static final String MORE_THAN_25_PERCENT = "-more-than-25-percent";
+    private static final String NORTHERN_IRELAND = "-northern-ireland";
+    private static final String OWNERSHIP_OF_SHARES = "ownership-of-shares";
+    private static final String PART_RIGHT_TO_SHARE_SURPLUS_ASSETS = "part-right-to-share-surplus-assets";
+    private static final String PERCENT_25_TO_50 = "-25-to-50-percent";
+    private static final String PERCENT_50_TO_75 = "-50-to-75-percent";
+    private static final String PERCENT_75_TO_100 = "-75-to-100-percent";
+    private static final String REGISTERED_OVERSEAS_ENTITY = "-registered-overseas-entity";
+    private static final String REGISTERED_OWNER = "registered-owner";
+    private static final String RIGHT_TO_APPOINT_AND_REMOVE_DIRECTORS = "right-to-appoint-and-remove-directors";
+    private static final String RIGHT_TO_APPOINT_AND_REMOVE_MEMBERS = "right-to-appoint-and-remove-members";
+    private static final String RIGHT_TO_SHARE_SURPLUS_ASSETS = "right-to-share-surplus-assets";
+    private static final String SCOTLAND = "-scotland";
+    private static final String SIGNIFICANT_INFLUENCE_CONTROL = "significant-influence-or-control";
+    private static final String VOTING_RIGHTS = "voting-rights";
+    private static final String RIGHT_TO_APPOINT_AND_REMOVE_PERSON = "right-to-appoint-and-remove-person";
+
     private MapperUtils() {
     }
 
@@ -36,7 +62,7 @@ public final class MapperUtils {
      * @return the LocalDate corresponding to the parsed string (at UTC by definition)
      * @throws NonRetryableErrorException if date parsing fails
      */
-    public static LocalDate parseLocalDate(String rawDateString)
+    public static LocalDate parseLocalDate(final String rawDateString)
             throws NonRetryableErrorException {
         return convertToLocalDate(rawDateString + TIME_START_OF_DAY);
     }
@@ -44,7 +70,7 @@ public final class MapperUtils {
     private static LocalDate convertToLocalDate(final String date) {
         try {
             return LocalDate.parse(date, UTC_DATETIME_FORMATTER);
-        } catch (DateTimeParseException exception) {
+        } catch (final DateTimeParseException exception) {
             final String msg = "Failed to parse date/time: [%s]".formatted(date);
             LOGGER.error(msg, DataMapHolder.getLogMap());
             throw new NonRetryableErrorException(msg, exception);
@@ -54,8 +80,8 @@ public final class MapperUtils {
     /**
      * encode the String passed in for use in links and ids.
      */
-    public static String encode(String unencodedString) {
-        String salt = "ks734s_sdgOc4£b2";
+    public static String encode(final String unencodedString) {
+        final String salt = "ks734s_sdgOc4£b2";
         return Base64.getUrlEncoder().withoutPadding().encodeToString(
                 DigestUtils.sha1(unencodedString + salt));
     }
@@ -63,11 +89,11 @@ public final class MapperUtils {
     /**
      * Create a hashmap for natures of control.
      */
-    public static HashMap<String, String> getNaturesOfControlMap(String companyNumber) {
+    public static Map<String, String> getNaturesOfControlMap(final String companyNumber) {
         if (companyNumber.length() < 2) {
             return getNaturesOfControlMap();
         } else {
-            String typeCode = companyNumber.substring(0, 2);
+            final String typeCode = companyNumber.substring(0, 2);
             if (typeCode.equals("SO") || typeCode.equals("NC") || typeCode.equals("OC")) {
                 return getLlpNaturesOfControlMap();
             } else if (typeCode.equals("OE")) {
@@ -81,326 +107,148 @@ public final class MapperUtils {
     /**
      * Create a hashmap for natures of control.
      */
-    private static HashMap<String, String> getNaturesOfControlMap() {
-
-        HashMap<String, String> naturesOfControlMap = new HashMap<>();
-
-        naturesOfControlMap.put("OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON",
-                "ownership-of-shares-25-to-50-percent");
-        naturesOfControlMap.put("OWNERSHIPOFSHARES_50TO75PERCENT_AS_PERSON",
-                "ownership-of-shares-50-to-75-percent");
-        naturesOfControlMap.put("OWNERSHIPOFSHARES_75TO100PERCENT_AS_PERSON",
-                "ownership-of-shares-75-to-100-percent");
-        naturesOfControlMap.put("OWNERSHIPOFSHARES_25TO50PERCENT_AS_TRUST",
-                "ownership-of-shares-25-to-50-percent-as-trust");
-        naturesOfControlMap.put("OWNERSHIPOFSHARES_50TO75PERCENT_AS_TRUST",
-                "ownership-of-shares-50-to-75-percent-as-trust");
-        naturesOfControlMap.put("OWNERSHIPOFSHARES_75TO100PERCENT_AS_TRUST",
-                "ownership-of-shares-75-to-100-percent-as-trust");
-        naturesOfControlMap.put("OWNERSHIPOFSHARES_25TO50PERCENT_AS_FIRM",
-                "ownership-of-shares-25-to-50-percent-as-firm");
-        naturesOfControlMap.put("OWNERSHIPOFSHARES_50TO75PERCENT_AS_FIRM",
-                "ownership-of-shares-50-to-75-percent-as-firm");
-        naturesOfControlMap.put("OWNERSHIPOFSHARES_75TO100PERCENT_AS_FIRM",
-                "ownership-of-shares-75-to-100-percent-as-firm");
-        naturesOfControlMap.put("VOTINGRIGHTS_25TO50PERCENT_AS_PERSON",
-                "voting-rights-25-to-50-percent");
-        naturesOfControlMap.put("VOTINGRIGHTS_50TO75PERCENT_AS_PERSON",
-                "voting-rights-50-to-75-percent");
-        naturesOfControlMap.put("VOTINGRIGHTS_75TO100PERCENT_AS_PERSON",
-                "voting-rights-75-to-100-percent");
-        naturesOfControlMap.put("VOTINGRIGHTS_25TO50PERCENT_AS_TRUST",
-                "voting-rights-25-to-50-percent-as-trust");
-        naturesOfControlMap.put("VOTINGRIGHTS_50TO75PERCENT_AS_TRUST",
-                "voting-rights-50-to-75-percent-as-trust");
-        naturesOfControlMap.put("VOTINGRIGHTS_75TO100PERCENT_AS_TRUST",
-                "voting-rights-75-to-100-percent-as-trust");
-        naturesOfControlMap.put("VOTINGRIGHTS_25TO50PERCENT_AS_FIRM",
-                "voting-rights-25-to-50-percent-as-firm");
-        naturesOfControlMap.put("VOTINGRIGHTS_50TO75PERCENT_AS_FIRM",
-                "voting-rights-50-to-75-percent-as-firm");
-        naturesOfControlMap.put("VOTINGRIGHTS_75TO100PERCENT_AS_FIRM",
-                "voting-rights-75-to-100-percent-as-firm");
-        naturesOfControlMap.put("RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_PERSON",
-                "right-to-appoint-and-remove-directors");
-        naturesOfControlMap.put("RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_TRUST",
-                "right-to-appoint-and-remove-directors-as-trust");
-        naturesOfControlMap.put("RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_FIRM",
-                "right-to-appoint-and-remove-directors-as-firm");
-        naturesOfControlMap.put("SIGINFLUENCECONTROL_AS_PERSON",
-                "significant-influence-or-control");
-        naturesOfControlMap.put("SIGINFLUENCECONTROL_AS_TRUST",
-                "significant-influence-or-control-as-trust");
-        naturesOfControlMap.put("SIGINFLUENCECONTROL_AS_FIRM",
-                "significant-influence-or-control-as-firm");
-        naturesOfControlMap.put("PART_RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_PERSON",
-                "part-right-to-share-surplus-assets-25-to-50-percent");
-        naturesOfControlMap.put("PART_RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_PERSON",
-                "part-right-to-share-surplus-assets-50-to-75-percent");
-        naturesOfControlMap.put("PART_RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_PERSON",
-                "part-right-to-share-surplus-assets-75-to-100-percent");
-        naturesOfControlMap.put("PART_RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_TRUST",
-                "part-right-to-share-surplus-assets-25-to-50-percent-as-trust");
-        naturesOfControlMap.put("PART_RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_TRUST",
-                "part-right-to-share-surplus-assets-50-to-75-percent-as-trust");
-        naturesOfControlMap.put("PART_RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_TRUST",
-                "part-right-to-share-surplus-assets-75-to-100-percent-as-trust");
-        naturesOfControlMap.put("PART_RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_FIRM",
-                "part-right-to-share-surplus-assets-25-to-50-percent-as-firm");
-        naturesOfControlMap.put("PART_RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_FIRM",
-                "part-right-to-share-surplus-assets-50-to-75-percent-as-firm");
-        naturesOfControlMap.put("PART_RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_FIRM",
-                "part-right-to-share-surplus-assets-75-to-100-percent-as-firm");
-        naturesOfControlMap.put("RIGHTTOAPPOINTANDREMOVEPERSONS_AS_PERSON",
-                "right-to-appoint-and-remove-person");
-        naturesOfControlMap.put("RIGHTTOAPPOINTANDREMOVEPERSONS_AS_FIRM",
-                "right-to-appoint-and-remove-person-as-firm");
-        naturesOfControlMap.put("RIGHTTOAPPOINTANDREMOVEPERSONS_AS_TRUST",
-                "right-to-appoint-and-remove-person-as-trust");
-        naturesOfControlMap.put("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_PERSON",
-                "ownership-of-shares-more-than-25-percent-registered-overseas-entity");
-        naturesOfControlMap.put("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_TRUST",
-                "ownership-of-shares-more-than-25-percent-as-trust-registered-overseas-entity");
-        naturesOfControlMap.put("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_FIRM",
-                "ownership-of-shares-more-than-25-percent-as-firm-registered-overseas-entity");
-        naturesOfControlMap.put("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_PERSON",
-                "voting-rights-more-than-25-percent-registered-overseas-entity");
-        naturesOfControlMap.put("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_TRUST",
-                "voting-rights-more-than-25-percent-as-trust-registered-overseas-entity");
-        naturesOfControlMap.put("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_FIRM",
-                "voting-rights-more-than-25-percent-as-firm-registered-overseas-entity");
-        naturesOfControlMap.put("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_PERSON",
-                "right-to-appoint-and-remove-directors-registered-overseas-entity");
-        naturesOfControlMap.put("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_TRUST",
-                "right-to-appoint-and-remove-directors-as-trust-registered-overseas-entity");
-        naturesOfControlMap.put("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_FIRM",
-                "right-to-appoint-and-remove-directors-as-firm-registered-overseas-entity");
-        naturesOfControlMap.put("OE_SIGINFLUENCECONTROL_AS_PERSON",
-                "significant-influence-or-control-registered-overseas-entity");
-        naturesOfControlMap.put("OE_SIGINFLUENCECONTROL_AS_TRUST",
-                "significant-influence-or-control-as-trust-registered-overseas-entity");
-        naturesOfControlMap.put("OE_SIGINFLUENCECONTROL_AS_FIRM",
-                "significant-influence-or-control-as-firm-registered-overseas-entity");
-        naturesOfControlMap.put("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_PERSON",
-                "right-to-share-surplus-assets-25-to-50-percent-limited-liability-partnership");
-        naturesOfControlMap.put("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_PERSON",
-                "right-to-share-surplus-assets-50-to-75-percent-limited-liability-partnership");
-        naturesOfControlMap.put("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_PERSON",
-                "right-to-share-surplus-assets-75-to-100-percent-limited-liability-partnership");
-        naturesOfControlMap.put("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_TRUST",
-                "right-to-share-surplus-assets-25-to-50-percent"
-                        + "-as-trust-limited-liability-partnership");
-        naturesOfControlMap.put("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_TRUST",
-                "right-to-share-surplus-assets-50-to-75-percent"
-                        + "-as-trust-limited-liability-partnership");
-        naturesOfControlMap.put("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_TRUST",
-                "right-to-share-surplus-assets-75-to-100-percent"
-                        + "-as-trust-limited-liability-partnership");
-        naturesOfControlMap.put("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_FIRM",
-                "right-to-share-surplus-assets-25-to-50-percent"
-                        + "-as-firm-limited-liability-partnership");
-        naturesOfControlMap.put("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_FIRM",
-                "right-to-share-surplus-assets-50-to-75-percent"
-                        + "-as-firm-limited-liability-partnership");
-        naturesOfControlMap.put("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_FIRM",
-                "right-to-share-surplus-assets-75-to-100-percent"
-                        + "-as-firm-limited-liability-partnership");
-        naturesOfControlMap.put("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_PERSON",
-                "right-to-appoint-and-remove-members-limited-liability-partnership");
-        naturesOfControlMap.put("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_FIRM",
-                "right-to-appoint-and-remove-members-as-firm-limited-liability-partnership");
-        naturesOfControlMap.put("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_TRUST",
-                "right-to-appoint-and-remove-members-as-trust-limited-liability-partnership");
-        naturesOfControlMap.put("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_CONTROLOVERTRUST",
-                "ownership-of-shares-more-than-25-percent-as-control-over-trust"
-                        + "-registered-overseas-entity");
-        naturesOfControlMap.put("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_CONTROLOVERTRUST",
-                "voting-rights-more-than-25-percent-as-control-over-trust"
-                        + "-registered-overseas-entity");
-        naturesOfControlMap.put("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_CONTROLOVERTRUST",
-                "right-to-appoint-and-remove-directors-as-control-over-trust"
-                        + "-registered-overseas-entity");
-        naturesOfControlMap.put("OE_SIGINFLUENCECONTROL_AS_CONTROLOVERTRUST",
-                "significant-influence-or-control-as-control-over-trust"
-                        + "-registered-overseas-entity");
-        naturesOfControlMap.put("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_CONTROLOVERFIRM",
-                "ownership-of-shares-more-than-25-percent-as-control-over-firm"
-                        + "-registered-overseas-entity");
-        naturesOfControlMap.put("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_CONTROLOVERFIRM",
-                "voting-rights-more-than-25-percent-as-control-over-firm"
-                        + "-registered-overseas-entity");
-        naturesOfControlMap.put("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_CONTROLOVERFIRM",
-                "right-to-appoint-and-remove-directors-as-control-over-firm"
-                        + "-registered-overseas-entity");
-        naturesOfControlMap.put("OE_SIGINFLUENCECONTROL_AS_CONTROLOVERFIRM",
-                "significant-influence-or-control-as-control-over-firm"
-                        + "-registered-overseas-entity");
-        naturesOfControlMap.put("OE_REGOWNER_AS_NOMINEEPERSON_ENGLANDWALES",
-                "registered-owner-as-nominee-person-england-wales"
-                        + "-registered-overseas-entity");
-        naturesOfControlMap.put("OE_REGOWNER_AS_NOMINEEPERSON_SCOTLAND",
-                "registered-owner-as-nominee-person-scotland"
-                        + "-registered-overseas-entity");
-        naturesOfControlMap.put("OE_REGOWNER_AS_NOMINEEPERSON_NORTHERNIRELAND",
-                "registered-owner-as-nominee-person-northern-ireland"
-                        + "-registered-overseas-entity");
-        naturesOfControlMap.put("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_ENGLANDWALES",
-                "registered-owner-as-nominee-another-entity-england-wales"
-                        + "-registered-overseas-entity");
-        naturesOfControlMap.put("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_SCOTLAND",
-                "registered-owner-as-nominee-another-entity-scotland"
-                        + "-registered-overseas-entity");
-        naturesOfControlMap.put("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_NORTHERNIRELAND",
-                "registered-owner-as-nominee-another-entity-northern-ireland"
-                        + "-registered-overseas-entity");
-
-        return naturesOfControlMap;
+    private static Map<String, String> getNaturesOfControlMap() {
+        return Map.<String, String>ofEntries( // explicitly specify Map types to avoid compilation and analysis slowdown for large argument lists
+            entry("OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON", OWNERSHIP_OF_SHARES + PERCENT_25_TO_50),
+            entry("OWNERSHIPOFSHARES_50TO75PERCENT_AS_PERSON", OWNERSHIP_OF_SHARES + PERCENT_50_TO_75),
+            entry("OWNERSHIPOFSHARES_75TO100PERCENT_AS_PERSON", OWNERSHIP_OF_SHARES + PERCENT_75_TO_100),
+            entry("OWNERSHIPOFSHARES_25TO50PERCENT_AS_TRUST", OWNERSHIP_OF_SHARES + PERCENT_25_TO_50 + AS_TRUST),
+            entry("OWNERSHIPOFSHARES_50TO75PERCENT_AS_TRUST", OWNERSHIP_OF_SHARES + PERCENT_50_TO_75 + AS_TRUST),
+            entry("OWNERSHIPOFSHARES_75TO100PERCENT_AS_TRUST", OWNERSHIP_OF_SHARES + PERCENT_75_TO_100 + AS_TRUST),
+            entry("OWNERSHIPOFSHARES_25TO50PERCENT_AS_FIRM", OWNERSHIP_OF_SHARES + PERCENT_25_TO_50 + AS_FIRM),
+            entry("OWNERSHIPOFSHARES_50TO75PERCENT_AS_FIRM", OWNERSHIP_OF_SHARES + PERCENT_50_TO_75 + AS_FIRM),
+            entry("OWNERSHIPOFSHARES_75TO100PERCENT_AS_FIRM", OWNERSHIP_OF_SHARES + PERCENT_75_TO_100 + AS_FIRM),
+            entry("VOTINGRIGHTS_25TO50PERCENT_AS_PERSON", VOTING_RIGHTS + PERCENT_25_TO_50),
+            entry("VOTINGRIGHTS_50TO75PERCENT_AS_PERSON", VOTING_RIGHTS + PERCENT_50_TO_75),
+            entry("VOTINGRIGHTS_75TO100PERCENT_AS_PERSON", VOTING_RIGHTS + PERCENT_75_TO_100),
+            entry("VOTINGRIGHTS_25TO50PERCENT_AS_TRUST", VOTING_RIGHTS + PERCENT_25_TO_50 + AS_TRUST),
+            entry("VOTINGRIGHTS_50TO75PERCENT_AS_TRUST", VOTING_RIGHTS + PERCENT_50_TO_75 + AS_TRUST),
+            entry("VOTINGRIGHTS_75TO100PERCENT_AS_TRUST", VOTING_RIGHTS + PERCENT_75_TO_100 + AS_TRUST),
+            entry("VOTINGRIGHTS_25TO50PERCENT_AS_FIRM", VOTING_RIGHTS + PERCENT_25_TO_50 + AS_FIRM),
+            entry("VOTINGRIGHTS_50TO75PERCENT_AS_FIRM", VOTING_RIGHTS + PERCENT_50_TO_75 + AS_FIRM),
+            entry("VOTINGRIGHTS_75TO100PERCENT_AS_FIRM", VOTING_RIGHTS + PERCENT_75_TO_100 + AS_FIRM),
+            entry("RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_PERSON", RIGHT_TO_APPOINT_AND_REMOVE_DIRECTORS),
+            entry("RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_TRUST", RIGHT_TO_APPOINT_AND_REMOVE_DIRECTORS + AS_TRUST),
+            entry("RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_FIRM", RIGHT_TO_APPOINT_AND_REMOVE_DIRECTORS + AS_FIRM),
+            entry("SIGINFLUENCECONTROL_AS_PERSON", SIGNIFICANT_INFLUENCE_CONTROL),
+            entry("SIGINFLUENCECONTROL_AS_TRUST", SIGNIFICANT_INFLUENCE_CONTROL + AS_TRUST),
+            entry("SIGINFLUENCECONTROL_AS_FIRM", SIGNIFICANT_INFLUENCE_CONTROL + AS_FIRM),
+            entry("PART_RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_PERSON", PART_RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_25_TO_50),
+            entry("PART_RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_PERSON", PART_RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_50_TO_75),
+            entry("PART_RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_PERSON", PART_RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_75_TO_100),
+            entry("PART_RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_TRUST", PART_RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_25_TO_50 + AS_TRUST),
+            entry("PART_RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_TRUST", PART_RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_50_TO_75 + AS_TRUST),
+            entry("PART_RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_TRUST", PART_RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_75_TO_100 + AS_TRUST),
+            entry("PART_RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_FIRM", PART_RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_25_TO_50 + AS_FIRM),
+            entry("PART_RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_FIRM", PART_RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_50_TO_75 + AS_FIRM),
+            entry("PART_RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_FIRM", PART_RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_75_TO_100 + AS_FIRM),
+            entry("RIGHTTOAPPOINTANDREMOVEPERSONS_AS_PERSON", RIGHT_TO_APPOINT_AND_REMOVE_PERSON),
+            entry("RIGHTTOAPPOINTANDREMOVEPERSONS_AS_FIRM", RIGHT_TO_APPOINT_AND_REMOVE_PERSON + AS_FIRM),
+            entry("RIGHTTOAPPOINTANDREMOVEPERSONS_AS_TRUST", RIGHT_TO_APPOINT_AND_REMOVE_PERSON + AS_TRUST),
+            entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_PERSON", OWNERSHIP_OF_SHARES + MORE_THAN_25_PERCENT + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_TRUST", OWNERSHIP_OF_SHARES + MORE_THAN_25_PERCENT + AS_TRUST + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_FIRM", OWNERSHIP_OF_SHARES + MORE_THAN_25_PERCENT + AS_FIRM + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_PERSON", VOTING_RIGHTS + MORE_THAN_25_PERCENT + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_TRUST", VOTING_RIGHTS + MORE_THAN_25_PERCENT + AS_TRUST + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_FIRM", VOTING_RIGHTS + MORE_THAN_25_PERCENT + AS_FIRM + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_PERSON", RIGHT_TO_APPOINT_AND_REMOVE_DIRECTORS + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_TRUST", RIGHT_TO_APPOINT_AND_REMOVE_DIRECTORS + AS_TRUST + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_FIRM", RIGHT_TO_APPOINT_AND_REMOVE_DIRECTORS + AS_FIRM + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_SIGINFLUENCECONTROL_AS_PERSON", SIGNIFICANT_INFLUENCE_CONTROL + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_SIGINFLUENCECONTROL_AS_TRUST", SIGNIFICANT_INFLUENCE_CONTROL + AS_TRUST + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_SIGINFLUENCECONTROL_AS_FIRM", SIGNIFICANT_INFLUENCE_CONTROL + AS_FIRM + REGISTERED_OVERSEAS_ENTITY),
+            entry("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_PERSON", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_25_TO_50 + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_PERSON", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_50_TO_75 + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_PERSON", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_75_TO_100 + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_TRUST", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_25_TO_50 + AS_TRUST + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_TRUST", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_50_TO_75 + AS_TRUST + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_TRUST", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_75_TO_100 + AS_TRUST + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_FIRM", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_25_TO_50 + AS_FIRM + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_FIRM", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_50_TO_75 + AS_FIRM + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_FIRM", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_75_TO_100 + AS_FIRM + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_PERSON", RIGHT_TO_APPOINT_AND_REMOVE_MEMBERS + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_FIRM", RIGHT_TO_APPOINT_AND_REMOVE_MEMBERS + AS_FIRM + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_TRUST", RIGHT_TO_APPOINT_AND_REMOVE_MEMBERS + AS_TRUST + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_CONTROLOVERTRUST", OWNERSHIP_OF_SHARES + MORE_THAN_25_PERCENT + AS_CONTROL_OVER_TRUST + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_CONTROLOVERTRUST", VOTING_RIGHTS + MORE_THAN_25_PERCENT + AS_CONTROL_OVER_TRUST + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_CONTROLOVERTRUST", RIGHT_TO_APPOINT_AND_REMOVE_DIRECTORS + AS_CONTROL_OVER_TRUST + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_SIGINFLUENCECONTROL_AS_CONTROLOVERTRUST", SIGNIFICANT_INFLUENCE_CONTROL + AS_CONTROL_OVER_TRUST + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_CONTROLOVERFIRM", OWNERSHIP_OF_SHARES + MORE_THAN_25_PERCENT + AS_CONTROL_OVER_FIRM + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_CONTROLOVERFIRM", VOTING_RIGHTS + MORE_THAN_25_PERCENT + AS_CONTROL_OVER_FIRM + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_CONTROLOVERFIRM", RIGHT_TO_APPOINT_AND_REMOVE_DIRECTORS + AS_CONTROL_OVER_FIRM + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_SIGINFLUENCECONTROL_AS_CONTROLOVERFIRM", SIGNIFICANT_INFLUENCE_CONTROL + AS_CONTROL_OVER_FIRM + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_REGOWNER_AS_NOMINEEPERSON_ENGLANDWALES", REGISTERED_OWNER + AS_NOMINEE_PERSON + ENGLAND_WALES + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_REGOWNER_AS_NOMINEEPERSON_SCOTLAND", REGISTERED_OWNER + AS_NOMINEE_PERSON + SCOTLAND + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_REGOWNER_AS_NOMINEEPERSON_NORTHERNIRELAND", REGISTERED_OWNER + AS_NOMINEE_PERSON + NORTHERN_IRELAND + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_ENGLANDWALES", REGISTERED_OWNER + AS_NOMINEE_ANOTHER_ENTITY + ENGLAND_WALES + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_SCOTLAND", REGISTERED_OWNER + AS_NOMINEE_ANOTHER_ENTITY + SCOTLAND + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_NORTHERNIRELAND", REGISTERED_OWNER + AS_NOMINEE_ANOTHER_ENTITY + NORTHERN_IRELAND + REGISTERED_OVERSEAS_ENTITY)
+        );
     }
 
     /**
      * Create a hashmap for natures of control llps.
      */
-    public static HashMap<String, String> getLlpNaturesOfControlMap() {
-        Map<String, String> llpMap = Map.ofEntries(
-                entry("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_PERSON",
-                        "right-to-share-surplus-assets-25-to-50-percent-"
-                                + "limited-liability-partnership"),
-                entry("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_PERSON",
-                        "right-to-share-surplus-assets-50-to-75-percent-limited-"
-                                + "liability-partnership"),
-                entry("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_PERSON",
-                        "right-to-share-surplus-assets-75-to-100-percent-"
-                                + "limited-liability-partnership"),
-                entry("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_TRUST",
-                        "right-to-share-surplus-assets-25-to-50-percent-"
-                                + "as-trust-limited-liability-partnership"),
-                entry("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_TRUST",
-                        "right-to-share-surplus-assets-50-to-75-percent-as"
-                                + "-trust-limited-liability-partnership"),
-                entry("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_TRUST",
-                        "right-to-share-surplus-assets-75-to-100-percent-as-"
-                                + "trust-limited-liability-partnership"),
-                entry("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_FIRM",
-                        "right-to-share-surplus-assets-25-to-50-percent-as-"
-                                + "firm-limited-liability-partnership"),
-                entry("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_FIRM",
-                        "right-to-share-surplus-assets-50-to-75-percent-"
-                                + "as-firm-limited-liability-partnership"),
-                entry("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_FIRM",
-                        "right-to-share-surplus-assets-75-to-100-percent-as-firm-"
-                                + "limited-liability-partnership"),
-                entry("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_PERSON",
-                        "right-to-appoint-and-remove-members-limited-liability-partnership"),
-                entry("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_FIRM",
-                        "right-to-appoint-and-remove-members-as"
-                                + "-firm-limited-liability-partnership"),
-                entry("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_TRUST",
-                        "right-to-appoint-and-remove-members-as"
-                                + "-trust-limited-liability-partnership"),
-                entry("VOTINGRIGHTS_25TO50PERCENT_AS_PERSON",
-                        "voting-rights-25-to-50-percent-limited-liability-partnership"),
-                entry("VOTINGRIGHTS_50TO75PERCENT_AS_PERSON",
-                        "voting-rights-50-to-75-percent-limited-liability-partnership"),
-                entry("VOTINGRIGHTS_75TO100PERCENT_AS_PERSON",
-                        "voting-rights-75-to-100-percent-limited-liability-partnership"),
-                entry("VOTINGRIGHTS_25TO50PERCENT_AS_TRUST",
-                        "voting-rights-25-to-50-percent-as-trust-limited-liability-partnership"),
-                entry("VOTINGRIGHTS_50TO75PERCENT_AS_TRUST",
-                        "voting-rights-50-to-75-percent-as-trust-limited-liability-partnership"),
-                entry("VOTINGRIGHTS_75TO100PERCENT_AS_TRUST",
-                        "voting-rights-75-to-100-percent-as-trust-limited-liability-partnership"),
-                entry("VOTINGRIGHTS_25TO50PERCENT_AS_FIRM",
-                        "voting-rights-25-to-50-percent-as-firm-limited-liability-partnership"),
-                entry("VOTINGRIGHTS_50TO75PERCENT_AS_FIRM",
-                        "voting-rights-50-to-75-percent-as-firm-limited-liability-partnership"),
-                entry("VOTINGRIGHTS_75TO100PERCENT_AS_FIRM",
-                        "voting-rights-75-to-100-percent-as-firm-limited-liability-partnership"),
-                entry("SIGINFLUENCECONTROL_AS_PERSON",
-                        "significant-influence-or-control-limited-liability-partnership"),
-                entry("SIGINFLUENCECONTROL_AS_TRUST",
-                        "significant-influence-or-control-as-trust-limited-liability-partnership"),
-                entry("SIGINFLUENCECONTROL_AS_FIRM",
-                        "significant-influence-or-control-as-firm-limited-liability-partnership")
+    public static Map<String, String> getLlpNaturesOfControlMap() {
+        return Map.ofEntries(
+            entry("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_PERSON", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_25_TO_50 + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_PERSON", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_50_TO_75 + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_PERSON", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_75_TO_100 + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_TRUST", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_25_TO_50 + AS_TRUST + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_TRUST", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_50_TO_75 + AS_TRUST + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_TRUST", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_75_TO_100 + AS_TRUST + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_FIRM", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_25_TO_50 + AS_FIRM + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOSHARESURPLUSASSETS_50TO75PERCENT_AS_FIRM", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_50_TO_75 + AS_FIRM + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOSHARESURPLUSASSETS_75TO100PERCENT_AS_FIRM", RIGHT_TO_SHARE_SURPLUS_ASSETS + PERCENT_75_TO_100 + AS_FIRM + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_PERSON", RIGHT_TO_APPOINT_AND_REMOVE_MEMBERS + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_FIRM", RIGHT_TO_APPOINT_AND_REMOVE_MEMBERS + AS_FIRM + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("RIGHTTOAPPOINTANDREMOVEMEMBERS_AS_TRUST", RIGHT_TO_APPOINT_AND_REMOVE_MEMBERS + AS_TRUST + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("VOTINGRIGHTS_25TO50PERCENT_AS_PERSON", VOTING_RIGHTS + PERCENT_25_TO_50 + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("VOTINGRIGHTS_50TO75PERCENT_AS_PERSON", VOTING_RIGHTS + PERCENT_50_TO_75 + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("VOTINGRIGHTS_75TO100PERCENT_AS_PERSON", VOTING_RIGHTS + PERCENT_75_TO_100 + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("VOTINGRIGHTS_25TO50PERCENT_AS_TRUST", VOTING_RIGHTS + PERCENT_25_TO_50 + AS_TRUST + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("VOTINGRIGHTS_50TO75PERCENT_AS_TRUST", VOTING_RIGHTS + PERCENT_50_TO_75 + AS_TRUST + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("VOTINGRIGHTS_75TO100PERCENT_AS_TRUST", VOTING_RIGHTS + PERCENT_75_TO_100 + AS_TRUST + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("VOTINGRIGHTS_25TO50PERCENT_AS_FIRM", VOTING_RIGHTS + PERCENT_25_TO_50 + AS_FIRM + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("VOTINGRIGHTS_50TO75PERCENT_AS_FIRM", VOTING_RIGHTS + PERCENT_50_TO_75 + AS_FIRM + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("VOTINGRIGHTS_75TO100PERCENT_AS_FIRM", VOTING_RIGHTS + PERCENT_75_TO_100 + AS_FIRM + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("SIGINFLUENCECONTROL_AS_PERSON", SIGNIFICANT_INFLUENCE_CONTROL + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("SIGINFLUENCECONTROL_AS_TRUST", SIGNIFICANT_INFLUENCE_CONTROL + AS_TRUST + LIMITED_LIABILITY_PARTNERSHIP),
+            entry("SIGINFLUENCECONTROL_AS_FIRM", SIGNIFICANT_INFLUENCE_CONTROL + AS_FIRM + LIMITED_LIABILITY_PARTNERSHIP)
         );
-        return new HashMap<>(llpMap);
     }
 
     /**
      * Create a hashmap for natures of control ROEs.
      */
-    private static HashMap<String, String> getRoeNaturesOfControlMap() {
-        Map<String, String> roeMap = Map.ofEntries(
-                entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_PERSON",
-                        "ownership-of-shares-more-than-25-percent-registered-overseas-entity"),
-                entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_TRUST",
-                        "ownership-of-shares-more-than-25-percent-as-trust-"
-                                + "registered-overseas-entity"),
-                entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_FIRM",
-                        "ownership-of-shares-more-than-25-percent-as-firm-"
-                                + "registered-overseas-entity"),
-                entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_PERSON",
-                        "voting-rights-more-than-25-percent-registered-overseas-entity"),
-                entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_TRUST",
-                        "voting-rights-more-than-25-percent-as-trust-registered-overseas-entity"),
-                entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_FIRM",
-                        "voting-rights-more-than-25-percent-as-firm-registered-overseas-entity"),
-                entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_PERSON",
-                        "right-to-appoint-and-remove-directors-registered-overseas-entity"),
-                entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_TRUST",
-                        "right-to-appoint-and-remove-directors-as-trust-"
-                                + "registered-overseas-entity"),
-                entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_FIRM",
-                        "right-to-appoint-and-remove-directors-as-firm-registered-overseas-entity"),
-                entry("OE_SIGINFLUENCECONTROL_AS_PERSON",
-                        "significant-influence-or-control-registered-overseas-entity"),
-                entry("OE_SIGINFLUENCECONTROL_AS_TRUST",
-                        "significant-influence-or-control-as-trust-registered-overseas-entity"),
-                entry("OE_SIGINFLUENCECONTROL_AS_FIRM",
-                        "significant-influence-or-control-as-firm-registered-overseas-entity"),
-                entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_CONTROLOVERTRUST",
-                        "ownership-of-shares-more-than-25-percent-as-control-over-trust"
-                                + "-registered-overseas-entity"),
-                entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_CONTROLOVERTRUST",
-                        "voting-rights-more-than-25-percent-as-control-over-trust"
-                                + "-registered-overseas-entity"),
-                entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_CONTROLOVERTRUST",
-                        "right-to-appoint-and-remove-directors-as-control-over-trust"
-                                + "-registered-overseas-entity"),
-                entry("OE_SIGINFLUENCECONTROL_AS_CONTROLOVERTRUST",
-                        "significant-influence-or-control-as-control-over-trust"
-                                + "-registered-overseas-entity"),
-                entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_CONTROLOVERFIRM",
-                        "ownership-of-shares-more-than-25-percent-as-control-over-firm"
-                                + "-registered-overseas-entity"),
-                entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_CONTROLOVERFIRM",
-                        "voting-rights-more-than-25-percent-as-control-over-firm"
-                                + "-registered-overseas-entity"),
-                entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_CONTROLOVERFIRM",
-                        "right-to-appoint-and-remove-directors-as-control-over-firm"
-                                + "-registered-overseas-entity"),
-                entry("OE_SIGINFLUENCECONTROL_AS_CONTROLOVERFIRM",
-                        "significant-influence-or-control-as-control-over-firm"
-                                + "-registered-overseas-entity"),
-                entry("OE_REGOWNER_AS_NOMINEEPERSON_ENGLANDWALES",
-                        "registered-owner-as-nominee-person-england-wales"
-                                + "-registered-overseas-entity"),
-                entry("OE_REGOWNER_AS_NOMINEEPERSON_SCOTLAND",
-                        "registered-owner-as-nominee-person-scotland"
-                                + "-registered-overseas-entity"),
-                entry("OE_REGOWNER_AS_NOMINEEPERSON_NORTHERNIRELAND",
-                        "registered-owner-as-nominee-person-northern-ireland"
-                                + "-registered-overseas-entity"),
-                entry("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_ENGLANDWALES",
-                        "registered-owner-as-nominee-another-entity-england-wales"
-                                + "-registered-overseas-entity"),
-                entry("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_SCOTLAND",
-                        "registered-owner-as-nominee-another-entity-scotland"
-                                + "-registered-overseas-entity"),
-                entry("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_NORTHERNIRELAND",
-                        "registered-owner-as-nominee-another-entity-northern-ireland"
-                                + "-registered-overseas-entity")
+    private static Map<String, String> getRoeNaturesOfControlMap() {
+        return Map.ofEntries(
+            entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_PERSON", OWNERSHIP_OF_SHARES + MORE_THAN_25_PERCENT + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_TRUST", OWNERSHIP_OF_SHARES + MORE_THAN_25_PERCENT + AS_TRUST + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_FIRM", OWNERSHIP_OF_SHARES + MORE_THAN_25_PERCENT + AS_FIRM + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_PERSON", VOTING_RIGHTS + MORE_THAN_25_PERCENT + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_TRUST", VOTING_RIGHTS + MORE_THAN_25_PERCENT + AS_TRUST + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_FIRM", VOTING_RIGHTS + MORE_THAN_25_PERCENT + AS_FIRM + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_PERSON", RIGHT_TO_APPOINT_AND_REMOVE_DIRECTORS + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_TRUST", RIGHT_TO_APPOINT_AND_REMOVE_DIRECTORS + AS_TRUST + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_FIRM", RIGHT_TO_APPOINT_AND_REMOVE_DIRECTORS + AS_FIRM + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_SIGINFLUENCECONTROL_AS_PERSON", SIGNIFICANT_INFLUENCE_CONTROL + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_SIGINFLUENCECONTROL_AS_TRUST", SIGNIFICANT_INFLUENCE_CONTROL + AS_TRUST + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_SIGINFLUENCECONTROL_AS_FIRM", SIGNIFICANT_INFLUENCE_CONTROL + AS_FIRM + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_CONTROLOVERTRUST", OWNERSHIP_OF_SHARES + MORE_THAN_25_PERCENT + AS_CONTROL_OVER_TRUST + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_CONTROLOVERTRUST", VOTING_RIGHTS + MORE_THAN_25_PERCENT + AS_CONTROL_OVER_TRUST + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_CONTROLOVERTRUST", RIGHT_TO_APPOINT_AND_REMOVE_DIRECTORS + AS_CONTROL_OVER_TRUST + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_SIGINFLUENCECONTROL_AS_CONTROLOVERTRUST", SIGNIFICANT_INFLUENCE_CONTROL + AS_CONTROL_OVER_TRUST + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_CONTROLOVERFIRM", OWNERSHIP_OF_SHARES + MORE_THAN_25_PERCENT + AS_CONTROL_OVER_FIRM + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_CONTROLOVERFIRM", VOTING_RIGHTS + MORE_THAN_25_PERCENT + AS_CONTROL_OVER_FIRM + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_CONTROLOVERFIRM", RIGHT_TO_APPOINT_AND_REMOVE_DIRECTORS + AS_CONTROL_OVER_FIRM + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_SIGINFLUENCECONTROL_AS_CONTROLOVERFIRM", SIGNIFICANT_INFLUENCE_CONTROL + AS_CONTROL_OVER_FIRM + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_REGOWNER_AS_NOMINEEPERSON_ENGLANDWALES", REGISTERED_OWNER + AS_NOMINEE_PERSON + ENGLAND_WALES + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_REGOWNER_AS_NOMINEEPERSON_SCOTLAND", REGISTERED_OWNER + AS_NOMINEE_PERSON + SCOTLAND + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_REGOWNER_AS_NOMINEEPERSON_NORTHERNIRELAND", REGISTERED_OWNER + AS_NOMINEE_PERSON + NORTHERN_IRELAND + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_ENGLANDWALES", REGISTERED_OWNER + AS_NOMINEE_ANOTHER_ENTITY + ENGLAND_WALES + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_SCOTLAND", REGISTERED_OWNER + AS_NOMINEE_ANOTHER_ENTITY + SCOTLAND + REGISTERED_OVERSEAS_ENTITY),
+            entry("OE_REGOWNER_AS_NOMINEEANOTHERENTITY_NORTHERNIRELAND", REGISTERED_OWNER + AS_NOMINEE_ANOTHER_ENTITY + NORTHERN_IRELAND + REGISTERED_OVERSEAS_ENTITY)
         );
-
-        return new HashMap<>(roeMap);
     }
 }
