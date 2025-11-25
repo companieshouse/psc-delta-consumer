@@ -139,7 +139,9 @@ public class PscSteps {
         verify(1, requestMadeFor(
                 new CustomRequestMatcher(output,
                         "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record",
-                        List.of("external_data.data.etag", "internal_data.delta_at"))));
+                        List.of("external_data.data.etag",
+                            "external_data.data.identityVerificationDetails",
+                            "internal_data.delta_at"))));
     }
 
     @Then("^the message should be moved to topic (.*)$")
