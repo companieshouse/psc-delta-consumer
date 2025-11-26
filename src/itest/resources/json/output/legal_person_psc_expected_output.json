@@ -33,7 +33,7 @@
       "links": [
         {
           "self": "/company/00623672/persons-with-significant-control/legal-person/WWG3toZrwNqzvwUZlSa4JgQAvzY",
-          "statements": "/company/00623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs"
+          "statement": "/company/00623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs"
         }
       ],
       "ceased_on": [
@@ -68,6 +68,7 @@
     },
     "internal_id": "6",
     "sensitive_data": {
+      "internal_id": 6,
       "date_of_birth": null,
       "residential_address_same_as_service_address": null,
       "usual_residential_address": {

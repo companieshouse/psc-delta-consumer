@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.matching.MatchResult;
 import com.github.tomakehurst.wiremock.matching.ValueMatcher;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -36,8 +35,8 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
     public MatchResult match(final Request request) {
         return MatchResult.of(
                 this.matchUrl(request.getUrl()) &&
-                        this.matchMethod(request.getMethod().toString()) &&
-                        this.matchBody(request.getBodyAsString()));
+                              this.matchMethod(request.getMethod().toString()) &&
+                              this.matchBody(request.getBodyAsString()));
     }
 
     private boolean matchUrl(final String actualUrl) {
@@ -64,7 +63,7 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
             final JSONObject actual = new JSONObject(actualBody);
 
             // Remove fields to ignore from the actual JSON
-            this.fieldsToIgnore.forEach((fieldName) -> {
+            this.fieldsToIgnore.forEach(fieldName -> {
                 try {
                     this.removeField(actual, fieldName);
                 } catch (final JSONException e) {
@@ -87,7 +86,7 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
         } catch (final JSONException e) {
             LOGGER.error("Error processing JSON", e);
             return false;
-        } catch (JsonProcessingException e) {
+        } catch (final JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
@@ -102,7 +101,8 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
                     if (!actual.has(fieldName)) {
                         return Optional.of("Missing field: " + fieldPath);
                     }
-                    final Optional<String> mismatch = findMismatch(expected.get(fieldName), actual.get(fieldName), fieldPath);
+                    final Optional<String> mismatch = findMismatch(expected.get(fieldName), actual.get(fieldName),
+                        fieldPath);
                     if (mismatch.isPresent()) {
                         return mismatch;
                     }
@@ -116,34 +116,43 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
                         return Optional.of("Unexpected field: " + fieldPath);
                     }
                 }
-            } else if (expected.isArray() && actual.isArray()) {
+            }
+            else if (expected.isArray() && actual.isArray()) {
                 for (int i = 0; i < expected.size(); i++) {
                     if (i >= actual.size()) {
                         return Optional.of("Array index out of bounds at: " + path + "[" + i + "]");
                     }
-                    final Optional<String> mismatch = findMismatch(expected.get(i), actual.get(i), path + "[" + i + "]");
+                    final Optional<String> mismatch = findMismatch(expected.get(i), actual.get(i),
+                        path + "[" + i + "]");
                     if (mismatch.isPresent()) {
                         return mismatch;
                     }
                 }
-            } else {
-                return Optional.of("Value mismatch at: " + path + " (expected: " + expected + ", actual: " + actual + ")");
+            }
+            else {
+                return Optional.of(
+                    "Value mismatch at: " + path + " (expected: " + expected + ", actual: " + actual + ")");
             }
         }
         return Optional.empty();
     }
 
     private void removeField(final JSONObject json, final String fieldName) throws JSONException {
-        final String[] parts = fieldName.split("\\.");
-        final String key = parts[0];
+        final int dotIndex = fieldName.indexOf('.');
 
-        if (parts.length == 1) {
-            // Base case: Remove the field if it exists at the current level
-            json.remove(key);
-        } else if (json.has(key) && json.get(key) instanceof JSONObject) {
-            // Recursive case: Traverse into the nested object
-            final JSONObject nestedObject = json.getJSONObject(key);
-            removeField(nestedObject, String.join(".", Arrays.stream(parts).skip(1).toArray(String[]::new)));
+        if (dotIndex == -1) {
+            json.remove(fieldName);
+        }
+        else {
+            final String key = fieldName.substring(0, dotIndex);
+            final String remainingPath = fieldName.substring(dotIndex + 1);
+
+            if (json.has(key)) {
+                final Object nestedObject = json.get(key);
+                if (nestedObject instanceof JSONObject) {
+                    removeField((JSONObject) nestedObject, remainingPath);
+                }
+            }
         }
     }
 }
