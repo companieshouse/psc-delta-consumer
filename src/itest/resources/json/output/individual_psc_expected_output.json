@@ -33,7 +33,7 @@
       "links": [
         {
           "self": "/company/00623672/persons-with-significant-control/individual/lXgouUAR16hSIwxdJSpbr_dhyT8",
-          "statements": "/company/00623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs"
+          "statement": "/company/00623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs"
         }
       ],
       "ceased_on": [
@@ -54,13 +54,7 @@
       "company_number": null,
       "country_of_residence": "Wales",
       "description": null,
-      "identification": {
-        "country_registered": null,
-        "legal_authority": null,
-        "legal_form": null,
-        "place_registered": null,
-        "registration_number": null
-      },
+      "identification": null,
       "name": "Mr John Dave Smith",
       "name_elements": {
         "forename": "John",
@@ -73,6 +67,7 @@
     },
     "internal_id": "5",
     "sensitive_data": {
+      "internal_id": 5,
       "date_of_birth": {
         "day": 12,
         "month": 7,

@@ -8,7 +8,13 @@ Feature: Psc delta
     Examples:
       | pscKind                | companyNumber | pscId                       |
       | super_secure_entity_BO | OE623672      | 0ewxT9lV_MPjngrHhR-vsOUHOpo |
+      | individual_BO          | OE623672      | ERyiOut_ZiY1GMAZbkeN6PLCDNc |
+      | corporate_entity_BO    | OE623672      | hZ_JFH9mW2suVRdVM7jm9w2MD10 |
+      | legal_person_BO        | OE623672      | nVygLIRIpytItqx33sVCo69WNt0 |
       | super_secure_entity    | 00623672      | Gh7E2SSkj-YBM3i396MI-ycubGY |
+      | individual             | 00623672      | lXgouUAR16hSIwxdJSpbr_dhyT8 |
+      | corporate_entity       | 00623672      | AoRE4bhxdSdXur_NLdfh4JF81Y4 |
+      | legal_person           | 00623672      | WWG3toZrwNqzvwUZlSa4JgQAvzY |
 
   Scenario: Process invalid avro message
     Given the application is running

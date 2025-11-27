@@ -44,7 +44,7 @@
       "links": [
         {
           "self": "/company/OE623672/persons-with-significant-control/corporate-entity-beneficial-owner/hZ_JFH9mW2suVRdVM7jm9w2MD10",
-          "statements": "/company/OE623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs"
+          "statement": "/company/OE623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs"
         }
       ],
       "ceased_on": [
@@ -79,6 +79,7 @@
     },
     "internal_id": "2",
     "sensitive_data": {
+      "internal_id": 2,
       "date_of_birth": null,
       "residential_address_same_as_service_address": null,
       "usual_residential_address": {

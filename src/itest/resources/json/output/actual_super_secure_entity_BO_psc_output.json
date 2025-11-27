@@ -1,0 +1,46 @@
+{
+  "external_data" : {
+    "data" : {
+      "description" : "super-secure-beneficial-owner",
+      "kind" : "super-secure-beneficial-owner",
+      "identification" : null,
+      "identityVerificationDetails" : null,
+      "notified_on" : null,
+      "ceased_on" : [ 2018, 2, 1 ],
+      "service_address" : null,
+      "principal_office_address" : null,
+      "name" : null,
+      "name_elements" : null,
+      "natures_of_control" : null,
+      "is_sanctioned" : false,
+      "etag" : "03d2fc9f6426e4a14e99d9cf97f715f984ec2637",
+      "service_address_same_as_registered_office_address" : null,
+      "country_of_residence" : null,
+      "links" : [ {
+        "self" : "/company/OE623672/persons-with-significant-control/super-secure-beneficial-owner/0ewxT9lV_MPjngrHhR-vsOUHOpo",
+        "statement" : null
+      } ],
+      "nationality" : null,
+      "company_number" : null,
+      "notification_date" : null
+    },
+    "sensitive_data" : {
+      "usual_residential_address" : null,
+      "residential_address_same_as_service_address" : null,
+      "date_of_birth" : null,
+      "internal_id" : 8
+    },
+    "id" : "0ewxT9lV_MPjngrHhR-vsOUHOpo",
+    "psc_id" : "AoRE4bhxdSdXur_NLdfh4JF81Y4",
+    "internal_id" : "8",
+    "notification_id" : "0ewxT9lV_MPjngrHhR-vsOUHOpo",
+    "psc_statement_id" : null,
+    "company_number" : "OE623672"
+  },
+  "internal_data" : {
+    "delta_at" : 1.63551724336056E9,
+    "created_at" : null,
+    "updated_by" : null,
+    "updated_at" : null
+  }
+}

@@ -34,7 +34,7 @@
       "links": [
         {
           "self": "/company/OE623672/persons-with-significant-control/individual-beneficial-owner/ERyiOut_ZiY1GMAZbkeN6PLCDNc",
-          "statements": "/company/OE623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs"
+          "statement": "/company/OE623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs"
         }
       ],
       "ceased_on": [
@@ -55,13 +55,7 @@
       "company_number": null,
       "country_of_residence": "Italy",
       "description": null,
-      "identification": {
-        "country_registered": null,
-        "legal_authority": null,
-        "legal_form": null,
-        "place_registered": null,
-        "registration_number": null
-      },
+      "identification": null,
       "name": "Mr John Dave Smith",
       "name_elements": {
         "forename": "John",
@@ -74,6 +68,7 @@
     },
     "internal_id": "4",
     "sensitive_data": {
+      "internal_id": 4,
       "date_of_birth": {
         "day": 12,
         "month": 7,

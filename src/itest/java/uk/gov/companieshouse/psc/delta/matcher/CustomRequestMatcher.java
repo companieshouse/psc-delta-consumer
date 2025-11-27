@@ -8,8 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.matching.MatchResult;
 import com.github.tomakehurst.wiremock.matching.ValueMatcher;
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import org.json.JSONException;
 import org.json.JSONObject;
 import uk.gov.companieshouse.logging.Logger;
@@ -24,28 +25,22 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
     private final String expectedUrl;
     private final List<String> fieldsToIgnore;
 
-    public CustomRequestMatcher(String output, String expectedUrl) {
-        this.expectedOutput = output;
-        this.expectedUrl = expectedUrl;
-        this.fieldsToIgnore = new ArrayList<>();
-    }
-
-    public CustomRequestMatcher(String output, String expectedUrl, List<String> fieldsToIgnore) {
+    public CustomRequestMatcher(final String output, final String expectedUrl, final List<String> fieldsToIgnore) {
         this.expectedOutput = output;
         this.expectedUrl = expectedUrl;
         this.fieldsToIgnore = fieldsToIgnore;
     }
 
     @Override
-    public MatchResult match(Request request) {
+    public MatchResult match(final Request request) {
         return MatchResult.of(
                 this.matchUrl(request.getUrl()) &&
-                        this.matchMethod(request.getMethod().toString()) &&
-                        this.matchBody(request.getBodyAsString()));
+                              this.matchMethod(request.getMethod().toString()) &&
+                              this.matchBody(request.getBodyAsString()));
     }
 
-    private boolean matchUrl(String actualUrl) {
-        boolean urlResult = this.expectedUrl.equals(actualUrl);
+    private boolean matchUrl(final String actualUrl) {
+        final boolean urlResult = this.expectedUrl.equals(actualUrl);
         if (!urlResult) {
             LOGGER.error("URL does not match - expected: [%s], actual: [%s]".formatted(expectedUrl, actualUrl));
         }
@@ -53,8 +48,8 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
         return urlResult;
     }
 
-    private boolean matchMethod(String actualMethod) {
-        boolean typeResult = PUT.equals(actualMethod);
+    private boolean matchMethod(final String actualMethod) {
+        final boolean typeResult = PUT.equals(actualMethod);
         if (!typeResult) {
             LOGGER.error("Method does not match - expected: [%s], actual: [%s]".formatted(PUT, actualMethod));
         }
@@ -62,48 +57,102 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
         return typeResult;
     }
 
-    private boolean matchBody(String actualBody) {
+    boolean matchBody(final String actualBody) {
         try {
-            JSONObject expectedBody = new JSONObject(this.expectedOutput);
-            JSONObject actual = new JSONObject(actualBody);
-            this.fieldsToIgnore.forEach((fieldName) -> {
+            final JSONObject expectedBody = new JSONObject(this.expectedOutput);
+            final JSONObject actual = new JSONObject(actualBody);
+
+            // Remove fields to ignore from the actual JSON
+            this.fieldsToIgnore.forEach(fieldName -> {
                 try {
                     this.removeField(actual, fieldName);
-                } catch (JSONException var4) {
-                    JSONException e = var4;
+                } catch (final JSONException e) {
                     throw new RuntimeException(e);
                 }
             });
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode expectedNode = mapper.readTree(expectedBody.toString());
-            JsonNode actualNode = mapper.readTree(actual.toString());
-            boolean bodyResult = expectedNode.equals(actualNode);
-            if (!bodyResult) {
-                String var10001 = String.valueOf(expectedBody);
-                LOGGER.error("Body does not match - expected: [%s], actual: [%s]".formatted(var10001, actualBody));
+
+            final ObjectMapper mapper = new ObjectMapper();
+            final JsonNode expectedNode = mapper.readTree(expectedBody.toString());
+            final JsonNode actualNode = mapper.readTree(actual.toString());
+
+            // Compare JSON nodes and log mismatches
+            final Optional<String> mismatchLocation = findMismatch(expectedNode, actualNode, "");
+            if (mismatchLocation.isPresent()) {
+                LOGGER.error("Body mismatch at: %s".formatted(mismatchLocation.get()));
+                return false;
             }
 
-            return bodyResult;
-        } catch (JsonProcessingException | JSONException var8) {
-            Exception ex = var8;
-            LOGGER.error("Error processing JSON", ex);
+            return true;
+        } catch (final JSONException e) {
+            LOGGER.error("Error processing JSON", e);
             return false;
+        } catch (final JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public JSONObject removeField(JSONObject json, String fieldName) throws JSONException {
-        String key = fieldName.split("\\.")[0];
-        if (json.has(fieldName)) {
-            json.remove(key);
-        } else if (json.has(key)) {
-            if (json.get(key) instanceof JSONObject) {
-                JSONObject value = json.getJSONObject(key);
-                this.removeField(value, fieldName.substring(fieldName.indexOf(".") + 1));
-            } else {
-                json.remove(key);
+    Optional<String> findMismatch(final JsonNode expected, final JsonNode actual, final String path) {
+        if (!expected.equals(actual)) {
+            if (expected.isObject() && actual.isObject()) {
+                final Iterator<String> fieldNames = expected.fieldNames();
+                while (fieldNames.hasNext()) {
+                    final String fieldName = fieldNames.next();
+                    final String fieldPath = path.isEmpty() ? fieldName : path + "." + fieldName;
+                    if (!actual.has(fieldName)) {
+                        return Optional.of("Missing field: " + fieldPath);
+                    }
+                    final Optional<String> mismatch = findMismatch(expected.get(fieldName), actual.get(fieldName),
+                        fieldPath);
+                    if (mismatch.isPresent()) {
+                        return mismatch;
+                    }
+                }
+                // Check for extra fields in the actual JsonNode
+                final Iterator<String> actualFieldNames = actual.fieldNames();
+                while (actualFieldNames.hasNext()) {
+                    final String fieldName = actualFieldNames.next();
+                    final String fieldPath = path.isEmpty() ? fieldName : path + "." + fieldName;
+                    if (!expected.has(fieldName)) {
+                        return Optional.of("Unexpected field: " + fieldPath);
+                    }
+                }
+            }
+            else if (expected.isArray() && actual.isArray()) {
+                for (int i = 0; i < expected.size(); i++) {
+                    if (i >= actual.size()) {
+                        return Optional.of("Array index out of bounds at: " + path + "[" + i + "]");
+                    }
+                    final Optional<String> mismatch = findMismatch(expected.get(i), actual.get(i),
+                        path + "[" + i + "]");
+                    if (mismatch.isPresent()) {
+                        return mismatch;
+                    }
+                }
+            }
+            else {
+                return Optional.of(
+                    "Value mismatch at: " + path + " (expected: " + expected + ", actual: " + actual + ")");
             }
         }
+        return Optional.empty();
+    }
 
-        return json;
+    private void removeField(final JSONObject json, final String fieldName) throws JSONException {
+        final int dotIndex = fieldName.indexOf('.');
+
+        if (dotIndex == -1) {
+            json.remove(fieldName);
+        }
+        else {
+            final String key = fieldName.substring(0, dotIndex);
+            final String remainingPath = fieldName.substring(dotIndex + 1);
+
+            if (json.has(key)) {
+                final Object nestedObject = json.get(key);
+                if (nestedObject instanceof JSONObject) {
+                    removeField((JSONObject) nestedObject, remainingPath);
+                }
+            }
+        }
     }
 }
