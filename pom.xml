@@ -33,7 +33,7 @@
         <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
         <map-struct.version>1.6.3</map-struct.version>
         <log4j-bom.version>3.0.0-alpha1</log4j-bom.version>
-        <opentelemetry-instrumentation-bom.version>2.23.0</opentelemetry-instrumentation-bom.version>
+        <opentelemetry-instrumentation-bom.version>2.28.1</opentelemetry-instrumentation-bom.version>
         <apache-commons-lang3.version>3.18.0</apache-commons-lang3.version>
 
         <!--CompaniesHouse library-->
@@ -205,7 +205,7 @@
         </dependency>
         <!-- Pinning version to address CVE-2026-41293(9.8), CVE-2026-41284(7.5), CVE-2026-43513(7.5),
             CVE-2026-43512(9.8), CVE-2026-42498(7.3), CVE-2026-43515(9.1) in tomcat-embed-core:jar:10.1.52
-             pulled transitively by spring-boot-starter-web:jar:3.5.11 -->
+             pulled transitively by spring-boot-starter-web:jar:3.5.15 -->
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
@@ -213,11 +213,19 @@
             <scope>compile</scope>
         </dependency>
         <!-- Pinning version to address CVEs in tomcat-embed-websocket:jar:10.1.54
-            pulled transitively by spring-boot-starter-web:jar:3.5.11 -->
+            pulled transitively by spring-boot-starter-web:jar:3.5.15 -->
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-websocket</artifactId>
             <version>11.0.22</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- Pinning version to address GitHub GHSA-mj4r-2hfc-f8p6 in netty-codec:jar:4.1.132.Final
+            pulled transitively by spring-boot-starter-web:jar:3.5.15 -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec</artifactId>
+            <version>4.2.14.Final</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
