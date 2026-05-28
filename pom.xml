@@ -228,6 +228,35 @@
             <version>4.2.14.Final</version>
             <scope>compile</scope>
         </dependency>
+        <!-- Pinning version to address CVE-2026-42581(9.8), CVE-2026-42580(6.5), CVE-2026-41417(5.3),
+            CVE-2026-42585(7.5), CVE-2026-42584(9.1), CVE-2026-42583(7.5), CVE-2026-42582(7.5), CVE-2026-42578(2.9),
+            CVE-2026-42587(7.5), CVE-2026-42586(7.1), CVE-2026-44248(7.5), CVE-2026-42579(9.1)
+            in netty-transport:jar:4.1.132.Final
+            pulled transitively by netty-codec:jar:4.2.14.Final -->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-transport</artifactId>
+            <version>4.2.14.Final</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-buffer</artifactId>
+            <version>4.2.14.Final</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-common</artifactId>
+            <version>4.2.14.Final</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver</artifactId>
+            <version>4.2.14.Final</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>uk.gov.companieshouse</groupId>
             <artifactId>ch-kafka</artifactId>
