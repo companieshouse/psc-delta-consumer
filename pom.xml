@@ -84,6 +84,16 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- Pinning version to resolve NoSuchMethodError in CommonConfig constructor:
+                 opentelemetry-spring-webmvc-6.0:2.28.1-alpha requires a constructor added after 2.14.0-alpha,
+                 but structured-logging pulls opentelemetry-logback-appender-1.0:2.14.0-alpha which brings in
+                 the older opentelemetry-instrumentation-api-incubator:2.14.0-alpha. The stable BOM does not
+                 manage alpha artifacts so the older version wins without this explicit pin. -->
+            <dependency>
+                <groupId>io.opentelemetry.instrumentation</groupId>
+                <artifactId>opentelemetry-instrumentation-api-incubator</artifactId>
+                <version>2.28.1-alpha</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
