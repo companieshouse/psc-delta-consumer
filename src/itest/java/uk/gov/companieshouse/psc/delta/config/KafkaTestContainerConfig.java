@@ -11,7 +11,6 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
@@ -32,7 +31,6 @@ public class KafkaTestContainerConfig {
     private final AvroDeserializer<ChsDelta> deserializer;
     private final AvroSerializer serializer;
 
-    @Autowired
     public KafkaTestContainerConfig(AvroSerializer serializer, AvroDeserializer<ChsDelta> deserializer) {
         this.serializer = serializer;
         this.deserializer = deserializer;

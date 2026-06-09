@@ -4,7 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static uk.gov.companieshouse.api.delta.Psc.KindEnum.SUPER_SECURE;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,18 +13,15 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.util.FileCopyUtils;
 import uk.gov.companieshouse.api.delta.Psc;
 import uk.gov.companieshouse.api.delta.Psc.NaturesOfControlEnum;
 import uk.gov.companieshouse.api.delta.PscDelta;
 import uk.gov.companieshouse.api.psc.*;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {
+@SpringJUnitConfig(classes = {
         PscMapperImpl.class})
 class PscMapperTest {
 
@@ -275,19 +273,19 @@ class PscMapperTest {
     }
 
     Address createServiceAddress() {
-        Address serviceAddress = new Address();
+        Address createServiceAddress = new Address();
 
-        serviceAddress.setPremises("3");
-        serviceAddress.setAddressLine1("Clos Rhiannon");
-        serviceAddress.setAddressLine2("Thornhill");
-        serviceAddress.setLocality("Cardiff");
-        serviceAddress.setRegion("Here");
-        serviceAddress.setCountry("Wales");
-        serviceAddress.setPostalCode("CF14 9HQ");
-        serviceAddress.setPoBox("PoBox");
-        serviceAddress.setCareOf("CareOf");
+        createServiceAddress.setPremises("3");
+        createServiceAddress.setAddressLine1("Clos Rhiannon");
+        createServiceAddress.setAddressLine2("Thornhill");
+        createServiceAddress.setLocality("Cardiff");
+        createServiceAddress.setRegion("Here");
+        createServiceAddress.setCountry("Wales");
+        createServiceAddress.setPostalCode("CF14 9HQ");
+        createServiceAddress.setPoBox("PoBox");
+        createServiceAddress.setCareOf("CareOf");
 
-        return serviceAddress;
+        return createServiceAddress;
     }
 
     UsualResidentialAddress createURA() {
@@ -307,28 +305,28 @@ class PscMapperTest {
     }
 
     NameElements createNameElements() {
-        NameElements nameElements = new NameElements();
+        NameElements createNameElements = new NameElements();
 
-        nameElements.setTitle("Mr");
-        nameElements.setForename("John");
-        nameElements.setMiddleName("Dave");
-        nameElements.setSurname("Smith");
+        createNameElements.setTitle("Mr");
+        createNameElements.setForename("John");
+        createNameElements.setMiddleName("Dave");
+        createNameElements.setSurname("Smith");
 
-        return nameElements;
+        return createNameElements;
     }
 
     DateOfBirth createDateOfBirth() {
-        DateOfBirth dateOfBirth = new DateOfBirth();
+        DateOfBirth createDateOfBirth = new DateOfBirth();
 
-        dateOfBirth.setDay(12);
-        dateOfBirth.setMonth(7);
-        dateOfBirth.setYear(1994);
+        createDateOfBirth.setDay(12);
+        createDateOfBirth.setMonth(7);
+        createDateOfBirth.setYear(1994);
 
-        return dateOfBirth;
+        return createDateOfBirth;
     }
 
     Psc createPscObject(String type) throws Exception {
-        mapper = new ObjectMapper();
+        mapper = new JsonMapper();
 
         String testFilePath = String.format("%s-delta-example.json", type);
 
@@ -343,30 +341,29 @@ class PscMapperTest {
 
     Identification createCorporateIdentification() {
 
-        Identification identification = new Identification();
+        Identification corporateIdentification = new Identification();
 
-        identification.setCountryRegistered("Wales");
-        identification.setLegalAuthority("Authority");
-        identification.setLegalForm("Form");
-        identification.setPlaceRegistered("Cardiff");
-        identification.setRegistrationNumber("16102009");
+        corporateIdentification.setCountryRegistered("Wales");
+        corporateIdentification.setLegalAuthority("Authority");
+        corporateIdentification.setLegalForm("Form");
+        corporateIdentification.setPlaceRegistered("Cardiff");
+        corporateIdentification.setRegistrationNumber("16102009");
 
-        return identification;
+        return corporateIdentification;
     }
 
     Identification createLegalIdentification() {
 
-        Identification identification = new Identification();
+        Identification legalIdentification = new Identification();
 
-        identification.setLegalAuthority("Authority");
-        identification.setLegalForm("Form");
+        legalIdentification.setLegalAuthority("Authority");
+        legalIdentification.setLegalForm("Form");
 
-        return identification;
+        return legalIdentification;
     }
 
-
     @Test
-    public void shouldMapNaturesOfControl() {
+    void shouldMapNaturesOfControl() {
         Psc source = new Psc();
         source.setNaturesOfControl(List.of(NaturesOfControlEnum.OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON));
         source.setCompanyNumber("00623672");
@@ -379,7 +376,7 @@ class PscMapperTest {
     }
 
     @Test
-    public void shouldMapNaturesOfControlLlp() {
+    void shouldMapNaturesOfControlLlp() {
         Psc source = new Psc();
         source.setNaturesOfControl(List.of(NaturesOfControlEnum.RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_FIRM));
         source.setCompanyNumber("OC623672");
@@ -393,7 +390,7 @@ class PscMapperTest {
     }
 
     @Test
-    public void shouldMapNaturesOfControlRoe() {
+    void shouldMapNaturesOfControlRoe() {
         Psc source = new Psc();
         source.setNaturesOfControl((List.of(NaturesOfControlEnum.OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_FIRM)));
         source.setCompanyNumber("OE623672");

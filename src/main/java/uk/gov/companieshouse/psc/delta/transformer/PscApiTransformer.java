@@ -3,7 +3,6 @@ package uk.gov.companieshouse.psc.delta.transformer;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.companieshouse.api.delta.Psc;
 import uk.gov.companieshouse.api.delta.PscDelta;
@@ -21,7 +20,6 @@ public class PscApiTransformer {
      *
      * @param pscMapper returns the FullRecordCompanyPSCApi object for Super Secure PSCs and BOs.
      */
-    @Autowired
     public PscApiTransformer(PscMapper pscMapper) {
         this.pscMapper = pscMapper;
     }
