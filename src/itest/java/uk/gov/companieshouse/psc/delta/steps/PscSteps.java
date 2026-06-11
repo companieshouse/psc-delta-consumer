@@ -15,17 +15,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.StreamSupport;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
@@ -40,21 +41,48 @@ public class PscSteps {
 
     private static WireMockServer wireMockServer;
 
-    @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
-
-    @Autowired
-    public KafkaConsumer<String, Object> kafkaConsumer;
-
-    @Value("${pscs.delta.topic}")
-    private String topic;
-
-    @Value("${wiremock.server.port:8888}")
-    private String port;
-
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final KafkaConsumer<String, Object> kafkaConsumer;
+    private final KafkaConsumer<String, Object> invalidTopicConsumer;
+    private final KafkaConsumer<String, Object> retryTopicConsumer;
+    private final KafkaConsumer<String, Object> errorTopicConsumer;
+    private final String topic;
+    private final String port;
     private final String contextId = "123456789";
 
-    public void sendMsgToKafkaTopic(String data) {
+    public PscSteps(final KafkaTemplate<String, Object> kafkaTemplate,
+            @Qualifier("mainTopicConsumer") final KafkaConsumer<String, Object> kafkaConsumer,
+            @Qualifier("invalidTopicConsumer") final KafkaConsumer<String, Object> invalidTopicConsumer,
+            @Qualifier("retryTopicConsumer") final KafkaConsumer<String, Object> retryTopicConsumer,
+            @Qualifier("errorTopicConsumer") final KafkaConsumer<String, Object> errorTopicConsumer,
+            @Value("${pscs.delta.topic}") final String topic,
+            @Value("${wiremock.server.port:8888}") final String port) {
+        this.kafkaTemplate = kafkaTemplate;
+        this.kafkaConsumer = kafkaConsumer;
+        this.invalidTopicConsumer = invalidTopicConsumer;
+        this.retryTopicConsumer = retryTopicConsumer;
+        this.errorTopicConsumer = errorTopicConsumer;
+        this.topic = topic;
+        this.port = port;
+    }
+
+    /**
+     * Reset Kafka consumer state before each scenario to ensure test isolation.
+     * Seeks to the end of all subscribed partitions so previous messages don't pollute the current scenario.
+     */
+    @Before
+    public void resetKafkaConsumerState() {
+        // Poll briefly to ensure assignment, then seek to end of all partitions
+        kafkaConsumer.poll(Duration.ofMillis(100));
+        final var partitions = kafkaConsumer.assignment();
+        if (!partitions.isEmpty()) {
+            kafkaConsumer.seekToEnd(partitions);
+            // Commit the new offsets so subsequent polls start from here
+            kafkaConsumer.commitSync();
+        }
+    }
+
+    public void sendMsgToKafkaTopic(final String data) {
         kafkaTemplate.send(topic, data);
     }
 
@@ -70,19 +98,19 @@ public class PscSteps {
     }
 
     @When("the consumer receives a message of kind {string} for company {string} with psc id {string}")
-    public void the_consumer_receives_a_message(String pscKind, String companyNumber, String pscId) throws Exception {
+    public void theConsumerReceivesAMessage(final String pscKind, final String companyNumber, final String pscId) throws Exception {
         configureWireMock();
         stubPutStatement(companyNumber, pscId, 200);
-        ChsDelta delta = new ChsDelta(TestData.getCompanyDelta(pscKind + "_psc_delta.json"), 1, contextId, false);
+        final var delta = new ChsDelta(TestData.getCompanyDelta(pscKind + "_psc_delta.json"), 1, contextId, false);
         kafkaTemplate.send(topic, delta);
         countDown();
     }
 
     @When("the consumer receives a delete payload with {string}")
-    public void theConsumerReceivesDelete(String kind) throws Exception {
+    public void theConsumerReceivesDelete(final String kind) throws Exception {
         configureWireMock();
         stubDeleteStatement(kind, 200);
-        ChsDelta delta = new ChsDelta(TestData.getDeleteData(kind), 1, "1", true);
+        final var delta = new ChsDelta(TestData.getDeleteData(kind), 1, "1", true);
         kafkaTemplate.send(topic, delta);
         countDown();
     }
@@ -90,7 +118,7 @@ public class PscSteps {
     @When("the consumer receives an invalid delete payload")
     public void theConsumerReceivesInvalidDelete() throws Exception {
         configureWireMock();
-        ChsDelta delta = new ChsDelta("invalid", 1, "1", true);
+        final var delta = new ChsDelta("invalid", 1, "1", true);
         kafkaTemplate.send(topic, delta);
 
         countDown();
@@ -105,36 +133,36 @@ public class PscSteps {
 
     @When("a message with invalid data is sent")
     public void messageWithInvalidDataIsSent() throws Exception {
-        ChsDelta delta = new ChsDelta("InvalidData", 1, "1", false);
+        final var delta = new ChsDelta("InvalidData", 1, "1", false);
         kafkaTemplate.send(topic, delta);
 
         countDown();
     }
 
     @When("the consumer receives a message for company {string} with notification id {string} but the api returns a {int}")
-    public void theConsumerReceivesMessageButDataApiReturns(String companyNumber, String notificationId, int responseCode)
+    public void theConsumerReceivesMessageButDataApiReturns(final String companyNumber, final String notificationId, final int responseCode)
             throws Exception {
         configureWireMock();
         stubPutStatement(companyNumber, notificationId, responseCode);
-        ChsDelta delta = new ChsDelta(TestData.getCompanyDelta("individual_psc_delta.json"), 1, contextId, false);
+        final var delta = new ChsDelta(TestData.getCompanyDelta("individual_psc_delta.json"), 1, contextId, false);
         kafkaTemplate.send(topic, delta);
 
         countDown();
     }
 
     @When("^the consumer receives a delete message but the data api returns a (\\d*)$")
-    public void theConsumerReceivesDeleteMessageButDataApiReturns(int responseCode) throws Exception {
+    public void theConsumerReceivesDeleteMessageButDataApiReturns(final int responseCode) throws Exception {
         configureWireMock();
         stubDeleteStatement(KindEnum.INDIVIDUAL.getValue(), responseCode);
-        ChsDelta delta = new ChsDelta(TestData.getDeleteData(KindEnum.INDIVIDUAL.getValue()), 1, "1", true);
+        final var delta = new ChsDelta(TestData.getDeleteData(KindEnum.INDIVIDUAL.getValue()), 1, "1", true);
         kafkaTemplate.send(topic, delta);
 
         countDown();
     }
 
     @Then("a PUT request is sent to the psc api with the transformed data for psc of kind {string} for company {string} with id {string}")
-    public void aPutRequestIsSent(String pscKind, String companyNumber, String pscId) {
-        String output = TestData.getOutputData(pscKind + "_psc_expected_output.json");
+    public void aPutRequestIsSent(final String pscKind, final String companyNumber, final String pscId) {
+        final String output = TestData.getOutputData(pscKind + "_psc_expected_output.json");
 
         verify(1, requestMadeFor(
                 new CustomRequestMatcher(output,
@@ -145,27 +173,28 @@ public class PscSteps {
     }
 
     @Then("^the message should be moved to topic (.*)$")
-    public void theMessageShouldBeMovedToTopic(String topic) {
-        ConsumerRecord<String, Object> singleRecord = KafkaTestUtils.getSingleRecord(kafkaConsumer, topic);
-
+    public void theMessageShouldBeMovedToTopic(final String topic) {
+        // Use dedicated consumer for invalid topic
+        final ConsumerRecord<String, Object> singleRecord =
+            KafkaTestUtils.getSingleRecord(invalidTopicConsumer, topic);
         assertThat(singleRecord.value()).isNotNull();
     }
 
     @Then("^the message should retry (\\d*) times and then error$")
-    public void theMessageShouldRetryAndError(int retries) {
-        ConsumerRecords<String, Object> records = KafkaTestUtils.getRecords(kafkaConsumer);
-        Iterable<ConsumerRecord<String, Object>> retryRecords = records.records("psc-delta-retry");
-        Iterable<ConsumerRecord<String, Object>> errorRecords = records.records("psc-delta-error");
+    public void theMessageShouldRetryAndError(final int retries) {
+        // Get records from dedicated retry and error consumers
+        final ConsumerRecords<String, Object> retryRecords = KafkaTestUtils.getRecords(retryTopicConsumer);
+        final ConsumerRecords<String, Object> errorRecords = KafkaTestUtils.getRecords(errorTopicConsumer);
 
-        int actualRetries = (int) StreamSupport.stream(retryRecords.spliterator(), false).count();
-        int errors = (int) StreamSupport.stream(errorRecords.spliterator(), false).count();
+        final int actualRetries = retryRecords.count();
+        final int errors = errorRecords.count();
 
         assertThat(actualRetries).isEqualTo(retries);
         assertThat(errors).isEqualTo(1);
     }
 
     @Then("a DELETE request is sent to the psc data api with the {string}")
-    public void deleteRequestIsSent(String kind) {
+    public void deleteRequestIsSent(final String kind) {
         verify(1, deleteRequestedFor(urlMatching(
                 "/company/OE623672/persons-with-significant-control/lXgouUAR16hSIwxdJSpbr_dhyT8/full_record"))
                 .withHeader("X-KIND", containing(kind))
@@ -179,13 +208,13 @@ public class PscSteps {
         }
     }
 
-    private void stubPutStatement(String companyNumber, String notificationId, int responseCode) {
+    private void stubPutStatement(final String companyNumber, final String notificationId, final int responseCode) {
         stubFor(put(urlEqualTo(
                 "/company/" + companyNumber + "/persons-with-significant-control/" + notificationId + "/full_record"))
                 .willReturn(aResponse().withStatus(responseCode)));
     }
 
-    private void stubDeleteStatement(String kind, int responseCode) {
+    private void stubDeleteStatement(final String kind, final int responseCode) {
         stubFor(delete(urlEqualTo(
                 "/company/OE623672/persons-with-significant-control/lXgouUAR16hSIwxdJSpbr_dhyT8/full_record"))
                 .withHeader("X-KIND", containing(kind))
@@ -194,7 +223,7 @@ public class PscSteps {
     }
 
     private void countDown() throws Exception {
-        CountDownLatch countDownLatch = new CountDownLatch(1);
+        final var countDownLatch = new CountDownLatch(1);
         countDownLatch.await(5, TimeUnit.SECONDS);
     }
 }
