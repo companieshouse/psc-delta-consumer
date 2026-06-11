@@ -17,7 +17,7 @@ import tools.jackson.core.JacksonException;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
-public class CustomRequestMatcher implements ValueMatcher<Request> {
+public class WiremockRequestMatcher implements ValueMatcher<Request> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NAMESPACE);
     private static final String PUT = "PUT";
@@ -26,7 +26,7 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
     private final String expectedUrl;
     private final List<String> fieldsToIgnore;
 
-    public CustomRequestMatcher(final String output, final String expectedUrl, final List<String> fieldsToIgnore) {
+    public WiremockRequestMatcher(final String output, final String expectedUrl, final List<String> fieldsToIgnore) {
         this.expectedOutput = output;
         this.expectedUrl = expectedUrl;
         this.fieldsToIgnore = fieldsToIgnore;

@@ -33,7 +33,7 @@ import org.springframework.kafka.test.utils.KafkaTestUtils;
 import uk.gov.companieshouse.api.delta.PscDeleteDelta.KindEnum;
 import uk.gov.companieshouse.delta.ChsDelta;
 import uk.gov.companieshouse.psc.delta.data.TestData;
-import uk.gov.companieshouse.psc.delta.matcher.CustomRequestMatcher;
+import uk.gov.companieshouse.psc.delta.matcher.WiremockRequestMatcher;
 
 public class PscSteps {
 
@@ -165,7 +165,7 @@ public class PscSteps {
         final String output = TestData.getOutputData(pscKind + "_psc_expected_output.json");
 
         verify(1, requestMadeFor(
-                new CustomRequestMatcher(output,
+                new WiremockRequestMatcher(output,
                         "/company/" + companyNumber + "/persons-with-significant-control/" + pscId + "/full_record",
                         List.of("external_data.data.etag",
                             "external_data.data.identityVerificationDetails",

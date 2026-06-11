@@ -16,7 +16,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class CustomRequestMatcherTest {
+class WiremockRequestMatcherTest {
 
     public static final String A_B_1 = """
         {
@@ -35,11 +35,11 @@ class CustomRequestMatcherTest {
 
     @ParameterizedTest
     @MethodSource("provideFindMismatchTestCases")
-    void testFindMismatch(final String expectedJson, final String actualJson, final String expectedMismatch) throws Exception {
+    void testFindMismatch(final String expectedJson, final String actualJson, final String expectedMismatch) {
         final ObjectMapper mapper = new JsonMapper();
         final JsonNode expected = mapper.readTree(expectedJson);
         final JsonNode actual = mapper.readTree(actualJson);
-        final Optional<String> mismatch = new CustomRequestMatcher("", "", List.of()).findMismatch(expected, actual, "");
+        final Optional<String> mismatch = new WiremockRequestMatcher("", "", List.of()).findMismatch(expected, actual, "");
 
         if (expectedMismatch == null) {
             assertThat("Mismatch result should be empty", mismatch.isEmpty(), is(true));
@@ -86,7 +86,7 @@ class CustomRequestMatcherTest {
     @MethodSource("provideMatchBodyTestCases")
     void testMatchBody(final String expectedOutput, final String actualBody, final List<String> fieldsToIgnore,
         final boolean expectedResult) {
-        final CustomRequestMatcher matcher = new CustomRequestMatcher(expectedOutput, "test-url", fieldsToIgnore);
+        final WiremockRequestMatcher matcher = new WiremockRequestMatcher(expectedOutput, "test-url", fieldsToIgnore);
         final boolean result = matcher.matchBody(actualBody);
         assertThat("Mismatch in matchBody result", result, is(expectedResult));
     }
@@ -139,7 +139,7 @@ class CustomRequestMatcherTest {
         final ObjectMapper mapper = new JsonMapper();
         final JsonNode expectedNode = mapper.readTree(expectedJson);
         final JsonNode actualNode = mapper.readTree(actualJson);
-        final CustomRequestMatcher matcher = new CustomRequestMatcher(null, null, List.of());
+        final WiremockRequestMatcher matcher = new WiremockRequestMatcher(null, null, List.of());
 
         final Optional<String> mismatch = matcher.findMismatch(expectedNode, actualNode, "");
 
@@ -169,7 +169,7 @@ class CustomRequestMatcherTest {
     @ParameterizedTest
     @MethodSource("provideJsonFileTestCases")
     void testMatchBodyWithJsonFiles(final String expectedJson, final String actualJson, final List<String> fieldsToIgnore, final boolean expectedResult) {
-        final CustomRequestMatcher matcher = new CustomRequestMatcher(expectedJson, "test-url", fieldsToIgnore);
+        final WiremockRequestMatcher matcher = new WiremockRequestMatcher(expectedJson, "test-url", fieldsToIgnore);
         final boolean result = matcher.matchBody(actualJson);
         assertThat("Mismatch in matchBody result with JSON files", result, is(expectedResult));
     }
