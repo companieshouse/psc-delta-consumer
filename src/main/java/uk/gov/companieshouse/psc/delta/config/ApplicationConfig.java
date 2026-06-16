@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.psc.delta.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import consumer.deserialization.AvroDeserializer;
 import consumer.serialization.AvroSerializer;
 import java.util.function.Supplier;
@@ -58,7 +59,7 @@ public class ApplicationConfig implements WebMvcConfigurer {
 
     @Bean
     ObjectMapper objectMapper() {
-        return new ObjectMapper();
+        return new JsonMapper();
     }
 
     @Bean

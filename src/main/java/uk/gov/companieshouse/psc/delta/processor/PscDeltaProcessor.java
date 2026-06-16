@@ -2,11 +2,11 @@ package uk.gov.companieshouse.psc.delta.processor;
 
 import static uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication.NAMESPACE;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import consumer.exception.RetryableErrorException;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
+import tools.jackson.core.JacksonException;
 import uk.gov.companieshouse.api.delta.Psc;
 import uk.gov.companieshouse.api.delta.PscDeleteDelta;
 import uk.gov.companieshouse.api.delta.PscDelta;
@@ -45,7 +45,7 @@ public class PscDeltaProcessor {
         PscDelta pscDelta;
         try {
             pscDelta = objectMapper.readValue(payload.getData(), PscDelta.class);
-        } catch (JsonProcessingException ex) {
+        } catch (JacksonException ex) {
             final String msg = "Failed to extract PSC delta";
             LOGGER.info(msg, DataMapHolder.getLogMap());
             throw new RetryableErrorException(msg, ex);
@@ -74,7 +74,7 @@ public class PscDeltaProcessor {
         PscDeleteDelta pscDelete;
         try {
             pscDelete = objectMapper.readValue(payload.getData(), PscDeleteDelta.class);
-        } catch (JsonProcessingException ex) {
+        } catch (JacksonException ex) {
             final String msg = "Failed to extract PSC delete delta";
             LOGGER.info(msg, DataMapHolder.getLogMap());
             throw new RetryableErrorException(msg, ex);

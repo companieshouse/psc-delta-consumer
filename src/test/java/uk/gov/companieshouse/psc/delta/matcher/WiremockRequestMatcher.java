@@ -2,9 +2,9 @@ package uk.gov.companieshouse.psc.delta.matcher;
 
 import static uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication.NAMESPACE;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.matching.MatchResult;
 import com.github.tomakehurst.wiremock.matching.ValueMatcher;
@@ -13,10 +13,11 @@ import java.util.List;
 import java.util.Optional;
 import org.json.JSONException;
 import org.json.JSONObject;
+import tools.jackson.core.JacksonException;
 import uk.gov.companieshouse.logging.Logger;
 import uk.gov.companieshouse.logging.LoggerFactory;
 
-public class CustomRequestMatcher implements ValueMatcher<Request> {
+public class WiremockRequestMatcher implements ValueMatcher<Request> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NAMESPACE);
     private static final String PUT = "PUT";
@@ -25,7 +26,7 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
     private final String expectedUrl;
     private final List<String> fieldsToIgnore;
 
-    public CustomRequestMatcher(final String output, final String expectedUrl, final List<String> fieldsToIgnore) {
+    public WiremockRequestMatcher(final String output, final String expectedUrl, final List<String> fieldsToIgnore) {
         this.expectedOutput = output;
         this.expectedUrl = expectedUrl;
         this.fieldsToIgnore = fieldsToIgnore;
@@ -71,7 +72,7 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
                 }
             });
 
-            final ObjectMapper mapper = new ObjectMapper();
+            final ObjectMapper mapper = new JsonMapper();
             final JsonNode expectedNode = mapper.readTree(expectedBody.toString());
             final JsonNode actualNode = mapper.readTree(actual.toString());
 
@@ -86,7 +87,7 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
         } catch (final JSONException e) {
             LOGGER.error("Error processing JSON", e);
             return false;
-        } catch (final JsonProcessingException e) {
+        } catch (final JacksonException e) {
             throw new RuntimeException(e);
         }
     }
@@ -94,7 +95,7 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
     Optional<String> findMismatch(final JsonNode expected, final JsonNode actual, final String path) {
         if (!expected.equals(actual)) {
             if (expected.isObject() && actual.isObject()) {
-                final Iterator<String> fieldNames = expected.fieldNames();
+                final Iterator<String> fieldNames = expected.propertyNames().iterator();
                 while (fieldNames.hasNext()) {
                     final String fieldName = fieldNames.next();
                     final String fieldPath = path.isEmpty() ? fieldName : path + "." + fieldName;
@@ -108,7 +109,7 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
                     }
                 }
                 // Check for extra fields in the actual JsonNode
-                final Iterator<String> actualFieldNames = actual.fieldNames();
+                final Iterator<String> actualFieldNames = actual.propertyNames().iterator();
                 while (actualFieldNames.hasNext()) {
                     final String fieldName = actualFieldNames.next();
                     final String fieldPath = path.isEmpty() ? fieldName : path + "." + fieldName;
@@ -149,8 +150,8 @@ public class CustomRequestMatcher implements ValueMatcher<Request> {
 
             if (json.has(key)) {
                 final Object nestedObject = json.get(key);
-                if (nestedObject instanceof JSONObject) {
-                    removeField((JSONObject) nestedObject, remainingPath);
+                if (nestedObject instanceof JSONObject object) {
+                    removeField(object, remainingPath);
                 }
             }
         }
