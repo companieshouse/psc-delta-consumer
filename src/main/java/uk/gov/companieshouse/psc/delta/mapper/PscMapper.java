@@ -47,6 +47,8 @@ public interface PscMapper {
     @Mapping(target = "externalData.data.serviceAddress", source = "address")
     @Mapping(target = "externalData.data.principalOfficeAddress", source = "principalOfficeAddress")
     @Mapping(target = "externalData.data.nameElements", source = "nameElements")
+    @Mapping(target = "externalData.data.companyName", source = "companyName")
+    @Mapping(target = "externalData.data.companyStatus", source = "status")
     @Mapping(target = "externalData.data.nationality", source = "nationality")
     @Mapping(target = "externalData.data.countryOfResidence", source = "countryOfResidence")
     @Mapping(target = "externalData.data.naturesOfControl", source = "naturesOfControl")
@@ -59,6 +61,7 @@ public interface PscMapper {
     @Mapping(target = "externalData.sensitiveData.internalId", source = "internalId")
     @Mapping(target = "externalData.data.identification", ignore = true)
     @Mapping(target = "externalData.data.identityVerificationDetails", ignore = true)
+    @Mapping(target = "externalData.data.previousPscId", source = "previousPscId")
     FullRecordCompanyPSCApi mapPscData(Psc psc);
 
     /**
@@ -360,7 +363,11 @@ public interface PscMapper {
         if (!CollectionUtils.isEmpty(source.getNaturesOfControl())) {
             final var naturesOfControlMap = MapperUtils.getNaturesOfControlMap(source.getCompanyNumber());
             final List<String> mappedNaturesOfControl = source.getNaturesOfControl().stream()
-                .map(nature -> naturesOfControlMap.get(nature.name()))
+                // SDK enum constant names changed; fall back to the enum wire value for compatibility.
+                .map(nature -> {
+                    String mappedValue = naturesOfControlMap.get(nature.name());
+                    return mappedValue != null ? mappedValue : naturesOfControlMap.get(nature.toString());
+                })
                 .collect(Collectors.toCollection(ArrayList::new));
 
             target.setNaturesOfControl(mappedNaturesOfControl);
@@ -395,6 +402,9 @@ public interface PscMapper {
             details.setAuthorisedCorporateServiceProviderName(sourceDetails.getAuthorisedCorporateServiceProviderName());
             details.setAntiMoneyLaunderingSupervisoryBodies(sourceDetails.getAntiMoneyLaunderingSupervisoryBodies());
             details.setPreferredName(sourceDetails.getPreferredName());
+        } else {
+            // SDKs default list behavior changed, this keeps legacy contract for super-secure records where these fields are omitted.
+            details.setAntiMoneyLaunderingSupervisoryBodies(null);
         }
 
         appointmentVerificationEndOn.ifPresent(dateString -> details.setAppointmentVerificationEndOn(parseLocalDate(dateString)));

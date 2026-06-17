@@ -36,7 +36,9 @@
       "name": null,
       "name_elements": null,
       "nationality": null,
-      "service_address_same_as_registered_office_address": null
+      "service_address_same_as_registered_office_address": null,
+      "company_name": "Test Company Ltd",
+      "company_status": "active"
     },
     "internal_id": "9",
     "sensitive_data": {

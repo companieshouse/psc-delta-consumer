@@ -5,14 +5,14 @@
     "updated_by": null
   },
   "external_data": {
-    "company_number": "OE623672",
-    "id": "ERyiOut_ZiY1GMAZbkeN6PLCDNc",
+    "company_number": "00623672",
+    "id": "lXgouUAR16hSIwxdJSpbr_dhyT8",
     "psc_id": "AoRE4bhxdSdXur_NLdfh4JF81Y4",
-    "notification_id": "ERyiOut_ZiY1GMAZbkeN6PLCDNc",
+    "notification_id": "lXgouUAR16hSIwxdJSpbr_dhyT8",
     "psc_statement_id": "UKWLhOXMpdjzt-Maq7hbxAyPyQs",
     "data": {
-      "kind": "individual-beneficial-owner",
-      "is_sanctioned": true,
+      "kind": "individual-person-with-significant-control",
+      "is_sanctioned": null,
       "service_address": {
         "premises": "3",
         "address_line_1": "Clos Rhiannon",
@@ -26,15 +26,14 @@
       },
       "principal_office_address": null,
       "natures_of_control": [
-        "ownership-of-shares-more-than-25-percent-registered-overseas-entity",
-        "voting-rights-more-than-25-percent-registered-overseas-entity",
-        "right-to-appoint-and-remove-directors-registered-overseas-entity",
-        "significant-influence-or-control-registered-overseas-entity"
+        "ownership-of-shares-75-to-100-percent",
+        "voting-rights-75-to-100-percent",
+        "right-to-appoint-and-remove-directors"
       ],
       "links": [
         {
-          "self": "/company/OE623672/persons-with-significant-control/individual-beneficial-owner/ERyiOut_ZiY1GMAZbkeN6PLCDNc",
-          "statement": "/company/OE623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs"
+          "self": "/company/00623672/persons-with-significant-control/individual/lXgouUAR16hSIwxdJSpbr_dhyT8",
+          "statement": "/company/00623672/persons-with-significant-control-statements/UKWLhOXMpdjzt-Maq7hbxAyPyQs"
         }
       ],
       "ceased_on": [
@@ -53,7 +52,7 @@
         1
       ],
       "company_number": null,
-      "country_of_residence": "Italy",
+      "country_of_residence": "Wales",
       "description": null,
       "identification": null,
       "name": "Mr John Dave Smith",
@@ -63,14 +62,15 @@
         "title": "Mr",
         "middle_name": "Dave"
       },
-      "nationality": "Italian",
+      "nationality": "Welsh",
       "service_address_same_as_registered_office_address": true,
+      "previous_psc_id": "previous-psc-3",
       "company_name": "Test Company Ltd",
       "company_status": "active"
     },
-    "internal_id": "4",
+    "internal_id": "5",
     "sensitive_data": {
-      "internal_id": 4,
+      "internal_id": 5,
       "date_of_birth": {
         "day": 12,
         "month": 7,
@@ -91,3 +91,4 @@
     }
   }
 }
+

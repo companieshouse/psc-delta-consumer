@@ -5,7 +5,9 @@
       "internal_id": "9",
       "psc_id": "3",
       "kind": "super-secure",
-      "ceased_on": "20180201"
+      "ceased_on": "20180201",
+      "company_name": "Test Company Ltd",
+      "status": "active"
     }
   ],
   "CreatedTime": "28-APR-22 16.51.29.000000",

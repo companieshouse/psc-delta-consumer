@@ -63,7 +63,9 @@
         "middle_name": "Dave"
       },
       "nationality": "Welsh",
-      "service_address_same_as_registered_office_address": true
+      "service_address_same_as_registered_office_address": true,
+      "company_name": "Test Company Ltd",
+      "company_status": "active"
     },
     "internal_id": "5",
     "sensitive_data": {
