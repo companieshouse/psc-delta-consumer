@@ -7,7 +7,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import consumer.exception.RetryableErrorException;
 import java.io.IOException;
 import org.junit.jupiter.api.Assertions;
@@ -45,7 +46,7 @@ class PscDeltaProcessorTest {
 
     @BeforeEach
     void setUp() {
-        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectMapper objectMapper = new JsonMapper();
         deltaProcessor = new PscDeltaProcessor(transformer, apiClientService, kindMapper, objectMapper);
     }
 
@@ -64,7 +65,7 @@ class PscDeltaProcessorTest {
 
     @Test
     @DisplayName("Confirms a Retryable Error is thrown when the Chs Delta message is invalid")
-    void When_InvalidChsDeltaMessage_Expect_RetryableError() {
+    void WhenInvalidChsDeltaMessageExpectRetryableError() {
         Message<ChsDelta> mockChsDeltaMessage = testHelper.createInvalidChsDeltaMessage();
         assertThrows(RetryableErrorException.class, () -> deltaProcessor.processDelta(mockChsDeltaMessage));
         Mockito.verify(apiClientService, times(0)).
@@ -73,7 +74,7 @@ class PscDeltaProcessorTest {
 
     @Test
     @DisplayName("Confirms a Retryable Error is thrown when the Chs Delete Delta message is invalid")
-    void When_InvalidChsDeleteDeltaMessage_Expect_RetryableError() {
+    void WhenInvalidChsDeleteDeltaMessageExpectRetryableError() {
         Message<ChsDelta> mockChsDeltaMessage = testHelper.createInvalidChsDeltaMessage();
 
         assertThrows(RetryableErrorException.class, () -> deltaProcessor.processDelete(mockChsDeltaMessage));
@@ -83,7 +84,7 @@ class PscDeltaProcessorTest {
 
     @Test
     @DisplayName("Confirms the Processor does not throw when a valid ChsDelta is given")
-    void When_ValidChsDeltaMessage_Expect_ProcessorDoesNotThrow_CallsTransformer() throws IOException {
+    void WhenValidChsDeltaMessageExpectProcessorDoesNotThrowCallsTransformer() throws IOException {
         Message<ChsDelta> mockChsDeltaMessage = testHelper.createChsDeltaMessage(false);
         PscDelta expectedDelta = testHelper.createPscDelta();
         FullRecordCompanyPSCApi apiObject = testHelper.createFullRecordCompanyPSCApi();
@@ -96,7 +97,7 @@ class PscDeltaProcessorTest {
 
     @Test
     @DisplayName("Confirms the Processor does not throw when a valid delete ChsDelta is given")
-    void When_ValidChsDeleteDeltaMessage_Expect_ProcessorDoesNotThrow() throws IOException {
+    void WhenValidChsDeleteDeltaMessageExpectProcessorDoesNotThrow() throws IOException {
         Message<ChsDelta> mockChsDeltaMessage = testHelper.createChsDeltaMessage(true);
 
         Assertions.assertDoesNotThrow(() -> deltaProcessor.processDelete(mockChsDeltaMessage));
