@@ -104,8 +104,6 @@ class PscMapperTest {
         String internalId = externalData.getInternalId();
         Data data = externalData.getData();
         SensitiveData sensitiveData = externalData.getSensitiveData();
-        identification = createCorporateIdentification();
-
         fullRecordCompanyPSCApi.getExternalData().getData().setEtag(null);
 
         List<ItemLinkTypes> links = new ArrayList<>();
@@ -123,11 +121,8 @@ class PscMapperTest {
         assertEquals("Test Company Ltd", externalData.getCompanyName());
         assertEquals("active", externalData.getCompanyStatus());
 
-        assertEquals("Form", identification.getLegalForm());
-        assertEquals("Authority", identification.getLegalAuthority());
-        assertEquals("Wales", identification.getCountryRegistered());
-        assertEquals("Cardiff", identification.getPlaceRegistered());
-        assertEquals("16102009", identification.getRegistrationNumber());
+        // verify the identification object mapped into the Data object matches the expected identification
+        assertEquals(createCorporateIdentification(), data.getIdentification());
 
         assertEquals(LocalDate.of(2018, 2, 1), data.getCeasedOn());
         assertEquals("corporate-entity-person-with-significant-control", data.getKind());

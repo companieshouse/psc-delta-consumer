@@ -296,7 +296,7 @@ public interface PscMapper {
         // If the status is missing or doesn't map correctly,
         // treat as invalid and route it to the invalid topic by throwing NonRetryableErrorException.
 
-        if (source == null || source.getStatus() == null) {
+        if (source.getStatus() == null) {
             throw new NonRetryableErrorException("Missing company status");
         }
 
