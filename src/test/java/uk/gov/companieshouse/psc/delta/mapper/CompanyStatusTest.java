@@ -1,9 +1,11 @@
 package uk.gov.companieshouse.psc.delta.mapper;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class CompanyStatusTest {
 
@@ -47,5 +49,15 @@ class CompanyStatusTest {
             "AD  , removed"})
     void successfullyTransformCompanyStatus(String sourceStatus, String targetStatus) {
         assertEquals(targetStatus, CompanyStatus.statusFromKey(sourceStatus));
+    }
+
+    @Test
+    void nullInputReturnsNull() {
+        assertNull(CompanyStatus.statusFromKey(null));
+    }
+
+    @Test
+    void emptyInputReturnsNull() {
+        assertNull(CompanyStatus.statusFromKey("   "));
     }
 }
