@@ -10,6 +10,9 @@
     "psc_id": "AoRE4bhxdSdXur_NLdfh4JF81Y4",
     "notification_id": "lXgouUAR16hSIwxdJSpbr_dhyT8",
     "psc_statement_id": "UKWLhOXMpdjzt-Maq7hbxAyPyQs",
+    "previous_psc_id": "previous-psc-3",
+    "company_name": "Test Company Ltd",
+    "company_status": "active",
     "data": {
       "kind": "individual-person-with-significant-control",
       "is_sanctioned": null,
@@ -63,10 +66,7 @@
         "middle_name": "Dave"
       },
       "nationality": "Welsh",
-      "service_address_same_as_registered_office_address": true,
-      "previous_psc_id": "previous-psc-3",
-      "company_name": "Test Company Ltd",
-      "company_status": "active"
+      "service_address_same_as_registered_office_address": true
     },
     "internal_id": "5",
     "sensitive_data": {

@@ -28,9 +28,7 @@
       ],
       "nationality": null,
       "company_number": null,
-      "notification_date": null,
-      "company_name": "Test Company Ltd",
-      "company_status": "active"
+      "notification_date": null
     },
     "sensitive_data": {
       "usual_residential_address": null,
@@ -43,7 +41,10 @@
     "internal_id": "9",
     "notification_id": "Gh7E2SSkj-YBM3i396MI-ycubGY",
     "psc_statement_id": null,
-    "company_number": "00623672"
+    "company_number": "00623672",
+    "previous_psc_id": null,
+    "company_name": "Test Company Ltd",
+    "company_status": "active"
   },
   "internal_data": {
     "delta_at": 1635517243.36056,

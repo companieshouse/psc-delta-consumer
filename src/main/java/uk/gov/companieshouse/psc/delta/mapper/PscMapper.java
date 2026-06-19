@@ -14,6 +14,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.util.CollectionUtils;
+import consumer.exception.NonRetryableErrorException;
 import uk.gov.companieshouse.GenerateEtagUtil;
 import uk.gov.companieshouse.api.delta.NameElements;
 import uk.gov.companieshouse.api.delta.Psc;
@@ -34,6 +35,9 @@ public interface PscMapper {
     @Mapping(target = "externalData.internalId", source = "internalId")
     @Mapping(target = "externalData.notificationId", source = "internalId", ignore = true)
     @Mapping(target = "externalData.companyNumber", source = "companyNumber")
+    @Mapping(target = "externalData.previousPscId", source = "previousPscId")
+    @Mapping(target = "externalData.companyName", source = "companyName")
+    @Mapping(target = "externalData.companyStatus", ignore = true)
     @Mapping(target = "externalData.id", source = "internalId", ignore = true)
     @Mapping(target = "externalData.data.etag", ignore = true)
     @Mapping(target = "externalData.data.name", ignore = true)
@@ -47,8 +51,6 @@ public interface PscMapper {
     @Mapping(target = "externalData.data.serviceAddress", source = "address")
     @Mapping(target = "externalData.data.principalOfficeAddress", source = "principalOfficeAddress")
     @Mapping(target = "externalData.data.nameElements", source = "nameElements")
-    @Mapping(target = "externalData.data.companyName", source = "companyName")
-    @Mapping(target = "externalData.data.companyStatus", source = "status")
     @Mapping(target = "externalData.data.nationality", source = "nationality")
     @Mapping(target = "externalData.data.countryOfResidence", source = "countryOfResidence")
     @Mapping(target = "externalData.data.naturesOfControl", source = "naturesOfControl")
@@ -61,7 +63,6 @@ public interface PscMapper {
     @Mapping(target = "externalData.sensitiveData.internalId", source = "internalId")
     @Mapping(target = "externalData.data.identification", ignore = true)
     @Mapping(target = "externalData.data.identityVerificationDetails", ignore = true)
-    @Mapping(target = "externalData.data.previousPscId", source = "previousPscId")
     FullRecordCompanyPSCApi mapPscData(Psc psc);
 
     /**
@@ -290,6 +291,24 @@ public interface PscMapper {
         }
     }
 
+    @AfterMapping
+    default void mapCompanyStatus(@MappingTarget ExternalData target, Psc source) {
+        // If the status is missing or doesn't map correctly,
+        // treat as invalid and route it to the invalid topic by throwing NonRetryableErrorException.
+
+        if (source == null || source.getStatus() == null) {
+            throw new NonRetryableErrorException("Missing company status");
+        }
+
+        String companyStatus = CompanyStatus.statusFromKey(source.getStatus());
+        if (companyStatus != null) {
+            target.setCompanyStatus(companyStatus);
+        } else {
+            throw new NonRetryableErrorException(
+                    String.format("Unrecognised company status: [%s]", source.getStatus()));
+        }
+    }
+
     /**
      * Manually map ServiceAddressSameAsRegisteredAddress.
      *
@@ -363,12 +382,12 @@ public interface PscMapper {
         if (!CollectionUtils.isEmpty(source.getNaturesOfControl())) {
             final var naturesOfControlMap = MapperUtils.getNaturesOfControlMap(source.getCompanyNumber());
             final List<String> mappedNaturesOfControl = source.getNaturesOfControl().stream()
-                // SDK enum constant names changed; fall back to the enum wire value for compatibility.
-                .map(nature -> {
-                    String mappedValue = naturesOfControlMap.get(nature.name());
-                    return mappedValue != null ? mappedValue : naturesOfControlMap.get(nature.toString());
-                })
-                .collect(Collectors.toCollection(ArrayList::new));
+                    // SDK enum constant names changed; fall back to the enum wire value for compatibility.
+                    .map(nature -> {
+                        String mappedValue = naturesOfControlMap.get(nature.name());
+                        return mappedValue != null ? mappedValue : naturesOfControlMap.get(nature.toString());
+                    })
+                    .collect(Collectors.toCollection(ArrayList::new));
 
             target.setNaturesOfControl(mappedNaturesOfControl);
         }

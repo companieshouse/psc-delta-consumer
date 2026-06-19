@@ -10,6 +10,9 @@
     "psc_id": "AoRE4bhxdSdXur_NLdfh4JF81Y4",
     "notification_id": "0ewxT9lV_MPjngrHhR-vsOUHOpo",
     "psc_statement_id": null,
+    "previous_psc_id": null,
+    "company_name": "Test Company Ltd",
+    "company_status": "active",
     "data": {
       "kind": "super-secure-beneficial-owner",
       "is_sanctioned": false,
@@ -36,9 +39,7 @@
       "name": null,
       "name_elements": null,
       "nationality": null,
-      "service_address_same_as_registered_office_address": null,
-      "company_name": "Test Company Ltd",
-      "company_status": "active"
+      "service_address_same_as_registered_office_address": null
     },
     "internal_id": "8",
     "sensitive_data": {
