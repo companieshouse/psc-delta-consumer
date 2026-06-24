@@ -1,7 +1,6 @@
 package uk.gov.companieshouse.psc.delta.mapper;
 
 import java.util.List;
-// no additional imports required
 
 public enum CompanyStatus {
 

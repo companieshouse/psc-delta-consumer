@@ -405,6 +405,29 @@ class PscMapperTest {
     }
 
     @Test
+    void shouldUseFallbackWhenNameLookupIsMissing() {
+        Psc source = new Psc();
+        // use NoC value where the enum name differs from the wire value used in the map
+        source.setNaturesOfControl((List.of(NaturesOfControlEnum.OE_OWNERSHIPOFSHARES_MORETHAN25_PERCENT_AS_FIRM)));
+        source.setCompanyNumber("OE623672");
+
+        // the primary lookup by name should be null and the fallback (toString) should be present
+        var nature = source.getNaturesOfControl().get(0);
+        var naturesMap = MapperUtils.getNaturesOfControlMap(source.getCompanyNumber());
+
+        assertNull(naturesMap.get(nature.name()));
+        // The enum toString() should match the map key and return the mapped value
+        assertEquals("ownership-of-shares-more-than-25-percent-as-firm-registered-overseas-entity",
+                naturesMap.get(nature.toString()));
+
+        Data target = new Data();
+        pscMapper.mapNaturesOfControl(target, source);
+
+        List<String> expectedValue = List.of("ownership-of-shares-more-than-25-percent-as-firm-registered-overseas-entity");
+        assertEquals(expectedValue, target.getNaturesOfControl());
+    }
+
+    @Test
     void shouldMapIdentityVerificationDetails() throws Exception {
         pscObject = createPscObject("identity-verification-details-psc");
         FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
