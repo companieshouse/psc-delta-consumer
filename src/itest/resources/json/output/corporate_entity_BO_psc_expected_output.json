@@ -10,6 +10,9 @@
     "psc_id": "AoRE4bhxdSdXur_NLdfh4JF81Y4",
     "notification_id": "hZ_JFH9mW2suVRdVM7jm9w2MD10",
     "psc_statement_id": "UKWLhOXMpdjzt-Maq7hbxAyPyQs",
+    "previous_psc_id": null,
+    "company_name": "Test Company Ltd",
+    "company_status": "active",
     "data": {
       "kind": "corporate-entity-beneficial-owner",
       "is_sanctioned": false,

@@ -43,7 +43,9 @@
         "OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"
       ],
       "service_address_same_as_registered_address": "Y",
-      "residential_address_same_as_service_address": "Y"
+      "residential_address_same_as_service_address": "Y",
+      "company_name": "Test Company Ltd",
+      "status": "Q"
     }
   ],
   "CreatedTime": "28-APR-22 16.51.29.000000",

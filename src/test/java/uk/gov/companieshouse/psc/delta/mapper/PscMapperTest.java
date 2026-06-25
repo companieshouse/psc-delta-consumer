@@ -2,6 +2,7 @@ package uk.gov.companieshouse.psc.delta.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static uk.gov.companieshouse.api.delta.Psc.KindEnum.SUPER_SECURE;
 
 import tools.jackson.databind.ObjectMapper;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.util.FileCopyUtils;
 import uk.gov.companieshouse.api.delta.Psc;
+import consumer.exception.NonRetryableErrorException;
 import uk.gov.companieshouse.api.delta.Psc.NaturesOfControlEnum;
 import uk.gov.companieshouse.api.delta.PscDelta;
 import uk.gov.companieshouse.api.psc.*;
@@ -69,6 +71,9 @@ class PscMapperTest {
         assertEquals("5", externalData.getInternalId());
         assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getNotificationId());
         assertEquals("00623672", externalData.getCompanyNumber());
+        assertEquals("Test Company Ltd", externalData.getCompanyName());
+        assertEquals("active", externalData.getCompanyStatus());
+        assertEquals("previous-psc-3", externalData.getPreviousPscId());
 
         assertEquals(LocalDate.of(2018, 2, 1), data.getCeasedOn());
         assertEquals("individual-person-with-significant-control", data.getKind());
@@ -99,8 +104,6 @@ class PscMapperTest {
         String internalId = externalData.getInternalId();
         Data data = externalData.getData();
         SensitiveData sensitiveData = externalData.getSensitiveData();
-        identification = createCorporateIdentification();
-
         fullRecordCompanyPSCApi.getExternalData().getData().setEtag(null);
 
         List<ItemLinkTypes> links = new ArrayList<>();
@@ -115,12 +118,11 @@ class PscMapperTest {
         assertEquals("lXgouUAR16hSIwxdJSpbr_dhyT8", externalData.getNotificationId());
         assertEquals("UKWLhOXMpdjzt-Maq7hbxAyPyQs", externalData.getPscStatementId());
         assertEquals("00623672", externalData.getCompanyNumber());
+        assertEquals("Test Company Ltd", externalData.getCompanyName());
+        assertEquals("active", externalData.getCompanyStatus());
 
-        assertEquals("Form", identification.getLegalForm());
-        assertEquals("Authority", identification.getLegalAuthority());
-        assertEquals("Wales", identification.getCountryRegistered());
-        assertEquals("Cardiff", identification.getPlaceRegistered());
-        assertEquals("16102009", identification.getRegistrationNumber());
+        // verify the identification object mapped into the Data object matches the expected identification
+        assertEquals(createCorporateIdentification(), data.getIdentification());
 
         assertEquals(LocalDate.of(2018, 2, 1), data.getCeasedOn());
         assertEquals("corporate-entity-person-with-significant-control", data.getKind());
@@ -365,7 +367,7 @@ class PscMapperTest {
     @Test
     void shouldMapNaturesOfControl() {
         Psc source = new Psc();
-        source.setNaturesOfControl(List.of(NaturesOfControlEnum.OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON));
+        source.setNaturesOfControl(List.of(NaturesOfControlEnum.OWNERSHIPOFSHARES_25_TO50_PERCENT_AS_PERSON));
         source.setCompanyNumber("00623672");
         Data target = new Data();
         pscMapper.mapNaturesOfControl(target, source);
@@ -378,7 +380,7 @@ class PscMapperTest {
     @Test
     void shouldMapNaturesOfControlLlp() {
         Psc source = new Psc();
-        source.setNaturesOfControl(List.of(NaturesOfControlEnum.RIGHTTOSHARESURPLUSASSETS_25TO50PERCENT_AS_FIRM));
+        source.setNaturesOfControl(List.of(NaturesOfControlEnum.RIGHTTOSHARESURPLUSASSETS_25_TO50_PERCENT_AS_FIRM));
         source.setCompanyNumber("OC623672");
         Data target = new Data();
         pscMapper.mapNaturesOfControl(target, source);
@@ -392,13 +394,36 @@ class PscMapperTest {
     @Test
     void shouldMapNaturesOfControlRoe() {
         Psc source = new Psc();
-        source.setNaturesOfControl((List.of(NaturesOfControlEnum.OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_FIRM)));
+        source.setNaturesOfControl((List.of(NaturesOfControlEnum.OE_OWNERSHIPOFSHARES_MORETHAN25_PERCENT_AS_FIRM)));
         source.setCompanyNumber("OE623672");
         Data target = new Data();
         pscMapper.mapNaturesOfControl(target, source);
 
         List<String> expectedValue = List.of("ownership-of-shares-more-than-25-percent-as-firm-registered-overseas-entity");
 
+        assertEquals(expectedValue, target.getNaturesOfControl());
+    }
+
+    @Test
+    void shouldUseFallbackWhenNameLookupIsMissing() {
+        Psc source = new Psc();
+        // use NoC value where the enum name differs from the wire value used in the map
+        source.setNaturesOfControl((List.of(NaturesOfControlEnum.OE_OWNERSHIPOFSHARES_MORETHAN25_PERCENT_AS_FIRM)));
+        source.setCompanyNumber("OE623672");
+
+        // the primary lookup by name should be null and the fallback (toString) should be present
+        var nature = source.getNaturesOfControl().get(0);
+        var naturesMap = MapperUtils.getNaturesOfControlMap(source.getCompanyNumber());
+
+        assertNull(naturesMap.get(nature.name()));
+        // The enum toString() should match the map key and return the mapped value
+        assertEquals("ownership-of-shares-more-than-25-percent-as-firm-registered-overseas-entity",
+                naturesMap.get(nature.toString()));
+
+        Data target = new Data();
+        pscMapper.mapNaturesOfControl(target, source);
+
+        List<String> expectedValue = List.of("ownership-of-shares-more-than-25-percent-as-firm-registered-overseas-entity");
         assertEquals(expectedValue, target.getNaturesOfControl());
     }
 
@@ -463,5 +488,23 @@ class PscMapperTest {
         assertNull(ivd.getAuthorisedCorporateServiceProviderName());
         assertNull(ivd.getPreferredName());
         assertNull(ivd.getAntiMoneyLaunderingSupervisoryBodies());
+    }
+
+    @Test
+    void shouldThrowWhenCompanyStatusIsUnknown() {
+        Psc source = new Psc();
+        source.setStatus("UNKNOWN_STATUS");
+        ExternalData target = new ExternalData();
+
+        assertThrows(NonRetryableErrorException.class, () -> pscMapper.mapCompanyStatus(target, source));
+    }
+
+    @Test
+    void shouldThrowWhenCompanyStatusIsNull() {
+        Psc source = new Psc();
+        // status left as null
+        ExternalData target = new ExternalData();
+
+        assertThrows(NonRetryableErrorException.class, () -> pscMapper.mapCompanyStatus(target, source));
     }
 }

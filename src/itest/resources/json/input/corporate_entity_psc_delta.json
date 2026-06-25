@@ -30,7 +30,9 @@
         "OWNERSHIPOFSHARES_75TO100PERCENT_AS_PERSON",
         "VOTINGRIGHTS_75TO100PERCENT_AS_PERSON",
         "RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_PERSON"
-      ]
+      ],
+      "company_name": "Test Company Ltd",
+      "status": "Q"
     }
   ],
   "CreatedTime": "28-APR-22 16.51.29.000000",

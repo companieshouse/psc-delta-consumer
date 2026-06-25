@@ -69,6 +69,8 @@ public class TestHelper {
         Psc psc = new Psc();
 
         psc.setCompanyNumber("00623672");
+        psc.setCompanyName("Test Company Ltd");
+        psc.setStatus("Q");
         psc.setPscId("3");
         psc.setInternalId("5");
         psc.setKind(Psc.KindEnum.SUPER_SECURE);

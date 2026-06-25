@@ -13,6 +13,7 @@ Feature: Psc delta
       | legal_person_BO        | OE623672      | nVygLIRIpytItqx33sVCo69WNt0 |
       | super_secure_entity    | 00623672      | Gh7E2SSkj-YBM3i396MI-ycubGY |
       | individual             | 00623672      | lXgouUAR16hSIwxdJSpbr_dhyT8 |
+      | individual_with_previous_psc_id | 00623672      | lXgouUAR16hSIwxdJSpbr_dhyT8 |
       | corporate_entity       | 00623672      | AoRE4bhxdSdXur_NLdfh4JF81Y4 |
       | legal_person           | 00623672      | WWG3toZrwNqzvwUZlSa4JgQAvzY |
 

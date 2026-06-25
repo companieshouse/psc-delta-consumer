@@ -26,7 +26,9 @@
       "country_of_residence": "Wales",
       "natures_of_control": [
         "OWNERSHIPOFSHARES_25TO50PERCENT_AS_PERSON"
-      ]
+      ],
+      "company_name": "Test Company Ltd",
+      "status": "Q"
     }
   ],
   "CreatedTime": "28-APR-22 16.51.29.000000",

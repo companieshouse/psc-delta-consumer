@@ -1,11 +1,11 @@
 {
   "pscs": [
     {
-      "company_number": "OE623672",
-      "internal_id": "2",
+      "company_number": "00623672",
+      "internal_id": "5",
       "psc_id": "3",
-      "kind": "corporate-entity-beneficial-owner",
-      "sanction_ind": "0",
+      "previous_psc_id": "previous-psc-3",
+      "kind": "individual",
       "notification_date": "20160101",
       "ceased_on": "20180201",
       "psc_statement_id": "12345",
@@ -20,8 +20,8 @@
         "care_of_name": "CareOf",
         "po_box": "PoBox"
       },
-      "principal_office_address": {
-        "premise": "4",
+      "usual_residential_address": {
+        "premise": "3",
         "address_line_1": "Clos Rhiannon",
         "address_line_2": "Thornhill",
         "locality": "Cardiff",
@@ -31,19 +31,22 @@
         "care_of": "CareOf",
         "po_box": "PoBox"
       },
-      "usual_residential_address": {},
-      "name": "John Smith Limited",
-      "legal_form": "Isle Of Man Companies Acts 1931-2004",
-      "legal_authority": "Isle Of Man",
-      "place_registered": "Isle Of Man Companies Registry",
-      "registration_number": "123456c",
-      "country_registered": "Isle Of Man",
+      "name_elements": {
+        "title": "Mr",
+        "surname": "Smith",
+        "forename": "John",
+        "middle_name": "Dave"
+      },
+      "date_of_birth": "19940712",
+      "nationality": "Welsh",
+      "country_of_residence": "Wales",
       "natures_of_control": [
-        "OE_OWNERSHIPOFSHARES_MORETHAN25PERCENT_AS_FIRM",
-        "OE_VOTINGRIGHTS_MORETHAN25PERCENT_AS_FIRM",
-        "OE_RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_FIRM",
-        "OE_SIGINFLUENCECONTROL_AS_FIRM"
+        "OWNERSHIPOFSHARES_75TO100PERCENT_AS_PERSON",
+        "VOTINGRIGHTS_75TO100PERCENT_AS_PERSON",
+        "RIGHTTOAPPOINTANDREMOVEDIRECTORS_AS_PERSON"
       ],
+      "service_address_same_as_registered_address": "Y",
+      "residential_address_same_as_service_address": "Y",
       "company_name": "Test Company Ltd",
       "status": "Q"
     }
@@ -51,3 +54,4 @@
   "CreatedTime": "28-APR-22 16.51.29.000000",
   "delta_at": "20211029142043360560"
 }
+
