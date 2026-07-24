@@ -74,8 +74,7 @@ class PscMapperTest {
         assertEquals("00623672", externalData.getCompanyNumber());
         assertEquals("Test Company Ltd", externalData.getCompanyName());
         assertEquals("active", externalData.getCompanyStatus());
-        assertEquals(MapperUtils.encode("previous-psc-3"), externalData.getPreviousPscId());
-        assertNotEquals("previous-psc-3", externalData.getPreviousPscId());
+        assertPreviousPscIdIsEncoded(externalData);
 
         assertEquals(LocalDate.of(2018, 2, 1), data.getCeasedOn());
         assertEquals("individual-person-with-significant-control", data.getKind());
@@ -275,6 +274,11 @@ class PscMapperTest {
         assertEquals(Boolean.TRUE, sensitiveData.getResidentialAddressSameAsServiceAddress());
         assertEquals(dateOfBirth, sensitiveData.getDateOfBirth());
         assertEquals(internalId, sensitiveData.getInternalId().toString());
+    }
+
+    private void assertPreviousPscIdIsEncoded(ExternalData externalData) {
+        assertEquals(MapperUtils.encode("previous-psc-3"), externalData.getPreviousPscId());
+        assertNotEquals("previous-psc-3", externalData.getPreviousPscId());
     }
 
     Address createServiceAddress() {
