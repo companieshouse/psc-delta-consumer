@@ -1,6 +1,7 @@
 package uk.gov.companieshouse.psc.delta.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static uk.gov.companieshouse.api.delta.Psc.KindEnum.SUPER_SECURE;
@@ -73,7 +74,7 @@ class PscMapperTest {
         assertEquals("00623672", externalData.getCompanyNumber());
         assertEquals("Test Company Ltd", externalData.getCompanyName());
         assertEquals("active", externalData.getCompanyStatus());
-        assertEquals("previous-psc-3", externalData.getPreviousPscId());
+        assertPreviousPscIdIsEncoded(externalData);
 
         assertEquals(LocalDate.of(2018, 2, 1), data.getCeasedOn());
         assertEquals("individual-person-with-significant-control", data.getKind());
@@ -120,6 +121,7 @@ class PscMapperTest {
         assertEquals("00623672", externalData.getCompanyNumber());
         assertEquals("Test Company Ltd", externalData.getCompanyName());
         assertEquals("active", externalData.getCompanyStatus());
+        assertNull(externalData.getPreviousPscId());
 
         // verify the identification object mapped into the Data object matches the expected identification
         assertEquals(createCorporateIdentification(), data.getIdentification());
@@ -272,6 +274,11 @@ class PscMapperTest {
         assertEquals(Boolean.TRUE, sensitiveData.getResidentialAddressSameAsServiceAddress());
         assertEquals(dateOfBirth, sensitiveData.getDateOfBirth());
         assertEquals(internalId, sensitiveData.getInternalId().toString());
+    }
+
+    private void assertPreviousPscIdIsEncoded(ExternalData externalData) {
+        assertEquals(MapperUtils.encode("previous-psc-3"), externalData.getPreviousPscId());
+        assertNotEquals("previous-psc-3", externalData.getPreviousPscId());
     }
 
     Address createServiceAddress() {

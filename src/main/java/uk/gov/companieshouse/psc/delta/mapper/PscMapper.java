@@ -35,7 +35,7 @@ public interface PscMapper {
     @Mapping(target = "externalData.internalId", source = "internalId")
     @Mapping(target = "externalData.notificationId", source = "internalId", ignore = true)
     @Mapping(target = "externalData.companyNumber", source = "companyNumber")
-    @Mapping(target = "externalData.previousPscId", source = "previousPscId")
+    @Mapping(target = "externalData.previousPscId", source = "previousPscId", ignore = true)
     @Mapping(target = "externalData.companyName", source = "companyName")
     @Mapping(target = "externalData.companyStatus", ignore = true)
     @Mapping(target = "externalData.id", source = "internalId", ignore = true)
@@ -288,6 +288,16 @@ public interface PscMapper {
     default void mapEncodedPscId(@MappingTarget ExternalData target, Psc source) {
         if (source.getPscId() != null) {
             target.setPscId(MapperUtils.encode(source.getPscId()));
+        }
+    }
+
+    /**
+     * encode previous_psc_id.
+     */
+    @AfterMapping
+    default void mapEncodedPreviousPscId(@MappingTarget ExternalData target, Psc source) {
+        if (source.getPreviousPscId() != null) {
+            target.setPreviousPscId(MapperUtils.encode(source.getPreviousPscId()));
         }
     }
 
