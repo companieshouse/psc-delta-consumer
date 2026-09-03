@@ -223,7 +223,7 @@
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
-            <version>11.0.22</version>
+            <version>11.0.25</version>
             <scope>compile</scope>
         </dependency>
         <!-- Pinning version to address CVEs in tomcat-embed-websocket:jar:10.1.54
