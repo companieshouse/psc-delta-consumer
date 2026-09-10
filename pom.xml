@@ -33,11 +33,12 @@
         <map-struct.version>1.6.3</map-struct.version>
         <log4j-bom.version>3.0.0-alpha1</log4j-bom.version>
         <opentelemetry-instrumentation-bom.version>2.28.1</opentelemetry-instrumentation-bom.version>
+        <opentelemetry-logback-appender.version>2.28.1-alpha</opentelemetry-logback-appender.version>
         <apache-commons-lang3.version>3.18.0</apache-commons-lang3.version>
 
         <!--CompaniesHouse library-->
         <ch-kafka.version>3.0.7</ch-kafka.version>
-        <structured-logging.version>3.0.51</structured-logging.version>
+        <structured-logging.version>4.0.4</structured-logging.version>
         <kafka-models.version>3.0.33</kafka-models.version>
         <private-api-sdk-java.version>6.0.31</private-api-sdk-java.version>
         <api-sdk-manager-java-library.version>3.0.15</api-sdk-manager-java-library.version>
@@ -374,8 +375,14 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-opentelemetry</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.opentelemetry.instrumentation</groupId>
-            <artifactId>opentelemetry-spring-boot-starter</artifactId>
+            <artifactId>opentelemetry-logback-appender-1.0</artifactId>
+            <version>${opentelemetry-logback-appender.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.retry</groupId>
