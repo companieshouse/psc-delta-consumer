@@ -15,8 +15,8 @@
     <properties>
         <java.version>21</java.version>
         <main.class>uk.gov.companieshouse.psc.delta.PscDeltaConsumerApplication</main.class>
-        <spring-boot-dependencies.version>4.0.6</spring-boot-dependencies.version>
-        <spring-boot-maven-plugin.version>4.0.6</spring-boot-maven-plugin.version>
+        <spring-boot-dependencies.version>4.1.1</spring-boot-dependencies.version>
+        <spring-boot-maven-plugin.version>4.1.1</spring-boot-maven-plugin.version>
         <avro.version>1.12.1</avro.version>
         <checkstyle.version>10.26.1</checkstyle.version>
         <checker-qual.version>3.49.5</checker-qual.version>
@@ -32,8 +32,7 @@
         <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
         <map-struct.version>1.6.3</map-struct.version>
         <log4j-bom.version>3.0.0-alpha1</log4j-bom.version>
-        <opentelemetry-instrumentation-bom.version>2.28.1</opentelemetry-instrumentation-bom.version>
-        <opentelemetry-logback-appender.version>2.28.1-alpha</opentelemetry-logback-appender.version>
+        <ch-boms.version>0.1.30</ch-boms.version>
         <apache-commons-lang3.version>3.18.0</apache-commons-lang3.version>
 
         <!--CompaniesHouse library-->
@@ -61,9 +60,9 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>io.opentelemetry.instrumentation</groupId>
-                <artifactId>opentelemetry-instrumentation-bom</artifactId>
-                <version>${opentelemetry-instrumentation-bom.version}</version>
+                <groupId>uk.gov.companieshouse</groupId>
+                <artifactId>ch-dependency-bom</artifactId>
+                <version>${ch-boms.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -80,16 +79,6 @@
                 <version>${spring-boot-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <!-- Pinning version to resolve NoSuchMethodError in CommonConfig constructor:
-                 opentelemetry-spring-webmvc-6.0:2.28.1-alpha requires a constructor added after 2.14.0-alpha,
-                 but structured-logging pulls opentelemetry-logback-appender-1.0:2.14.0-alpha which brings in
-                 the older opentelemetry-instrumentation-api-incubator:2.14.0-alpha. The stable BOM does not
-                 manage alpha artifacts so the older version wins without this explicit pin. -->
-            <dependency>
-                <groupId>io.opentelemetry.instrumentation</groupId>
-                <artifactId>opentelemetry-instrumentation-api-incubator</artifactId>
-                <version>2.28.1-alpha</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -382,7 +371,6 @@
         <dependency>
             <groupId>io.opentelemetry.instrumentation</groupId>
             <artifactId>opentelemetry-logback-appender-1.0</artifactId>
-            <version>${opentelemetry-logback-appender.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
