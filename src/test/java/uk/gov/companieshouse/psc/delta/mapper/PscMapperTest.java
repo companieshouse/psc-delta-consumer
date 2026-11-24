@@ -15,6 +15,8 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.util.FileCopyUtils;
@@ -422,27 +424,20 @@ class PscMapperTest {
         assertEquals(expectedValue, target.getNaturesOfControl());
     }
 
-    @Test
-    void shouldUseFallbackWhenNameLookupIsMissing() {
-        Psc source = new Psc();
-        // use NoC value where the enum name differs from the wire value used in the map
-        source.setNaturesOfControl((List.of(NaturesOfControlEnum.OE_OWNERSHIPOFSHARES_MORETHAN25_PERCENT_AS_FIRM)));
-        source.setCompanyNumber("OE623672");
+    @ParameterizedTest
+    // These prefixes select the standard company, LLP and overseas entity mapping tables respectively.
+    @ValueSource(strings = {"00623672", "OC623672", "OE623672"})
+    void shouldMapEverySupportedNatureOfControl(String companyNumber) {
+        MapperUtils.getNaturesOfControlMap(companyNumber).forEach((wireValue, expected) -> {
+            Psc source = new Psc();
+            source.setCompanyNumber(companyNumber);
+            source.setNaturesOfControl(List.of(NaturesOfControlEnum.fromValue(wireValue)));
+            Data target = new Data();
 
-        // the primary lookup by name should be null and the fallback (toString) should be present
-        var nature = source.getNaturesOfControl().get(0);
-        var naturesMap = MapperUtils.getNaturesOfControlMap(source.getCompanyNumber());
+            pscMapper.mapNaturesOfControl(target, source);
 
-        assertNull(naturesMap.get(nature.name()));
-        // The enum toString() should match the map key and return the mapped value
-        assertEquals("ownership-of-shares-more-than-25-percent-as-firm-registered-overseas-entity",
-                naturesMap.get(nature.toString()));
-
-        Data target = new Data();
-        pscMapper.mapNaturesOfControl(target, source);
-
-        List<String> expectedValue = List.of("ownership-of-shares-more-than-25-percent-as-firm-registered-overseas-entity");
-        assertEquals(expectedValue, target.getNaturesOfControl());
+            assertEquals(List.of(expected), target.getNaturesOfControl(), wireValue);
+        });
     }
 
     @Test
