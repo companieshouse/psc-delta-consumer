@@ -400,6 +400,8 @@ public interface PscMapper {
                     .collect(Collectors.toCollection(ArrayList::new));
 
             target.setNaturesOfControl(mappedNaturesOfControl);
+        } else {
+            target.setNaturesOfControl(null);
         }
     }
 
@@ -429,7 +431,9 @@ public interface PscMapper {
             identityVerifiedOn.ifPresent(dateString -> details.setIdentityVerifiedOn(parseLocalDate(dateString)));
 
             details.setAuthorisedCorporateServiceProviderName(sourceDetails.getAuthorisedCorporateServiceProviderName());
-            details.setAntiMoneyLaunderingSupervisoryBodies(sourceDetails.getAntiMoneyLaunderingSupervisoryBodies());
+                List<String> supervisoryBodies = sourceDetails.getAntiMoneyLaunderingSupervisoryBodies();
+                details.setAntiMoneyLaunderingSupervisoryBodies(
+                    CollectionUtils.isEmpty(supervisoryBodies) ? null : supervisoryBodies);
             details.setPreferredName(sourceDetails.getPreferredName());
         } else {
             // SDKs default list behavior changed, this keeps legacy contract for super-secure records where these fields are omitted.

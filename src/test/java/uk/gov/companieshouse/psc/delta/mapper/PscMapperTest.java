@@ -385,6 +385,17 @@ class PscMapperTest {
     }
 
     @Test
+    void shouldMapEmptyNaturesOfControlAsNull() {
+        Psc source = new Psc();
+        source.setNaturesOfControl(List.of());
+        Data target = new Data();
+
+        pscMapper.mapNaturesOfControl(target, source);
+
+        assertNull(target.getNaturesOfControl());
+    }
+
+    @Test
     void shouldMapNaturesOfControlLlp() {
         Psc source = new Psc();
         source.setNaturesOfControl(List.of(NaturesOfControlEnum.RIGHTTOSHARESURPLUSASSETS_25_TO50_PERCENT_AS_FIRM));
@@ -471,6 +482,18 @@ class PscMapperTest {
         assertEquals(LocalDate.of(2018, 1, 12), ivd.getIdentityVerifiedOn());
         assertEquals("Corporate Service Provider Ltd", ivd.getAuthorisedCorporateServiceProviderName());
         assertEquals("Preferred Name", ivd.getPreferredName());
+        assertNull(ivd.getAntiMoneyLaunderingSupervisoryBodies());
+    }
+
+    @Test
+    void shouldMapEmptyAntiMoneyLaunderingSupervisoryBodiesAsNull() throws Exception {
+        pscObject = createPscObject("identity-verification-details-psc");
+        pscObject.getIdentityVerificationDetails().setAntiMoneyLaunderingSupervisoryBodies(List.of());
+
+        FullRecordCompanyPSCApi fullRecordCompanyPSCApi = pscMapper.mapPscData(pscObject);
+
+        IdentityVerificationDetails ivd = fullRecordCompanyPSCApi.getExternalData().getData()
+                .getIdentityVerificationDetails();
         assertNull(ivd.getAntiMoneyLaunderingSupervisoryBodies());
     }
 
