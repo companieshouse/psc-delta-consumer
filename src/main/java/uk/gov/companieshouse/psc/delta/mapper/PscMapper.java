@@ -392,8 +392,11 @@ public interface PscMapper {
         if (!CollectionUtils.isEmpty(source.getNaturesOfControl())) {
             final var naturesOfControlMap = MapperUtils.getNaturesOfControlMap(source.getCompanyNumber());
             final List<String> mappedNaturesOfControl = source.getNaturesOfControl().stream()
-                    // Map the JSON values sent by chs-delta-api, not generated Java enum names.
-                    .map(nature -> naturesOfControlMap.get(nature.getValue()))
+                    // SDK enum constant names changed; fall back to the enum wire value for compatibility.
+                    .map(nature -> {
+                        String mappedValue = naturesOfControlMap.get(nature.name());
+                        return mappedValue != null ? mappedValue : naturesOfControlMap.get(nature.toString());
+                    })
                     .collect(Collectors.toCollection(ArrayList::new));
 
             target.setNaturesOfControl(mappedNaturesOfControl);
