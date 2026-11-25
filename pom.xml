@@ -32,16 +32,16 @@
         <jib-maven-plugin.version>3.4.6</jib-maven-plugin.version>
         <map-struct.version>1.6.3</map-struct.version>
         <log4j-bom.version>3.0.0-alpha1</log4j-bom.version>
-        <ch-boms.version>0.1.30</ch-boms.version>
+        <ch-boms.version>0.1.42</ch-boms.version>
         <apache-commons-lang3.version>3.18.0</apache-commons-lang3.version>
 
         <!--CompaniesHouse library-->
-        <ch-kafka.version>3.0.7</ch-kafka.version>
-        <structured-logging.version>4.0.4</structured-logging.version>
-        <kafka-models.version>3.0.33</kafka-models.version>
-        <private-api-sdk-java.version>6.0.31</private-api-sdk-java.version>
+        <ch-kafka.version>3.0.18</ch-kafka.version>
+        <structured-logging.version>4.0.7</structured-logging.version>
+        <kafka-models.version>3.0.40</kafka-models.version>
+        <private-api-sdk-java.version>6.0.33</private-api-sdk-java.version>
         <api-sdk-manager-java-library.version>3.0.15</api-sdk-manager-java-library.version>
-        <api-helper-java-library.version>3.0.4</api-helper-java-library.version>
+        <api-helper-java-library.version>3.0.5</api-helper-java-library.version>
         <java-checkstyle-config.version>1.1</java-checkstyle-config.version>
         <skip.integration.tests>false</skip.integration.tests>
         <skip.unit.tests>false</skip.unit.tests>
@@ -184,80 +184,12 @@
             <groupId>net.minidev</groupId>
             <artifactId>json-smart</artifactId>
         </dependency>
-        <!-- Pinning version to address CVE-2024-29371 in 0.9.4 pulled transitively by spring-kafka-test:jar:3.3.13-->
-        <dependency>
-            <groupId>org.bitbucket.b_c</groupId>
-            <artifactId>jose4j</artifactId>
-            <version>0.9.6</version>
-            <scope>compile</scope>
-        </dependency>
         <!-- Pinning version to address CVE-2026-33558(5.3) in kafka-clients:jar:test:3.9.1
             pulled transitively by spring-kafka-test:jar:3.3.13 -->
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
             <version>4.3.0</version>
-            <scope>compile</scope>
-        </dependency>
-        <!-- Pinning version to address CVE-2020-29582(5.3) in kotlin-stdlib:jar:1.9.25
-             pulled transitively by okhttp (via the OTLP exporter) -->
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-            <version>2.2.21</version>
-        </dependency>
-        <!-- Pinning version to address CVE-2026-41293(9.8), CVE-2026-41284(7.5), CVE-2026-43513(7.5),
-            CVE-2026-43512(9.8), CVE-2026-42498(7.3), CVE-2026-43515(9.1) in tomcat-embed-core:jar:10.1.52
-             pulled transitively by spring-boot-starter-web:jar:3.5.15 -->
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-            <version>11.0.22</version>
-            <scope>compile</scope>
-        </dependency>
-        <!-- Pinning version to address CVEs in tomcat-embed-websocket:jar:10.1.54
-            pulled transitively by spring-boot-starter-web:jar:3.5.15 -->
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-websocket</artifactId>
-            <version>11.0.22</version>
-            <scope>compile</scope>
-        </dependency>
-        <!-- Pinning version to address GitHub GHSA-mj4r-2hfc-f8p6 in netty-codec:jar:4.1.132.Final
-            pulled transitively by spring-boot-starter-web:jar:3.5.15 -->
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec</artifactId>
-            <version>4.2.14.Final</version>
-            <scope>compile</scope>
-        </dependency>
-        <!-- Pinning version to address CVE-2026-42581(9.8), CVE-2026-42580(6.5), CVE-2026-41417(5.3),
-            CVE-2026-42585(7.5), CVE-2026-42584(9.1), CVE-2026-42583(7.5), CVE-2026-42582(7.5), CVE-2026-42578(2.9),
-            CVE-2026-42587(7.5), CVE-2026-42586(7.1), CVE-2026-44248(7.5), CVE-2026-42579(9.1)
-            in netty-transport:jar:4.1.132.Final
-            pulled transitively by netty-codec:jar:4.2.14.Final -->
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-transport</artifactId>
-            <version>4.2.14.Final</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-buffer</artifactId>
-            <version>4.2.14.Final</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-common</artifactId>
-            <version>4.2.14.Final</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-resolver</artifactId>
-            <version>4.2.14.Final</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -370,17 +302,6 @@
             <groupId>io.opentelemetry.instrumentation</groupId>
             <artifactId>opentelemetry-logback-appender-1.0</artifactId>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.retry</groupId>
-            <artifactId>spring-retry</artifactId>
-            <version>2.0.12</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.grpc</groupId>
-            <artifactId>grpc-context</artifactId>
-            <version>1.73.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
