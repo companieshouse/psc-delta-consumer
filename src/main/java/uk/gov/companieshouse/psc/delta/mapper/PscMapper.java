@@ -397,8 +397,6 @@ public interface PscMapper {
                     .collect(Collectors.toCollection(ArrayList::new));
 
             target.setNaturesOfControl(mappedNaturesOfControl);
-        } else {
-            target.setNaturesOfControl(null);
         }
     }
 
@@ -430,14 +428,13 @@ public interface PscMapper {
             details.setAuthorisedCorporateServiceProviderName(sourceDetails.getAuthorisedCorporateServiceProviderName());
             details.setAntiMoneyLaunderingSupervisoryBodies(sourceDetails.getAntiMoneyLaunderingSupervisoryBodies());
             details.setPreferredName(sourceDetails.getPreferredName());
+        } else {
+            // SDKs default list behavior changed, this keeps legacy contract for super-secure records where these fields are omitted.
+            details.setAntiMoneyLaunderingSupervisoryBodies(null);
         }
 
         appointmentVerificationEndOn.ifPresent(dateString -> details.setAppointmentVerificationEndOn(parseLocalDate(dateString)));
         appointmentVerificationStartOn.ifPresent(dateString -> details.setAppointmentVerificationStartOn(parseLocalDate(dateString)));
-
-        if (CollectionUtils.isEmpty(details.getAntiMoneyLaunderingSupervisoryBodies())) {
-            details.setAntiMoneyLaunderingSupervisoryBodies(null);
-        }
 
         target.setIdentityVerificationDetails(details);
     }
